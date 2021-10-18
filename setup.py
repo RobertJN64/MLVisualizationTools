@@ -1,4 +1,12 @@
-from setuptools import setup, find_packages
+from setuptools import setup
+import os
+
+
+include = []
+for item in list(os.walk('MLVisualizationTools')):
+    if 'pycache' not in item:
+        include.append(item)
+
 
 setup(
     name='MLVisualizationTools',
@@ -6,12 +14,12 @@ setup(
     author='Robert Nies',
     author_email='robertjnies@gamil.com',
     # Needed to actually package something
-    packages=find_packages(),
+    packages=include,
     install_requires=['pandas'],
     extras_require={'dash': ['dash', 'plotly', 'dash_bootstrap_components>=1.0.0'],
                     'dash-notebook': ['dash', 'plotly', 'dash_bootstrap_components>=1.0.0', 'jupyter-dash']},
     # *strongly* suggested for sharing
-    version='0.0.1',
+    version='0.0.2',
     # The license can be anything you like
     license='MIT',
     description='A set of functions and demos to make machine learning projects easier to understand.',
