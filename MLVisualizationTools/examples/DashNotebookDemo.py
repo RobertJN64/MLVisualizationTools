@@ -6,6 +6,7 @@ from tensorflow import keras
 
 try:
     from jupyter_dash import JupyterDash
+
     from dash import Input, Output
     from dash import dcc
     from dash import html
@@ -17,7 +18,7 @@ except:
 
 class App:
     def __init__(self):
-        self.app = JupyterDash.Dash(__name__, title="Example Dash App")
+        self.app = JupyterDash(__name__, title="Example Dash App")
 
         self.model = keras.models.load_model('Models/titanicmodel')
         self.df = pd.read_csv('Datasets/Titanic/train.csv')
