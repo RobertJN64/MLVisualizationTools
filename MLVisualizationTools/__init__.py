@@ -1,7 +1,12 @@
+"""
+A set of functions and demos to make machine learning projects easier to understand through effective visualizations.
+"""
+
 from MLVisualizationTools.modelanalytics import analyzeTFModel, analyzeTFModelRaw
 from MLVisualizationTools.modelinterface import TFModelPredictionGrid, TFModelPredictionGridRaw
 from MLVisualizationTools.modelinterface import TFModelPredictionAnimation, TFModelPredictionAnimationRaw
 from MLVisualizationTools.graphinterface import plotlyGrid, plotlyAnimation, matplotlibGrid
+from MLVisualizationTools.colorizer import simpleColor
 
 #TODO - colorizer
 
@@ -15,6 +20,9 @@ class Interfaces:
     TensorflowGridRaw = TFModelPredictionGridRaw
     TensorflowAnimation = TFModelPredictionAnimation
     TensorflowAnimationRaw = TFModelPredictionAnimationRaw
+
+class Colorizers:
+    Simple = simpleColor
 
 class Graphs:
     PlotlyGrid = plotlyGrid

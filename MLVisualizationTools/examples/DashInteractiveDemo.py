@@ -1,10 +1,12 @@
 from MLVisualizationTools import Analytics, Interfaces, Graphs
+from MLVisualizationTools.backend import fileloader
 import pandas as pd
 import os
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2' #stops agressive error message printing
 from tensorflow import keras
 
 #TODO - themes
+#TODO - incorporate nicely instead of hardcode
 
 try:
     import dash
@@ -21,8 +23,8 @@ class App:
     def __init__(self):
         self.app = dash.Dash(__name__, title="Example Dash App")
 
-        self.model = keras.models.load_model('Models/titanicmodel')
-        self.df = pd.read_csv('Datasets/Titanic/train.csv')
+        self.model = keras.models.load_model(fileloader(__file__, 'Models/titanicmodel'))
+        self.df = pd.read_csv(fileloader(__file__, 'Datasets/Titanic/train.csv'))
 
         options = []
         for col in self.df.columns:

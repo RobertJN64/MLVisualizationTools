@@ -1,4 +1,5 @@
 from MLVisualizationTools import Analytics, Interfaces, Graphs
+from MLVisualizationTools.backend import fileloader
 import pandas as pd
 import os
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2' #stops agressive error message printing
@@ -11,8 +12,8 @@ except:
                       "`pip install plotly' or run the matplotlib demo instead.")
 
 def main():
-    model = keras.models.load_model('Models/titanicmodel')
-    df = pd.read_csv('Datasets/Titanic/train.csv')
+    model = keras.models.load_model(fileloader(__file__, 'Models/titanicmodel'))
+    df = pd.read_csv(fileloader(__file__, 'Datasets/Titanic/train.csv'))
 
     AR = Analytics.Tensorflow(model, df, ["Survived"])
     maxvar = AR.maxVariance()

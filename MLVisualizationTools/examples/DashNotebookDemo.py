@@ -1,4 +1,5 @@
 from MLVisualizationTools import Analytics, Interfaces, Graphs
+from MLVisualizationTools.backend import fileloader
 import pandas as pd
 import os
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2' #stops agressive error message printing
@@ -20,8 +21,8 @@ class App:
     def __init__(self):
         self.app = JupyterDash(__name__, title="Example Dash App")
 
-        self.model = keras.models.load_model('Models/titanicmodel')
-        self.df = pd.read_csv('Datasets/Titanic/train.csv')
+        self.model = keras.models.load_model(fileloader(__file__, 'Models/titanicmodel'))
+        self.df = pd.read_csv(fileloader(__file__, 'Datasets/Titanic/train.csv'))
 
         options = []
         for col in self.df.columns:
@@ -62,7 +63,7 @@ class App:
         self.app.callback(Output("example-graph", "figure"), inputs)(self.updateGraphFromWebsite)
 
     def run(self):
-        self.app.run_server(mode='inline',host="0.0.0.0", port=1005)
+        self.app.run_server(mode='external',host="0.0.0.0", port=1005)
 
     def updateGraph(self):
         data = Interfaces.TensorflowGrid(self.model, self.x, self.y, self.df, ["Survived"])
