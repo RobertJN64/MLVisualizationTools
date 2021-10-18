@@ -13,7 +13,7 @@ sets of functions.
 
 ## Installation
 
-`pip install git+https://github.com/RobertJN64/MLVisualizationTools`
+`pip install MLVisualizationTools`
 
 Depending on your use case, tensorflow, plotly and matplotlib might need to be
 installed.
@@ -22,7 +22,7 @@ installed.
 `pip install plotly`
 `pip install matplotlib`
 
-To use interactive webapps, use the `[dash]` or `[dash-notebook]`
+To use interactive webapps, use the `pip install MLVisualizationTools[dash]` or `pip install MLVisualizationTools[dash-notebook]`
 flags on install.
 
 ## Functions

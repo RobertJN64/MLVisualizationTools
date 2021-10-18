@@ -66,7 +66,7 @@ def TFModelPredictionGridRaw(model, x:str, y:str, coldata:List[Dict], steps:int=
 
 #region animation
 def TFModelPredictionAnimation(model, x:str, y:str, anim:str, data: pd.DataFrame,
-                               exclude:list[str] = None, steps:int=20) -> pd.DataFrame:
+                               exclude:List[str] = None, steps:int=20) -> pd.DataFrame:
     """
     Creates a dataset from a 2d prediction on a tensorflow model. Wrapper function for TFModelPredictionGridRaw()
     that automatically handles column info generation.

@@ -18,11 +18,11 @@ def main():
     maxvar = AR.maxVariance()
 
     grid = Interfaces.TensorflowGrid(model, maxvar[0].name, maxvar[1].name, df, ["Survived"])
-    fig = Graphs.PlotlyGrid(grid, maxvar[0].name, maxvar[1].name)
+    fig, _, _ = Graphs.MatplotlibGrid(grid, maxvar[0].name, maxvar[1].name)
     fig.show()
 
     grid = Interfaces.TensorflowGrid(model, 'Parch', 'SibSp', df, ["Survived"])
-    fig = Graphs.PlotlyGrid(grid, 'Parch', 'SibSp')
+    fig, _, _ = Graphs.MatplotlibGrid(grid, 'Parch', 'SibSp')
     fig.show()
 
 main()

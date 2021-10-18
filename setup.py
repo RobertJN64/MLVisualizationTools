@@ -9,12 +9,14 @@ setup(
     packages=['MLVisualizationTools'],
     include_package_data=True,
     install_requires=['pandas'],
-    extras_require={'dash': ['dash', 'plotly', 'dash_bootstrap_components>=1.0.0'],
-                    'dash-notebook': ['dash', 'plotly', 'dash_bootstrap_components>=1.0.0', 'jupyter-dash']},
+    extras_require={'dash': ['dash', 'plotly', 'dash-bootstrap-components>=1.0.0*'],
+                    'dash-notebook': ['MLVisualizationTools[dash]', 'jupyter-dash']},
     # *strongly* suggested for sharing
-    version='0.0.10',
+    version='0.0.21',
     # The license can be anything you like
     license='MIT',
-    description='A set of functions and demos to make machine learning projects easier to understand.',
+    description=('A set of functions and demos to make machine learning projects easier to understand '
+                 'through effective visualizations.'),
     long_description=open('README.md').read(),
+    long_description_content_type='text/markdown'
 )
