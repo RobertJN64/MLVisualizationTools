@@ -12,7 +12,7 @@ setup(
     extras_require={'dash': ['dash', 'plotly', 'dash_bootstrap_components>=1.0.0'],
                     'dash-notebook': ['dash', 'plotly', 'dash_bootstrap_components>=1.0.0', 'jupyter-dash']},
     # *strongly* suggested for sharing
-    version='0.0.7',
+    version='0.0.8',
     # The license can be anything you like
     license='MIT',
     description='A set of functions and demos to make machine learning projects easier to understand.',
