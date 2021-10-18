@@ -1,1 +1,2 @@
 recursive-include MLVisualizationTools/examples *
+include examples/Demo.py
