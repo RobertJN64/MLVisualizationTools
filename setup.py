@@ -4,8 +4,8 @@ import os
 
 include = []
 for item in list(os.walk('MLVisualizationTools')):
-    if 'pycache' not in item:
-        include.append(item)
+    if 'pycache' not in item[0]:
+        include.append(item[0].replace('\\', '.'))
 
 
 setup(
@@ -19,7 +19,7 @@ setup(
     extras_require={'dash': ['dash', 'plotly', 'dash_bootstrap_components>=1.0.0'],
                     'dash-notebook': ['dash', 'plotly', 'dash_bootstrap_components>=1.0.0', 'jupyter-dash']},
     # *strongly* suggested for sharing
-    version='0.0.2',
+    version='0.0.3',
     # The license can be anything you like
     license='MIT',
     description='A set of functions and demos to make machine learning projects easier to understand.',
