@@ -10,7 +10,7 @@ setup(
     install_requires=['pandas'],
     extras_require={'dash': ['dash', 'plotly', 'dash-bootstrap-components>=1.0.0*'],
                     'dash-notebook': ['MLVisualizationTools[dash]', 'jupyter-dash']},
-    version='0.0.22',
+    version='0.0.30',
     license='MIT',
     description=('A set of functions and demos to make machine learning projects easier to understand '
                  'through effective visualizations.'),

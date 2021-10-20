@@ -1,4 +1,4 @@
-from MLVisualizationTools import Analytics, Interfaces, Graphs
+from MLVisualizationTools import Analytics, Interfaces, Graphs, Colorizers
 from MLVisualizationTools.backend import fileloader
 import pandas as pd
 import os
@@ -19,10 +19,12 @@ def main():
     maxvar = AR.maxVariance()
 
     grid = Interfaces.TensorflowGrid(model, maxvar[0].name, maxvar[1].name, df, ["Survived"])
+    grid = Colorizers.Simple(grid, 'red')
     fig = Graphs.PlotlyGrid(grid, maxvar[0].name, maxvar[1].name)
     fig.show()
 
     grid = Interfaces.TensorflowGrid(model, 'Parch', 'SibSp', df, ["Survived"])
+    grid = Colorizers.Simple(grid, 'orange')
     fig = Graphs.PlotlyGrid(grid, 'Parch', 'SibSp')
     fig.show()
 

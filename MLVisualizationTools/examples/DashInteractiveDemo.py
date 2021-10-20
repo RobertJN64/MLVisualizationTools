@@ -1,4 +1,4 @@
-from MLVisualizationTools import Analytics, Interfaces, Graphs
+from MLVisualizationTools import Analytics, Interfaces, Graphs, Colorizers
 from MLVisualizationTools.backend import fileloader
 import pandas as pd
 import os
@@ -69,6 +69,7 @@ class App:
 
     def updateGraph(self):
         data = Interfaces.TensorflowGrid(self.model, self.x, self.y, self.df, ["Survived"])
+        data = Colorizers.Simple(data, 'red')
         self.fig = Graphs.PlotlyGrid(data, self.x, self.y)
         return self.fig
 
