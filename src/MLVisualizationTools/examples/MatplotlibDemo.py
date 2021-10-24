@@ -9,7 +9,7 @@ try:
     import matplotlib.pyplot
 except ImportError:
     raise ImportError("Matplotlib is required to run this demo. If you don't have matplotlib installed, install it"
-                      "with `pip install matplotlib` or run the plotly demo instead.")
+                      " with `pip install matplotlib` or run the plotly demo instead.")
 
 def main():
     model = keras.models.load_model(fileloader(__file__, 'Models/titanicmodel'))
@@ -24,7 +24,7 @@ def main():
     plt.show(block=False)
 
     grid = Interfaces.TensorflowGrid(model, 'Parch', 'SibSp', df, ["Survived"])
-    grid = Colorizers.Simple(grid, 'orange')
+    grid = Colorizers.Binary(grid, highcontrast=True)
     plt, _, _ = Graphs.MatplotlibGrid(grid, 'Parch', 'SibSp', title="Parch by SibSp")
     plt.show()
 

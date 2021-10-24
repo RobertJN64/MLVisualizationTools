@@ -24,6 +24,6 @@ def colinfo(data: pd.DataFrame, exclude:List[str] = None) -> List[Dict]:
 def fileloader(start: str, target: str):
     """Generates relative file paths"""
     s = start.split(filesep)
-    s = s[:-1]
+    s = s[:-2]
     s = filesep.join(s)
-    return s + filesep + target
+    return s + filesep + 'examples' + filesep + target

@@ -15,7 +15,7 @@ try:
     import plotly
 except:
     raise ImportError("Dash and plotly are required to run this demo. Install them with the [dash] flag"
-                      "on installation of this library.")
+                      " on installation of this library.")
 
 class App:
     def __init__(self):
@@ -67,7 +67,7 @@ class App:
 
     def updateGraph(self):
         data = Interfaces.TensorflowGrid(self.model, self.x, self.y, self.df, ["Survived"])
-        data = Colorizers.Simple(data, 'red')
+        data = Colorizers.Binary(data, highcontrast=True)
         self.fig = Graphs.PlotlyGrid(data, self.x, self.y)
         return self.fig
 

@@ -14,7 +14,7 @@ try:
     import plotly
 except:
     raise ImportError("Plotly is required to run this demo. If you don't have plotly installed, install it with"
-                      "`pip install plotly' or run the matplotlib demo instead.")
+                      " `pip install plotly' or run the matplotlib demo instead.")
 
 def main():
     model = keras.models.load_model(fileloader(__file__, 'Models/titanicmodel'))
