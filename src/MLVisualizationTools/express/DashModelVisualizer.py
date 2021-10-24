@@ -21,6 +21,14 @@ class App:
                  notebook:bool = False, kagglenotebook:bool = False, mode:str = 'external',
                  host:str = '0.0.0.0', port: bool = None):
 
+        if port is None:
+            if notebook:
+                self.port = 1005
+            else:
+                self.port = 8050
+        else:
+            self.port = port
+
         if notebook:
             from jupyter_dash import JupyterDash
             if kagglenotebook:
@@ -28,7 +36,7 @@ class App:
                     from pyngrok import ngrok
                 except:
                     raise ImportError("Pyngrok is required to run in a kaggle notebook.")
-                tunnel = ngrok.connect(8050)
+                tunnel = ngrok.connect(self.port)
                 print("Running in an ngrok tunnel. This limits you to 20 requests per minute. For full features",
                       "use google colab instead.")
                 url = tunnel.public_url
@@ -37,14 +45,6 @@ class App:
             self.app = JupyterDash(__name__, title=title, server_url=url)
         else:
             self.app = dash.Dash(__name__, title=title)
-
-        if port is None:
-            if notebook:
-                self.port = 1005
-            else:
-                self.port = 8050
-        else:
-            self.port = port
 
         self.model = model
         self.df = data
