@@ -1,1 +1,1 @@
-recursive-include MLVisualizationTools/examples *
+recursive-include src/MLVisualizationTools/examples *
