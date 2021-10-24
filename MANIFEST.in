@@ -1,1 +1,2 @@
 recursive-include src/MLVisualizationTools/examples *
+recursive-include src/MLVisualizationTools/express *
