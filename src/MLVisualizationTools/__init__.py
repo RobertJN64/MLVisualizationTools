@@ -6,9 +6,7 @@ from MLVisualizationTools.modelanalytics import analyzeTFModel, analyzeTFModelRa
 from MLVisualizationTools.modelinterface import TFModelPredictionGrid, TFModelPredictionGridRaw
 from MLVisualizationTools.modelinterface import TFModelPredictionAnimation, TFModelPredictionAnimationRaw
 from MLVisualizationTools.graphinterface import plotlyGrid, plotlyAnimation, matplotlibGrid
-from MLVisualizationTools.colorizer import simpleColor
-
-#TODO - colorizer
+from MLVisualizationTools.colorizer import simpleColor, binaryColor
 
 #A bunch of wrapper functions to make calling various tools easier
 class Analytics:
@@ -23,6 +21,7 @@ class Interfaces:
 
 class Colorizers:
     Simple = simpleColor
+    Binary = binaryColor
 
 class Graphs:
     PlotlyGrid = plotlyGrid

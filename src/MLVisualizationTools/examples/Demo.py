@@ -19,12 +19,12 @@ def main():
     maxvar = AR.maxVariance()
 
     grid = Interfaces.TensorflowGrid(model, maxvar[0].name, maxvar[1].name, df, ["Survived"])
-    grid = Colorizers.Simple(grid, 'red')
+    grid = Colorizers.Binary(grid)
     fig = Graphs.PlotlyGrid(grid, maxvar[0].name, maxvar[1].name)
     fig.show()
 
     grid = Interfaces.TensorflowGrid(model, 'Parch', 'SibSp', df, ["Survived"])
-    grid = Colorizers.Simple(grid, 'orange')
+    grid = Colorizers.Binary(grid, highcontrast=True)
     fig = Graphs.PlotlyGrid(grid, 'Parch', 'SibSp')
     fig.show()
 

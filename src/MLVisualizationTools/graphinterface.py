@@ -32,7 +32,7 @@ def plotlyAnimation(data, x, y, anim, output="Output", title=""):
     """
     Calls px.scatter_3d with data and animation frame. Returns a plotly figure.
 
-    :param data: pandas dataframe with cols x, y, and output. Color is optional
+    :param data: pandas dataframe with cols x, y, anim, and output. Color is optional
     :param x: xcol in df
     :param y: ycol in df
     :param anim: column for animation
@@ -48,9 +48,10 @@ def plotlyAnimation(data, x, y, anim, output="Output", title=""):
         colormap = "identity"
     else:
         color = None
-        colormap = "identity"
+        colormap = None
+
     fig = px.scatter_3d(data, x, y, output, animation_frame=anim, color=color, color_discrete_map=colormap,
-                        title=title)
+                        title=title, range_z=[data[output].min(), data[output].max()])
     return fig
 
 def matplotlibGrid(data, x, y, output="Output", title=""):
