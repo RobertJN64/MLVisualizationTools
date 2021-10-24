@@ -17,11 +17,24 @@ except:
                       " on installation of this library.")
 
 class App:
-    def __init__(self, model, data: pd.DataFrame, title = "DashModelVisualizer", highcontrast=True,
-                 notebook=False, inline=False, host='0.0.0.0', port=None):
+    def __init__(self, model, data: pd.DataFrame, title:str = "DashModelVisualizer", highcontrast:bool = True,
+                 notebook:bool = False, kagglenotebook:bool = False, mode:str = 'external',
+                 host:str = '0.0.0.0', port: bool = None):
+
         if notebook:
             from jupyter_dash import JupyterDash
-            self.app = JupyterDash(__name__, title=title)
+            if kagglenotebook:
+                try:
+                    from pyngrok import ngrok
+                except:
+                    raise ImportError("Pyngrok is required to run in a kaggle notebook.")
+                tunnel = ngrok.connect(8050)
+                print("Running in an ngrok tunnel. This limits you to 20 requests per minute. For full features",
+                      "use google colab instead.")
+                url = tunnel.public_url
+            else:
+                url = None
+            self.app = JupyterDash(__name__, title=title, server_url=url)
         else:
             self.app = dash.Dash(__name__, title=title)
 
@@ -37,7 +50,7 @@ class App:
         self.df = data
         self.highcontrast = highcontrast
         self.notebook = notebook
-        self.inline = inline
+        self.mode = mode
         self.host = host
 
         options = []
@@ -78,7 +91,7 @@ class App:
         self.app.callback(Output("example-graph", "figure"), inputs)(self.updateGraphFromWebsite)
 
     def run(self):
-        self.app.run_server(host = self.host, port = self.port)
+        self.app.run_server(host = self.host, port = self.port, mode=self.mode)
 
     def updateGraph(self):
         data = Interfaces.TensorflowGrid(self.model, self.x, self.y, self.df)
@@ -91,8 +104,8 @@ class App:
         self.y = y
         return self.updateGraph()
 
-def main(model, data: pd.DataFrame, title = "DashModelVisualizer", highcontrast=True, notebook=False,
-         inline=False, host='0.0.0.0', port=None):
+def main(model, data: pd.DataFrame, title:str = "DashModelVisualizer", highcontrast:bool = True, notebook:bool = False,
+         kagglenotebook:bool = False, mode:str = 'external', host:str = '0.0.0.0', port: bool = None):
     """
     Creates a dash website to visualize an ML model.
 
@@ -101,12 +114,13 @@ def main(model, data: pd.DataFrame, title = "DashModelVisualizer", highcontrast=
     :param title: Title for website
     :param highcontrast: Visualizes the model with orange and blue instead of green and red. Great for colorblind people!
     :param notebook: Uses jupyter dash instead of dash
-    :param inline: If running in a notebook, whether or not to launch an external website
+    :param kagglenotebook: Enables ngrok tunneling for use in kaggle notebooks
+    :param mode: Use 'external', 'inline', or 'jupyterlab'
     :param host: default hostname for dash
     :param port: None for default port (8050) or (1005)
     """
 
-    App(model, data, title, highcontrast, notebook, inline, host, port).run()
+    App(model, data, title, highcontrast, notebook, kagglenotebook, mode, host, port).run()
 
 def default():
     model = keras.models.load_model(fileloader(__file__, 'Models/titanicmodel'))

@@ -25,6 +25,9 @@ installed.
 To use interactive webapps, use the `pip install MLVisualizationTools[dash]` or `pip install MLVisualizationTools[dash-notebook]`
 flags on install.
 
+If you are running on a kaggle notebook, you might need 
+`pip install MLVisualizationTools[kaggle-notebook]`
+
 ## Express
 
 To get started using MLVisualizationTools, run one of the prebuilt apps.
@@ -78,7 +81,7 @@ df = ... #your dataframe
 AR = Analytics.Tensorflow(model, df)
 maxvar = AR.maxVariance()
 
-grid = Interfaces.TensorflowGrid(model, maxvar[0].name, maxvar[1].name, df, ["Survived"])
+grid = Interfaces.TensorflowGrid(model, maxvar[0].name, maxvar[1].name, df)
 grid = Colorizers.Binary(grid)
 fig = Graphs.PlotlyGrid(grid, maxvar[0].name, maxvar[1].name)
 fig.show()

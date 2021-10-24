@@ -8,3 +8,7 @@ dash-bootstrap-components>=1.0.0
 [dash-notebook]
 MLVisualizationTools[dash]
 jupyter-dash
+
+[kaggle-notebook]
+MLVisualizationTools[dash-notebook]
+pyngrok

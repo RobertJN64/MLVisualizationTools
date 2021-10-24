@@ -39,7 +39,6 @@ def main():
     model = getModel()
     print("Starting Training")
     model.fit(trainX, trainY, epochs=50, batch_size=10)
-    print(type(model))
     print("Starting Evaluation")
     _, trainaccuracy = model.evaluate(trainX,trainY)
     _, testaccuracy = model.evaluate(testX, testY)
