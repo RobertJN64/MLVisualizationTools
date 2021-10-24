@@ -78,7 +78,7 @@ class App:
         self.app.callback(Output("example-graph", "figure"), inputs)(self.updateGraphFromWebsite)
 
     def run(self):
-        self.app.run_server(host = self.host, port = self.port, debug=True)
+        self.app.run_server(host = self.host, port = self.port)
 
     def updateGraph(self):
         data = Interfaces.TensorflowGrid(self.model, self.x, self.y, self.df)

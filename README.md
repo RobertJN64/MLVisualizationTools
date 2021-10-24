@@ -25,7 +25,61 @@ installed.
 To use interactive webapps, use the `pip install MLVisualizationTools[dash]` or `pip install MLVisualizationTools[dash-notebook]`
 flags on install.
 
+## Express
+
+To get started using MLVisualizationTools, run one of the prebuilt apps.
+
+```python
+import MLVisualizationTools.express.DashModelVisualizer as App
+
+model = ... #your keras model
+data = ... #your pandas dataframe with features
+
+App.main(model, data)
+```
+
 ## Functions
 
-More function docs coming soon, see examples for examples.
-Functions have docstrings which explain params and whatnot.
+MLVisualizationTools connects a variety of smaller functions.
+
+Steps:
+1. Keras Model and Dataframe with features
+2. Analyzer
+3. Interface / Interface Raw (if you don't have a dataframe)
+4. Colorizers (optional)
+5. Graphs
+
+Analyzers take a keras model and return information about the inputs
+such as which ones have high variance.
+
+Interfaces take parameters and construct a multidimensional grid
+of values based on plugging these numbers into the model.
+
+(Raw interfaces allow you to use interfaces by specifying column
+data instead of a pandas dataframe. Column data is a list with a dict with name, min,
+max, and mean values for each feature column)
+
+Colorizers mark points as being certain colors, typically above or below
+0.5.
+
+Graphs turn these output grids into a visual representation.
+
+## Examples
+
+See [MLVisualizationTools/Examples](/src/MLVisualizationTools/examples) for more examples.
+
+```python
+from MLVisualizationTools import Analytics, Interfaces, Graphs, Colorizers
+
+#Displays plotly graphs with max variance inputs to model
+
+model = ... #your model
+df = ... #your dataframe
+AR = Analytics.Tensorflow(model, df)
+maxvar = AR.maxVariance()
+
+grid = Interfaces.TensorflowGrid(model, maxvar[0].name, maxvar[1].name, df, ["Survived"])
+grid = Colorizers.Binary(grid)
+fig = Graphs.PlotlyGrid(grid, maxvar[0].name, maxvar[1].name)
+fig.show()
+```
