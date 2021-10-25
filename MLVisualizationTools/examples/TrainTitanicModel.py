@@ -2,6 +2,7 @@ import os
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2' #stops agressive error message printing
 from tensorflow import keras
 import pandas as pd
+from MLVisualizationTools.backend import fileloader
 
 # This creates a keras model for use in demo visualizations
 # It uses the Datasets/Titanic/train.csv file
@@ -18,7 +19,7 @@ def getModel():
     return model
 
 def main():
-    df = pd.read_csv('Datasets/Titanic/train.csv')
+    df = pd.read_csv(fileloader(__file__,'Datasets/Titanic/train.csv'))
 
     #region preprocess
     header = list(df.columns)
@@ -46,7 +47,7 @@ def main():
     print("We achieved an (training) accuracy of:", str(round(trainaccuracy,3) * 100) + "%")
     print("We achieved an (testing) accuracy of:", str(round(testaccuracy,3) * 100) + "%")
     print()
-    model.save('Models/titanicmodel')
+    model.save(fileloader(__file__,'Models/titanicmodel'))
     print("Model saved to Models/titanicmodel")
 
 main()
