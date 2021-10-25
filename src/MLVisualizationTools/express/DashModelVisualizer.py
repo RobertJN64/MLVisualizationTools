@@ -37,7 +37,7 @@ class App:
                 except:
                     raise ImportError("Pyngrok is required to run in a kaggle notebook.")
                 tunnel = ngrok.connect(self.port)
-                print("Running in an ngrok tunnel. This limits you to 20 requests per minute. For full features",
+                print("Running in an ngrok tunnel. This limits you to 40 requests per minute. For full features",
                       "use google colab instead.")
                 url = tunnel.public_url
             else:
