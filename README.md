@@ -1,5 +1,9 @@
 # MLVisualizationTools
 
+![Tests Badge](https://github.com/RobertJN64/MLVisualizationTools/actions/workflows/tests.yml/badge.svg)
+![Python Version Badge](https://img.shields.io/pypi/pyversions/MLVisualizationTools)
+![License Badge](https://img.shields.io/github/license/RobertJN64/MLVisualizationTools)
+
 MLVisualizationTools is a python library to make
 machine learning more understandable through the
 use of effective visualizations.
