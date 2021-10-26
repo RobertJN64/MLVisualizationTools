@@ -6,7 +6,6 @@ os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2' #stops agressive error message printing
 from tensorflow import keras
 
 #TODO - themes
-#TODO - incorporate nicely instead of hardcode
 
 try:
     import dash
