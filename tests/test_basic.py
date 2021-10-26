@@ -4,9 +4,9 @@ import pandas as pd
 
 def test_colorizer():
     data = pd.DataFrame({'feature': [0, 0.5, 1]})
-    assert list(project.Colorizers.Simple(data.copy(), 'red')['Colors']) == ['red'] * 3
-    assert list(project.Colorizers.Binary(data.copy(), highcontrast=True)['Colors']) == ['orange', 'orange', 'blue']
-    assert list(project.Colorizers.Binary(data.copy(), highcontrast=False)['Colors']) == ['red', 'red', 'green']
+    assert list(project.Colorizers.Simple(data.copy(), 'red')['Color']) == ['red'] * 3
+    assert list(project.Colorizers.Binary(data.copy(), highcontrast=True)['Color']) == ['orange', 'orange', 'blue']
+    assert list(project.Colorizers.Binary(data.copy(), highcontrast=False)['Color']) == ['red', 'red', 'green']
 
 def test_demos():
     #no way to test dash demos yet
