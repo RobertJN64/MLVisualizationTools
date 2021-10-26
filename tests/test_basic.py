@@ -3,7 +3,7 @@ import pytest
 import pandas as pd
 
 def test_colorizer():
-    data = pd.DataFrame({'feature': [0, 0.5, 1]})
+    data = pd.DataFrame({'Output': [0, 0.5, 1]})
     assert list(project.Colorizers.Simple(data.copy(), 'red')['Color']) == ['red'] * 3
     assert list(project.Colorizers.Binary(data.copy(), highcontrast=True)['Color']) == ['orange', 'orange', 'blue']
     assert list(project.Colorizers.Binary(data.copy(), highcontrast=False)['Color']) == ['red', 'red', 'green']
