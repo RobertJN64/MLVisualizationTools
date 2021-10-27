@@ -1,6 +1,14 @@
 import MLVisualizationTools as project
 import pytest
 import pandas as pd
+import matplotlib
+matplotlib.use('Agg') #disables UI rendering
+import warnings
+warnings.filterwarnings(
+    action='ignore',
+    category=UserWarning,
+    message=r'UserWarning: Matplotlib is currently using agg, which is a non-GUI backend, so cannot show the figure.'
+)
 
 def test_colorizer():
     data = pd.DataFrame({'Output': [0, 0.5, 1]})
