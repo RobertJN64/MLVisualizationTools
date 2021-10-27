@@ -3,12 +3,7 @@ import pytest
 import pandas as pd
 import matplotlib
 matplotlib.use('Agg') #disables UI rendering
-import warnings
-warnings.filterwarnings(
-    action='ignore',
-    category=UserWarning,
-    message=r'UserWarning: Matplotlib is currently using agg, which is a non-GUI backend, so cannot show the figure.'
-)
+
 
 def test_colorizer():
     data = pd.DataFrame({'Output': [0, 0.5, 1]})
@@ -17,8 +12,15 @@ def test_colorizer():
     assert list(project.Colorizers.Binary(data.copy(), highcontrast=False)['Color']) == ['red', 'red', 'green']
 
 def test_demos():
+    import warnings
+    warnings.filterwarnings(
+        action='ignore',
+        category=UserWarning,
+        message= r'Matplotlib is currently using agg, which is a non-GUI backend, so cannot show the figure.'
+        # disables agg warning on matplotlib
+    )
     #no way to test dash demos yet
-    import MLVisualizationTools.examples.Demo as Demo
+    #import MLVisualizationTools.examples.Demo as Demo
     import MLVisualizationTools.examples.MatplotlibDemo as MPLDemo
 
     if Demo == MPLDemo: #clears warnings
