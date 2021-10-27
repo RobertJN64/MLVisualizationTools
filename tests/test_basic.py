@@ -23,7 +23,7 @@ def test_demos():
     #import MLVisualizationTools.examples.Demo as Demo
     import MLVisualizationTools.examples.MatplotlibDemo as MPLDemo
 
-    if Demo == MPLDemo: #clears warnings
+    if MPLDemo == MPLDemo: #clears warnings
         pass
 
 def test_notimplemented():
