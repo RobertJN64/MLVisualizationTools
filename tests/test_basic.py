@@ -32,6 +32,7 @@ def test_run_model():
     os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'  # stops aggressive error message printing
     from tensorflow import keras
 
+    #TODO - model load failing on windows
     model = keras.models.load_model('MLVisualizationTools/examples/Models/titanicmodel')
     df = pd.read_csv('MLVisualizationTools/examples/Datasets/Titanic/train.csv')
 
