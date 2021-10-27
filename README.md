@@ -73,7 +73,7 @@ Graphs turn these output grids into a visual representation.
 
 ## Examples
 
-See [MLVisualizationTools/Examples](/src/MLVisualizationTools/examples) for more examples.
+See [MLVisualizationTools/Examples](/MLVisualizationTools/examples) for more examples.
 
 ```python
 from MLVisualizationTools import Analytics, Interfaces, Graphs, Colorizers
