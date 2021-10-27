@@ -11,12 +11,11 @@ def test_colorizer():
 #no way to test dash demos yet
 
 def test_demo():
-    from MLVisualizationTools.backend import fileloader
     import os
     os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'  # stops agressive error message printing
     from tensorflow import keras
-    model = keras.models.load_model(fileloader(__file__, 'Models/titanicmodel'))
-    df = pd.read_csv(fileloader(__file__, 'Datasets/Titanic/train.csv'))
+    model = keras.models.load_model('MLVisualizationTools/examples/Models/titanicmodel')
+    df = pd.read_csv('MLVisualizationTools/examples/Datasets/Titanic/train.csv')
 
     AR = project.Analytics.Tensorflow(model, df, ["Survived"])
     maxvar = AR.maxVariance()
@@ -73,4 +72,4 @@ def test_run_model():
     Y = df["Survived"].values
 
     _, accuracy = model.evaluate(X, Y)
-    assert accuracy >= 0.70 #
+    assert accuracy >= 0.70 #had to lower this because a test failed when we got 73%...
