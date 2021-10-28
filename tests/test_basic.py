@@ -56,6 +56,11 @@ def test_train_model():
     if TTM == TTM:
         pass
 
+def test_data_preprocess():
+    import MLVisualizationTools.examples.Datasets.Titanic.TitanicDemoPreprocess as TDP
+    if TDP == TDP:
+        pass
+
 def test_run_model():
     import os
     os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'  # stops aggressive error message printing
