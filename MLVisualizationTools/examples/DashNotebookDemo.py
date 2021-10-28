@@ -21,8 +21,8 @@ class App:
     def __init__(self):
         self.app = JupyterDash(__name__, title="Example Dash App")
 
-        self.model = keras.models.load_model(fileloader(__file__, 'Models/titanicmodel'))
-        self.df = pd.read_csv(fileloader(__file__, 'Datasets/Titanic/train.csv'))
+        self.model = keras.models.load_model(fileloader('examples/Models/titanicmodel'))
+        self.df: pd.DataFrame = pd.read_csv(fileloader('examples/Datasets/Titanic/train.csv'))
 
         options = []
         for col in self.df.columns:

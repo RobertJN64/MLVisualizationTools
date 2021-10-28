@@ -19,7 +19,7 @@ def getModel():
     return model
 
 def main():
-    df = pd.read_csv(fileloader(__file__,'Datasets/Titanic/train.csv'))
+    df: pd.DataFrame = pd.read_csv(fileloader('examples/Datasets/Titanic/train.csv'))
 
     #region preprocess
     header = list(df.columns)
@@ -47,7 +47,7 @@ def main():
     print("We achieved an (training) accuracy of:", str(round(trainaccuracy,3) * 100) + "%")
     print("We achieved an (testing) accuracy of:", str(round(testaccuracy,3) * 100) + "%")
     print()
-    model.save(fileloader(__file__,'Models/titanicmodel'))
+    model.save(fileloader('examples/Models/titanicmodel'))
     print("Model saved to Models/titanicmodel")
 
 main()

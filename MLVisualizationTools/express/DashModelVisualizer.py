@@ -123,8 +123,8 @@ def main(model, data: pd.DataFrame, title:str = "DashModelVisualizer", highcontr
     App(model, data, title, highcontrast, notebook, kagglenotebook, mode, host, port).run()
 
 def default():
-    model = keras.models.load_model(fileloader(__file__, 'Models/titanicmodel'))
-    df = pd.read_csv(fileloader(__file__, 'Datasets/Titanic/train.csv'))
+    model = keras.models.load_model(fileloader('examples/Models/titanicmodel'))
+    df: pd.DataFrame = pd.read_csv(fileloader('examples/Datasets/Titanic/train.csv'))
     df = df.drop('Survived', axis=1)
     main(model, df)
 

@@ -1,6 +1,6 @@
 from typing import List, Dict
 import pandas as pd
-from os.path import sep as filesep
+from os import path
 
 #Backend functions and classes used by the other scripts
 
@@ -21,9 +21,6 @@ def colinfo(data: pd.DataFrame, exclude:List[str] = None) -> List[Dict]:
                             'min': data[item].min(), 'max': data[item].max()})
     return coldata
 
-def fileloader(start: str, target: str):
-    """Generates relative file paths"""
-    s = start.split(filesep)
-    s = s[:-2]
-    s = filesep.join(s)
-    return s + filesep + 'examples' + filesep + target
+def fileloader(target: str):
+    """Specify a path relative to MLVisualizationTools"""
+    return path.dirname(__file__) + '/' + target

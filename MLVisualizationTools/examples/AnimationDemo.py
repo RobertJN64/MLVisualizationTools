@@ -17,8 +17,8 @@ except:
                       " `pip install plotly' or run the matplotlib demo instead.")
 
 def main():
-    model = keras.models.load_model(fileloader(__file__, 'Models/titanicmodel'))
-    df: pd.DataFrame = pd.read_csv(fileloader(__file__, 'Datasets/Titanic/train.csv'))
+    model = keras.models.load_model(fileloader('examples/Models/titanicmodel'))
+    df: pd.DataFrame = pd.read_csv(fileloader('examples/Datasets/Titanic/train.csv'))
 
     AR = Analytics.Tensorflow(model, df, ["Survived"])
     maxvar = AR.maxVariance()
