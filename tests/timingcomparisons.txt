@@ -1,3 +1,94 @@
+Interface grid with 5 steps took 0.099 seconds to complete.
+This is 0.00396 seconds per item.
+Graph grid with 5 steps took 2.868 seconds to complete.
+This is 0.1147 seconds per item.
+Graph grid with 5 steps took 1.313 seconds to show.
+This is 0.05251 seconds per item.
+
+Animation grid with 5 steps took 0.181 seconds to complete.
+This is 0.00145 seconds per item.
+Animation graph with 5 steps took 0.332 seconds to complete.
+This is 0.00266 seconds per item.
+Animation graph with 5 steps took 0.18 seconds to show.
+This is 0.00144 seconds per item.
+
+
+Interface grid with 10 steps took 0.184 seconds to complete.
+This is 0.00184 seconds per item.
+Graph grid with 10 steps took 0.161 seconds to complete.
+This is 0.00161 seconds per item.
+Graph grid with 10 steps took 0.207 seconds to show.
+This is 0.00207 seconds per item.
+
+Animation grid with 10 steps took 0.217 seconds to complete.
+This is 0.00022 seconds per item.
+Animation graph with 10 steps took 0.406 seconds to complete.
+This is 0.00041 seconds per item.
+Animation graph with 10 steps took 0.194 seconds to show.
+This is 0.00019 seconds per item.
+
+
+Interface grid with 15 steps took 0.186 seconds to complete.
+This is 0.00083 seconds per item.
+Graph grid with 15 steps took 0.166 seconds to complete.
+This is 0.00074 seconds per item.
+Graph grid with 15 steps took 0.203 seconds to show.
+This is 0.0009 seconds per item.
+
+Animation grid with 15 steps took 0.329 seconds to complete.
+This is 0.0001 seconds per item.
+Animation graph with 15 steps took 0.455 seconds to complete.
+This is 0.00013 seconds per item.
+Animation graph with 15 steps took 0.283 seconds to show.
+This is 8e-05 seconds per item.
+
+
+Interface grid with 20 steps took 0.2 seconds to complete.
+This is 0.0005 seconds per item.
+Graph grid with 20 steps took 0.164 seconds to complete.
+This is 0.00041 seconds per item.
+Graph grid with 20 steps took 0.256 seconds to show.
+This is 0.00064 seconds per item.
+
+Animation grid with 20 steps took 0.837 seconds to complete.
+This is 0.0001 seconds per item.
+Animation graph with 20 steps took 0.52 seconds to complete.
+This is 6e-05 seconds per item.
+Animation graph with 20 steps took 0.325 seconds to show.
+This is 4e-05 seconds per item.
+
+
+Interface grid with 50 steps took 0.296 seconds to complete.
+This is 0.00012 seconds per item.
+Graph grid with 50 steps took 0.161 seconds to complete.
+This is 6e-05 seconds per item.
+Graph grid with 50 steps took 0.254 seconds to show.
+This is 0.0001 seconds per item.
+
+Animation grid with 50 steps took 5.419 seconds to complete.
+This is 4e-05 seconds per item.
+Animation graph with 50 steps took 1.661 seconds to complete.
+This is 1e-05 seconds per item.
+Animation graph with 50 steps took 0.841 seconds to show.
+This is 1e-05 seconds per item.
+
+
+Interface grid with 100 steps took 0.426 seconds to complete.
+This is 4e-05 seconds per item.
+Graph grid with 100 steps took 0.216 seconds to complete.
+This is 2e-05 seconds per item.
+Graph grid with 100 steps took 0.415 seconds to show.
+This is 4e-05 seconds per item.
+
+Animation grid with 100 steps took 27.737 seconds to complete.
+This is 3e-05 seconds per item.
+Animation graph with 100 steps took 3.308 seconds to complete.
+This is 0.0 seconds per item.
+Animation graph with 100 steps took 3.775 seconds to show.
+This is 0.0 seconds per item.
+
+## OLD DATA (BEFORE MASSIVE OPTIMIZATIONS): ##
+
 Interface grid with 5 steps took 0.18 seconds to complete.
 This is 0.00722 seconds per item.
 Graph grid with 5 steps took 1.734 seconds to complete.
@@ -80,5 +171,5 @@ This is 2e-05 seconds per item.
 Graph grid with 100 steps took 0.313 seconds to show.
 This is 3e-05 seconds per item.
 
-## WE NEVER RAN THE ANIMATION GRID WITH 100 STEPS##
+## WE NEVER RAN THE ANIMATION GRID WITH 100 STEPS ##
 Estimated time > 24 minutes!

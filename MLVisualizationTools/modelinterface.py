@@ -37,27 +37,47 @@ def TFModelPredictionGridRaw(model, x:str, y:str, coldata:List[Dict], steps:int=
     :param coldata: An ordered list of dicts with col names, min max values, and means
     :param steps: Resolution to scan model with
     """
+    for item in coldata:
+        if x == item['name']:
+            break
+    else:
+        raise Exception("X must be in coldata")
+
+    for item in coldata:
+        if y == item['name']:
+            break
+    else:
+        raise Exception("Y must be in coldata")
+
     cols = []
     for item in coldata:
-        cols.append(item['name'])
-    preddata = pd.DataFrame(columns=cols)
+        if item not in [x, y]:
+            cols.append(item['name'])
 
-    assert x in cols, "X must be in coldata"
-    assert y in cols, "Y must be in coldata"
+    srow = []
+    for item in cols:
+        for d in coldata:
+            if d['name'] == item:
+                srow.append(d['mean'])
 
-    for xpos in range(0, steps):
-        for ypos in range(0, steps):
-            predictionrow = {}
-            for item in coldata:
-                key = item['name']
-                if key == x:
-                    predictionrow[x] = xpos * (item['max'] - item['min']) / (steps - 1) + item['min']
-                elif key == y:
-                    predictionrow[y] = ypos * (item['max'] - item['min']) / (steps - 1) + item['min']
-                else:
-                    predictionrow[key] = item['mean']
+    srow = [srow] * (steps ** 2)
+    preddata = pd.DataFrame(srow, columns=cols)
 
-            preddata = preddata.append(predictionrow, ignore_index=True)
+    col = []
+    for pos in range(0, steps):
+        for item in coldata:
+            if item['name'] == x:
+                col.append(pos * (item['max'] - item['min']) / (steps - 1) + item['min'])
+    col = col * steps
+    preddata[x] = col
+
+    col = []
+    for pos in range(0, steps):
+        for item in coldata:
+            if item['name'] == y:
+                for j in range(0, steps):
+                    col.append(pos * (item['max'] - item['min']) / (steps - 1) + item['min'])
+    preddata[y] = col
 
     predictions = model.predict(preddata)
     preddata['Output'] = predictions
@@ -98,34 +118,67 @@ def TFModelPredictionAnimationRaw(model, x:str, y:str, anim:str, coldata:List[Di
     :param coldata: An ordered list of dicts with col names, min max values, and means
     :param steps: Resolution to scan model with
     """
+
+    for item in coldata:
+        if x == item['name']:
+            break
+    else:
+        raise Exception("X must be in coldata")
+
+    for item in coldata:
+        if y == item['name']:
+            break
+    else:
+        raise Exception("Y must be in coldata")
+
+    for item in coldata:
+        if anim == item['name']:
+            break
+    else:
+        raise Exception("Anim must be in coldata")
+
     cols = []
     for item in coldata:
-        cols.append(item['name'])
-    preddata = pd.DataFrame(columns=cols)
+        if item not in [x, y, anim]:
+            cols.append(item['name'])
 
-    assert x in cols, "X must be in coldata"
-    assert y in cols, "Y must be in coldata"
-    assert anim in cols, "Anim must be in coldata"
+    srow = []
+    for item in cols:
+        for d in coldata:
+            if d['name'] == item:
+                srow.append(d['mean'])
 
-    for xpos in range(0, steps):
-        for ypos in range(0, steps):
-            for animpos in range(0, steps):
-                predictionrow = {}
-                for item in coldata:
-                    key = item['name']
-                    if key == x:
-                        predictionrow[x] = xpos * (item['max'] - item['min']) / (steps - 1) + item['min']
-                    elif key == y:
-                        predictionrow[y] = ypos * (item['max'] - item['min']) / (steps - 1) + item['min']
-                    elif key == anim:
-                        predictionrow[anim] = animpos * (item['max'] - item['min']) / (steps - 1) + item['min']
-                    else:
-                        predictionrow[key] = item['mean']
+    srow = [srow] * (steps ** 3)
+    preddata = pd.DataFrame(srow, columns=cols)
 
-                preddata = preddata.append(predictionrow, ignore_index=True)
+    col = []
+    for pos in range(0, steps):
+        for item in coldata:
+            if item['name'] == x:
+                col.append(pos * (item['max'] - item['min']) / (steps - 1) + item['min'])
+    col = col * (steps ** 2)
+    preddata[x] = col
+
+    col = []
+    for pos in range(0, steps):
+        for item in coldata:
+            if item['name'] == y:
+                for j in range(0, steps):
+                    col.append(pos * (item['max'] - item['min']) / (steps - 1) + item['min'])
+    col = col * steps
+    preddata[y] = col
+
+    col = []
+    for pos in range(0, steps):
+        for item in coldata:
+            if item['name'] == anim:
+                for j in range(0, steps ** 2):
+                    col.append(pos * (item['max'] - item['min']) / (steps - 1) + item['min'])
+    preddata[anim] = col
 
     predictions = model.predict(preddata)
     preddata['Output'] = predictions
     return preddata
+
 #endregion
 #endregion

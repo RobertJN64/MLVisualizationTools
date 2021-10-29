@@ -144,5 +144,5 @@ def resolution_compare():
         print()
 
 if __name__ == "__main__":
-    #run_benchmark()
-    resolution_compare()
+    run_benchmark()
+    #resolution_compare()
