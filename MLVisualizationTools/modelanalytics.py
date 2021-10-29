@@ -78,4 +78,5 @@ def analyzeTFModelRaw(model, coldata: List[Dict], steps:int=20) -> AnalyticsResu
         AR.append(key, predictions.max() - predictions.min())
 
     return AR
+#TODO - optimize
 #endregion
