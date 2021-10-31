@@ -34,7 +34,7 @@ class AnalyticsResult:
         return cols
 
 #region Tensorflow
-def analyzeTFModel(model, data: pd.DataFrame, exclude: List[str] = None) -> AnalyticsResult:
+def analyzeTFModel(model, data: pd.DataFrame, exclude: List[str] = None, steps:int=20) -> AnalyticsResult:
     """
     Performs 1d analysis on a tensorflow model. Wrapper function for analyzeTFModelRaw()
     that automatically handles column info generation.
@@ -42,8 +42,9 @@ def analyzeTFModel(model, data: pd.DataFrame, exclude: List[str] = None) -> Anal
     :param model: A tensorflow model
     :param data: A pandas dataframe
     :param exclude: Values to be excluded from data, useful for output values
+    :param steps: Resolution to scan model with
     """
-    return analyzeTFModelRaw(model, colinfo(data, exclude))
+    return analyzeTFModelRaw(model, colinfo(data, exclude), steps)
 
 def analyzeTFModelRaw(model, coldata: List[Dict], steps:int=20) -> AnalyticsResult:
     """
@@ -56,27 +57,28 @@ def analyzeTFModelRaw(model, coldata: List[Dict], steps:int=20) -> AnalyticsResu
     :param coldata: An ordered list of dicts with col names, min max values, and means
     :param steps: Resolution to scan model with
     """
-
     AR = AnalyticsResult()
 
+    predrow = []
+    cols = []
     for item in coldata:
-        key = item['name']
-        predictiondata = []
+        predrow.append(item['mean'])
+        cols.append(item['name'])
+    predrow = [predrow] * (steps * len(coldata))
+    preddata = pd.DataFrame(predrow, columns=cols)
 
+    currentpos = 0
+    for item in coldata:
         for i in range(0, steps):
-            predictionrow = []
-            for subitem in coldata:
-                subkey = subitem['name']
-                if key == subkey:
-                    predictionrow.append(i * (subitem['max'] - subitem['min'])/(steps-1) + subitem['min'])
-                else:
-                    predictionrow.append(subitem['mean'])
+            preddata[item['name']][i + currentpos] = i * (item['max'] - item['min'])/(steps-1) + item['min']
+        currentpos += steps
 
-            predictiondata.append(predictionrow)
-        preddata = pd.DataFrame(predictiondata)
-        predictions = model.predict(preddata)
-        AR.append(key, predictions.max() - predictions.min())
+    predictions = model.predict(preddata)
 
+    currentpos = 0
+    for item in coldata:
+        values = predictions[currentpos:currentpos + steps]
+        currentpos += steps
+        AR.append(item['name'], values.max() - values.min())
     return AR
-#TODO - optimize
 #endregion

@@ -1,11 +1,23 @@
 --- BENCHMARK REPORT ---
-Pandas import finished in 1.283 seconds, 10.3% of total time.
-MLVisualizationTools import finished in 0.015 seconds, 0.1% of total time.
-TF import finished in 6.072 seconds, 48.8% of total time.
-Model load finished in 1.637 seconds, 13.1% of total time.
-CSV load finished in 0.01 seconds, 0.1% of total time.
-Analytics call finished in 0.702 seconds, 5.6% of total time.
-Interface call finished in 0.056 seconds, 0.4% of total time.
-Binary colorizer finished in 0.001 seconds, 0.0% of total time.
-Plotly fig creation finished in 1.924 seconds, 15.4% of total time.
-Plotly fig render finished in 0.751 seconds, 6.0% of total time.
+Pandas import finished in 0.52 seconds, 8.9% of total time.
+MLVisualizationTools import finished in 0.013 seconds, 0.2% of total time.
+TF import finished in 2.429 seconds, 41.4% of total time.
+Model load finished in 0.699 seconds, 11.9% of total time.
+CSV load finished in 0.003 seconds, 0.1% of total time.
+Analytics call finished in 0.138 seconds, 2.3% of total time.
+Interface call finished in 0.055 seconds, 0.9% of total time.
+Binary colorizer finished in 0.004 seconds, 0.1% of total time.
+Plotly fig creation finished in 1.364 seconds, 23.3% of total time.
+Plotly fig render finished in 0.639 seconds, 10.9% of total time.
+
+--- OLD BENCHMARK REPORT---
+Pandas import finished in 1.712 seconds, 13.1% of total time.
+MLVisualizationTools import finished in 0.019 seconds, 0.1% of total time.
+TF import finished in 5.788 seconds, 44.4% of total time.
+Model load finished in 1.524 seconds, 11.7% of total time.
+CSV load finished in 0.007 seconds, 0.1% of total time.
+Analytics call finished in 0.823 seconds, 6.3% of total time.
+Interface call finished in 0.831 seconds, 6.4% of total time.
+Binary colorizer finished in 0.003 seconds, 0.0% of total time.
+Plotly fig creation finished in 1.642 seconds, 12.6% of total time.
+Plotly fig render finished in 0.681 seconds, 5.2% of total time.

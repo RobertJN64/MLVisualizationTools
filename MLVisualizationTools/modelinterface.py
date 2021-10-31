@@ -37,17 +37,12 @@ def TFModelPredictionGridRaw(model, x:str, y:str, coldata:List[Dict], steps:int=
     :param coldata: An ordered list of dicts with col names, min max values, and means
     :param steps: Resolution to scan model with
     """
+    allcols = []
     for item in coldata:
-        if x == item['name']:
-            break
-    else:
-        raise Exception("X must be in coldata")
+        allcols.append(item['name'])
 
-    for item in coldata:
-        if y == item['name']:
-            break
-    else:
-        raise Exception("Y must be in coldata")
+    assert x in allcols, "X must be in coldata"
+    assert y in allcols, "Y must be in coldata"
 
     cols = []
     for item in coldata:
@@ -75,8 +70,7 @@ def TFModelPredictionGridRaw(model, x:str, y:str, coldata:List[Dict], steps:int=
     for pos in range(0, steps):
         for item in coldata:
             if item['name'] == y:
-                for j in range(0, steps):
-                    col.append(pos * (item['max'] - item['min']) / (steps - 1) + item['min'])
+                col += [pos * (item['max'] - item['min']) / (steps - 1) + item['min']] * steps
     preddata[y] = col
 
     predictions = model.predict(preddata)
@@ -119,23 +113,13 @@ def TFModelPredictionAnimationRaw(model, x:str, y:str, anim:str, coldata:List[Di
     :param steps: Resolution to scan model with
     """
 
+    allcols = []
     for item in coldata:
-        if x == item['name']:
-            break
-    else:
-        raise Exception("X must be in coldata")
+        allcols.append(item['name'])
 
-    for item in coldata:
-        if y == item['name']:
-            break
-    else:
-        raise Exception("Y must be in coldata")
-
-    for item in coldata:
-        if anim == item['name']:
-            break
-    else:
-        raise Exception("Anim must be in coldata")
+    assert x in allcols, "X must be in coldata"
+    assert y in allcols, "Y must be in coldata"
+    assert anim in allcols, "Anim must be in coldata"
 
     cols = []
     for item in coldata:
@@ -163,8 +147,7 @@ def TFModelPredictionAnimationRaw(model, x:str, y:str, anim:str, coldata:List[Di
     for pos in range(0, steps):
         for item in coldata:
             if item['name'] == y:
-                for j in range(0, steps):
-                    col.append(pos * (item['max'] - item['min']) / (steps - 1) + item['min'])
+                col += [pos * (item['max'] - item['min']) / (steps - 1) + item['min']] * steps
     col = col * steps
     preddata[y] = col
 
@@ -172,8 +155,7 @@ def TFModelPredictionAnimationRaw(model, x:str, y:str, anim:str, coldata:List[Di
     for pos in range(0, steps):
         for item in coldata:
             if item['name'] == anim:
-                for j in range(0, steps ** 2):
-                    col.append(pos * (item['max'] - item['min']) / (steps - 1) + item['min'])
+                col += [pos * (item['max'] - item['min']) / (steps - 1) + item['min']] * (steps ** 2)
     preddata[anim] = col
 
     predictions = model.predict(preddata)
