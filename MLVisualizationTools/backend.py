@@ -24,3 +24,34 @@ def colinfo(data: pd.DataFrame, exclude:List[str] = None) -> List[Dict]:
 def fileloader(target: str):
     """Specify a path relative to MLVisualizationTools"""
     return path.dirname(__file__) + '/' + target
+
+def getTheme(theme, folder=None, figtemplate=None):
+    """
+    Backend function for loading theme css files.
+
+    Theme can be 'light' or 'dark', and that will autoload the theme from dbc
+    If folder is none, it is set based on the theme
+    If figtemplate is none, it is set based on the theme
+
+    Returns theme, folder
+
+    :param theme: 'light' / 'dark' or a css url
+    :param folder: path to assets folder
+    :param figtemplate: Used for putting plotly in dark theme
+    """
+    import dash_bootstrap_components as dbc
+    if theme == "light":
+        theme = dbc.themes.FLATLY
+        if folder is None:
+            folder = fileloader('theme_assets/light_assets')
+        if figtemplate is None:
+            figtemplate = "plotly"
+
+    elif theme == "dark":
+        theme = dbc.themes.DARKLY
+        if folder is None:
+            folder = fileloader('theme_assets/dark_assets')
+        if figtemplate is None:
+            figtemplate = "plotly_dark"
+
+    return theme, folder, figtemplate

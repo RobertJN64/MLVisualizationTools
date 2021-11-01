@@ -1,5 +1,5 @@
 from MLVisualizationTools import Analytics, Interfaces, Graphs, Colorizers
-from MLVisualizationTools.backend import fileloader
+from MLVisualizationTools.backend import fileloader, getTheme
 import pandas as pd
 import os
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2' #stops agressive error message printing
@@ -18,8 +18,16 @@ except:
                       " on installation of this library.")
 
 class App:
-    def __init__(self):
-        self.app = JupyterDash(__name__, title="Example Dash App")
+    def __init__(self, theme='dark', folder=None):
+        """
+        Creates a dash app
+
+        :param theme: Theme to load app in, can be a string (light / dark) or a url to load a stylesheet from
+        :param folder: Directory to load additional css and js from
+        """
+        theme, folder, self.figtemplate = getTheme(theme, folder)
+
+        self.app = JupyterDash(__name__, title="Dash Notebook App", external_stylesheets=[theme], assets_folder=folder)
 
         self.model = keras.models.load_model(fileloader('examples/Models/titanicmodel'))
         self.df: pd.DataFrame = pd.read_csv(fileloader('examples/Datasets/Titanic/train.csv'))
@@ -57,7 +65,10 @@ class App:
                 dbc.Col(config, md=4),
                 dbc.Col(graph, md=8)]
             ),
-            html.P()])
+            html.P()],
+            fluid=True,
+            className='dash-bootstrap'
+        )
 
         inputs = [Input('xaxis', "value"), Input('yaxis', 'value')]
         self.app.callback(Output("example-graph", "figure"), inputs)(self.updateGraphFromWebsite)
@@ -69,6 +80,7 @@ class App:
         data = Interfaces.TensorflowGrid(self.model, self.x, self.y, self.df, ["Survived"])
         data = Colorizers.Binary(data, highcontrast=True)
         self.fig = Graphs.PlotlyGrid(data, self.x, self.y)
+        self.fig.update_layout(template=self.figtemplate)
         return self.fig
 
     def updateGraphFromWebsite(self, x, y):

@@ -11,3 +11,4 @@ include setup.py
 
 recursive-include MLVisualizationTools/examples *
 recursive-include MLVisualizationTools/express *
+recursive-include MLVisualizationTools/theme_assets *

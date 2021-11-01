@@ -1,5 +1,5 @@
 from MLVisualizationTools import Analytics, Interfaces, Graphs, Colorizers
-from MLVisualizationTools.backend import fileloader
+from MLVisualizationTools.backend import fileloader, getTheme
 import pandas as pd
 import os
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2' #stops agressive error message printing
@@ -17,9 +17,11 @@ except:
                       " on installation of this library.")
 
 class App:
-    def __init__(self, model, data: pd.DataFrame, title:str = "DashModelVisualizer", highcontrast:bool = True,
-                 notebook:bool = False, kagglenotebook:bool = False, mode:str = 'external',
+    def __init__(self, model, data: pd.DataFrame, title:str = "DashModelVisualizer", theme:str = "dark", folder = None,
+                 highcontrast:bool = True, notebook:bool = False, kagglenotebook:bool = False, mode:str = 'external',
                  host:str = '0.0.0.0', port: bool = None):
+
+        theme, folder, self.figtemplate = getTheme(theme, folder)
 
         if port is None:
             if notebook:
@@ -42,9 +44,10 @@ class App:
                 url = tunnel.public_url
             else:
                 url = None
-            self.app = JupyterDash(__name__, title=title, server_url=url)
+            self.app = JupyterDash(__name__, title=title, server_url=url,
+                                   external_stylesheets=[theme], assets_folder=folder)
         else:
-            self.app = dash.Dash(__name__, title=title)
+            self.app = dash.Dash(__name__, title=title, external_stylesheets=[theme], assets_folder=folder)
 
         self.model = model
         self.df = data
@@ -85,7 +88,10 @@ class App:
                 dbc.Col(config, md=4),
                 dbc.Col(graph, md=8)]
             ),
-            html.P()])
+            html.P()],
+            fluid=True,
+            className='dash-bootstrap'
+        )
 
         inputs = [Input('xaxis', "value"), Input('yaxis', 'value')]
         self.app.callback(Output("example-graph", "figure"), inputs)(self.updateGraphFromWebsite)
@@ -97,6 +103,7 @@ class App:
         data = Interfaces.TensorflowGrid(self.model, self.x, self.y, self.df)
         data = Colorizers.Binary(data, highcontrast=self.highcontrast)
         self.fig = Graphs.PlotlyGrid(data, self.x, self.y)
+        self.fig.update_layout(template=self.figtemplate)
         return self.fig
 
     def updateGraphFromWebsite(self, x, y):
@@ -104,7 +111,8 @@ class App:
         self.y = y
         return self.updateGraph()
 
-def main(model, data: pd.DataFrame, title:str = "DashModelVisualizer", highcontrast:bool = True, notebook:bool = False,
+def main(model, data: pd.DataFrame, title:str = "DashModelVisualizer", theme:str = "dark", folder = None,
+         highcontrast:bool = True, notebook:bool = False,
          kagglenotebook:bool = False, mode:str = 'external', host:str = '0.0.0.0', port: bool = None):
     """
     Creates a dash website to visualize an ML model.
@@ -112,6 +120,8 @@ def main(model, data: pd.DataFrame, title:str = "DashModelVisualizer", highcontr
     :param model: A tensorflow keras model
     :param data: A pandas dataframe, all df columns must be numerical model inputs
     :param title: Title for website
+    :param theme: Theme to load app in, can be a string (light / dark) or a url to load a stylesheet from
+    :param folder: Directory to load additional css and js from
     :param highcontrast: Visualizes the model with orange and blue instead of green and red. Great for colorblind people!
     :param notebook: Uses jupyter dash instead of dash
     :param kagglenotebook: Enables ngrok tunneling for use in kaggle notebooks
@@ -120,7 +130,7 @@ def main(model, data: pd.DataFrame, title:str = "DashModelVisualizer", highcontr
     :param port: None for default port (8050) or (1005)
     """
 
-    App(model, data, title, highcontrast, notebook, kagglenotebook, mode, host, port).run()
+    App(model, data, title, theme, folder, highcontrast, notebook, kagglenotebook, mode, host, port).run()
 
 def default():
     model = keras.models.load_model(fileloader('examples/Models/titanicmodel'))
