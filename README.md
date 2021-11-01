@@ -11,7 +11,7 @@ use of effective visualizations.
 It supports tensorflow, matplotlib, and plotly, with 
 support for more ml libraries coming soon.
 
-You can use the builtin apps to quickly anaylyze your
+You can use the built in apps to quickly anaylyze your
 existing models, or build custom projects using the modular
 sets of functions.
 
@@ -74,6 +74,7 @@ Graphs turn these output grids into a visual representation.
 ## Examples
 
 See [MLVisualizationTools/Examples](/MLVisualizationTools/examples) for more examples.
+Use example.main() to run the examples and set parameters such as themes.
 
 ```python
 from MLVisualizationTools import Analytics, Interfaces, Graphs, Colorizers

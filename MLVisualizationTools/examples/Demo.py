@@ -30,4 +30,5 @@ def main():
     fig = Graphs.PlotlyGrid(grid, 'Parch', 'SibSp')
     fig.show()
 
-main()
+if __name__ == "__main__":
+    main()

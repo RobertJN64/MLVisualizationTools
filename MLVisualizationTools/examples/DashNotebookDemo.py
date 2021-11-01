@@ -18,7 +18,7 @@ except:
                       " on installation of this library.")
 
 class App:
-    def __init__(self, theme='dark', folder=None):
+    def __init__(self, theme='dark', folder=None, highcontrast=True):
         """
         Creates a dash app
 
@@ -26,6 +26,7 @@ class App:
         :param folder: Directory to load additional css and js from
         """
         theme, folder, self.figtemplate = getTheme(theme, folder)
+        self.highcontrast = highcontrast
 
         self.app = JupyterDash(__name__, title="Dash Notebook App", external_stylesheets=[theme], assets_folder=folder)
 
@@ -78,7 +79,7 @@ class App:
 
     def updateGraph(self):
         data = Interfaces.TensorflowGrid(self.model, self.x, self.y, self.df, ["Survived"])
-        data = Colorizers.Binary(data, highcontrast=True)
+        data = Colorizers.Binary(data, highcontrast=self.highcontrast)
         self.fig = Graphs.PlotlyGrid(data, self.x, self.y)
         self.fig.update_layout(template=self.figtemplate)
         return self.fig
@@ -88,4 +89,9 @@ class App:
         self.y = y
         return self.updateGraph()
 
-App().run()
+
+def main(theme='dark', highcontrast=True):
+    App(theme=theme, highcontrast=highcontrast).run()
+
+if __name__ == "__main__":
+    main()

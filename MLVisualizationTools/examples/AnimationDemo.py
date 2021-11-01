@@ -37,4 +37,5 @@ def main():
     fig = Graphs.PlotlyAnimation(grid, 'Parch', 'SibSp', maxvar[0].name)
     fig.show()
 
-main()
+if __name__ == "__main__":
+    main()

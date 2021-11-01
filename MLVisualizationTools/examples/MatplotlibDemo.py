@@ -28,4 +28,5 @@ def main():
     plt, _, _ = Graphs.MatplotlibGrid(grid, 'Parch', 'SibSp', title="Parch by SibSp")
     plt.show()
 
-main()
+if __name__ == "__main__":
+    main()
