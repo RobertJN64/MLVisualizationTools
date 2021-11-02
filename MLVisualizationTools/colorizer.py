@@ -5,6 +5,7 @@ def simpleColor(data: pd.DataFrame, color) -> pd.DataFrame:
     data['Color'] = [color] * len(data)
     return data
 
+#TODO - keys and set default to highcontrast
 def binaryColor(data: pd.DataFrame, highcontrast:bool=False, truecolor=None, falsecolor=None,
                 cutoff:float=0.5, outputkey: str = 'Output') -> pd.DataFrame:
     """

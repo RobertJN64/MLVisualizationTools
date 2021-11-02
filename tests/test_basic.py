@@ -1,3 +1,6 @@
+import os
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'  # stops agressive error message printing
+from tensorflow import keras
 import MLVisualizationTools as project
 import pytest
 import pandas as pd
@@ -8,12 +11,16 @@ def test_colorizer():
     assert list(project.Colorizers.Binary(data.copy(), highcontrast=True)['Color']) == ['orange', 'orange', 'blue']
     assert list(project.Colorizers.Binary(data.copy(), highcontrast=False)['Color']) == ['red', 'red', 'green']
 
-#no way to test dash demos yet
+def test_dash_visualizer(): #doesn't launch dash apps, but tests creation process
+    import MLVisualizationTools.express.DashModelVisualizer as DMV
+    from MLVisualizationTools.backend import fileloader
+    model = keras.models.load_model(fileloader('examples/Models/titanicmodel'))
+    df: pd.DataFrame = pd.read_csv(fileloader('examples/Datasets/Titanic/train.csv'))
+    df = df.drop("Survived", axis=1)
+    DMV.App(model, df, theme='light')
+    DMV.App(model, df, theme='dark')
 
 def test_demo():
-    import os
-    os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'  # stops agressive error message printing
-    from tensorflow import keras
     model = keras.models.load_model('MLVisualizationTools/examples/Models/titanicmodel')
     df = pd.read_csv('MLVisualizationTools/examples/Datasets/Titanic/train.csv')
 
@@ -62,10 +69,6 @@ def test_data_preprocess():
         pass
 
 def test_run_model():
-    import os
-    os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'  # stops aggressive error message printing
-    from tensorflow import keras
-
     model = keras.models.load_model('MLVisualizationTools/examples/Models/titanicmodel')
     df = pd.read_csv('MLVisualizationTools/examples/Datasets/Titanic/train.csv')
 
