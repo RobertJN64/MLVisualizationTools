@@ -56,7 +56,6 @@ def getTheme(theme, folder=None, figtemplate=None):
 
     return theme, folder, figtemplate
 
-activengroktunnels = []
 def getDashApp(title:str, notebook:bool, usetunneling:bool, port:int, theme, folder):
     """
     Creates a dash or jupyter dash app
@@ -82,13 +81,11 @@ def getDashApp(title:str, notebook:bool, usetunneling:bool, port:int, theme, fol
             except ImportError:
                 raise ImportError("Pyngrok is required to run in a kaggle notebook. "
                                   "Use pip install MLVisualizationTools[kaggle-notebook]")
-            for tunnel in activengroktunnels:
-                ngrok.disconnect(tunnel) #we have to manually disconnect the tunnels because of ngrok limits
+            ngrok.kill() #disconnects active tunnels
             tunnel = ngrok.connect(port)
-            print("Running in an ngrok tunnel. This limits you to 40 requests per minute. For full features",
-                  "use google colab instead.")
+            print("Running in an ngrok tunnel. This limits you to 40 requests and one app per minute."
+                  "For full features use google colab instead.")
             url = tunnel.public_url
-            activengroktunnels.append(url)
         else:
             url = None
 
