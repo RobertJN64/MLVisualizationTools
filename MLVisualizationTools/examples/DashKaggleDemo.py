@@ -1,5 +1,6 @@
 from MLVisualizationTools.express import DashModelVisualizer
 from MLVisualizationTools.backend import fileloader
+from werkzeug.serving import is_running_from_reloader
 import pandas as pd
 import os
 
@@ -21,9 +22,9 @@ def main(theme='dark', highcontrast=True, mode='external'):
     DashModelVisualizer.visualize(model, df, title="DashKaggleDemo", theme=theme,
                                   highcontrast=highcontrast, notebook=True, mode=mode, kagglenotebook=True)
 
-
-print("This demo is for use inside a jupyter notebook that does not supports dash natively (such as kaggle).")
-print("It uses the default precompiled model. To run the demo, call DashKaggleDemo.main()")
+if not is_running_from_reloader():
+    print("This demo is for use inside a jupyter notebook that does not supports dash natively (such as kaggle).")
+    print("It uses the default precompiled model. To run the demo, call DashKaggleDemo.main()")
 
 if __name__ == "__main__":
     main()

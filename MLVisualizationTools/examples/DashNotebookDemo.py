@@ -1,4 +1,5 @@
 from MLVisualizationTools.express import DashModelVisualizer
+from werkzeug.serving import is_running_from_reloader
 from MLVisualizationTools.backend import fileloader
 import pandas as pd
 import os
@@ -19,8 +20,9 @@ def main(theme = 'dark', highcontrast = True, mode='external'):
     DashModelVisualizer.visualize(model, df, title="DashNotebookDemo", theme=theme,
                                   highcontrast=highcontrast, notebook=True, mode=mode)
 
-print("This demo is for use inside a jupyter notebook that supports dash natively (such as google colab).")
-print("It uses the default precompiled model. To run the demo, call DashNotebookDemo.main()")
+if not is_running_from_reloader():
+    print("This demo is for use inside a jupyter notebook that supports dash natively (such as google colab).")
+    print("It uses the default precompiled model. To run the demo, call DashNotebookDemo.main()")
 
 if __name__ == "__main__":
     main()

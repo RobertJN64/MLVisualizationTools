@@ -56,14 +56,16 @@ def getTheme(theme, folder=None, figtemplate=None):
 
     return theme, folder, figtemplate
 
-def getDashApp(title:str, notebook:bool, usetunneling:bool, port:int, theme, folder):
+def getDashApp(title:str, notebook:bool, usetunneling:bool, host:str, port:int, mode: str, theme, folder):
     """
-    Creates a dash or jupyter dash app
+    Creates a dash or jupyter dash app, returns the app and a function to run it
 
     :param title: Passed to dash app
     :param notebook: Uses jupyter dash with default port of 1005 (instead of 8050)
     :param usetunneling: Enables ngrok tunneling for kaggle notebooks
+    :param host: Passed to dash app.run()
     :param port: Can be used to override default ports
+    :param mode: Could be 'inline', 'external', or 'jupyterlab'
     :param theme: Passed to dash app external stylesheets
     :param folder: Passed to assets folder to load theme css
     """
@@ -81,7 +83,7 @@ def getDashApp(title:str, notebook:bool, usetunneling:bool, port:int, theme, fol
             except ImportError:
                 raise ImportError("Pyngrok is required to run in a kaggle notebook. "
                                   "Use pip install MLVisualizationTools[kaggle-notebook]")
-            ngrok.kill() #disconnects active tunnels
+            #ngrok.kill() #disconnects active tunnels
             tunnel = ngrok.connect(port)
             print("Running in an ngrok tunnel. This limits you to 40 requests and one app per minute."
                   "For full features use google colab instead.")
@@ -95,9 +97,15 @@ def getDashApp(title:str, notebook:bool, usetunneling:bool, port:int, theme, fol
             raise ImportError("JupyterDash is required to run in a kaggle notebook. "
                               "Use pip install MLVisualizationTools[dash-notebook]")
         app = JupyterDash(__name__, title=title, server_url=url,
-                               external_stylesheets=[theme], assets_folder=folder)
+                               external_stylesheets=[theme], assets_folder=folder) #TODO - sever shutdown issues
     else:
         from dash import Dash
         app = Dash(__name__, title=title, external_stylesheets=[theme], assets_folder=folder)
 
-    return app, port
+    def runApp():
+        if notebook:
+            app.run_server(host=host, port=port, mode=mode, debug=True) #, use_reloader=False)
+        else:
+            app.run_server(host=host, port=port, debug=True) #, use_reloader=False)
+
+    return app, runApp

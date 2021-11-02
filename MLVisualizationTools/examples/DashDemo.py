@@ -1,5 +1,6 @@
 from MLVisualizationTools.express import DashModelVisualizer
 from MLVisualizationTools.backend import fileloader
+from werkzeug.serving import is_running_from_reloader
 import pandas as pd
 import os
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2' #stops agressive error message printing
@@ -18,7 +19,9 @@ def main(theme = 'dark', highcontrast = True):
     DashModelVisualizer.visualize(model, df, title="DashInteractiveDemo", theme=theme,
                                   highcontrast=highcontrast)
 
-print("This demo is for use outside of a jupyter notebook and uses the default precompiled model.")
-print("To run the demo, call DashDemo.main()")
+if not is_running_from_reloader():
+    print("This demo is for use outside of a jupyter notebook and uses the default precompiled model.")
+    print("To run the demo, call DashDemo.main()")
+
 if __name__ == "__main__":
     main()

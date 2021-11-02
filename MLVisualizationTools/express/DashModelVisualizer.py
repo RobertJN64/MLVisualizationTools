@@ -21,14 +21,11 @@ class App:
                  host:str = '0.0.0.0', port: bool = None):
 
         theme, folder, self.figtemplate = getTheme(theme, folder)
-        self.app, self.port = getDashApp(title, notebook, kagglenotebook, port, theme, folder)
+        self.app, self.runFunc = getDashApp(title, notebook, kagglenotebook, host, port, mode, theme, folder)
 
         self.model = model
         self.df = data
         self.highcontrast = highcontrast
-        self.notebook = notebook
-        self.mode = mode
-        self.host = host
 
         options = []
         for col in self.df.columns:
@@ -71,10 +68,7 @@ class App:
         self.app.callback(Output("example-graph", "figure"), inputs)(self.updateGraphFromWebsite)
 
     def run(self):
-        if self.notebook:
-            self.app.run_server(host=self.host, port=self.port, mode=self.mode, debug=True, use_reloader=False)
-        else:
-            self.app.run_server(host=self.host, port=self.port, debug=True, use_reloader=False)
+        self.runFunc()
 
     def updateGraph(self):
         data = Interfaces.TensorflowGrid(self.model, self.x, self.y, self.df)
