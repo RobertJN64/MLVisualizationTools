@@ -94,10 +94,13 @@ def getDashApp(title:str, notebook:bool, usetunneling:bool, host:str, port:int, 
         try:
             from jupyter_dash import JupyterDash
         except ImportError:
-            raise ImportError("JupyterDash is required to run in a kaggle notebook. "
+            raise ImportError("JupyterDash is required to run in a notebook. "
                               "Use pip install MLVisualizationTools[dash-notebook]")
         app = JupyterDash(__name__, title=title, server_url=url,
                                external_stylesheets=[theme], assets_folder=folder) #TODO - sever shutdown issues
+
+        def f(*_): print("Not terminating server for args: ", _)
+        app._terminate_server_for_port = f
     else:
         from dash import Dash
         app = Dash(__name__, title=title, external_stylesheets=[theme], assets_folder=folder)
