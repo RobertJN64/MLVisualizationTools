@@ -56,6 +56,7 @@ def getTheme(theme, folder=None, figtemplate=None):
 
     return theme, folder, figtemplate
 
+activeprocesses = []
 def getDashApp(title:str, notebook:bool, usetunneling:bool, host:str, port:int, mode: str, theme, folder):
     """
     Creates a dash or jupyter dash app, returns the app and a function to run it
@@ -99,15 +100,22 @@ def getDashApp(title:str, notebook:bool, usetunneling:bool, host:str, port:int, 
         app = JupyterDash(__name__, title=title, server_url=url,
                                external_stylesheets=[theme], assets_folder=folder) #TODO - sever shutdown issues
 
-        def f(*_): print("Not terminating server for args: ", _)
-        app._terminate_server_for_port = f
     else:
         from dash import Dash
         app = Dash(__name__, title=title, external_stylesheets=[theme], assets_folder=folder)
 
     def runApp():
         if notebook:
-            app.run_server(host=host, port=port, mode=mode, debug=True) #, use_reloader=False)
+            import multiprocessing
+            for process in activeprocesses:
+                process.terminate()
+                process.join()
+            activeprocesses.clear()
+            def run_server():
+                app.run_server(host=host, port=port, mode=mode, debug=True)
+            p = multiprocessing.Process(target=run_server)
+            p.start()
+            activeprocesses.append(p)
         else:
             app.run_server(host=host, port=port, debug=True) #, use_reloader=False)
 
