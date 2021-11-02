@@ -83,9 +83,9 @@ def getDashApp(title:str, notebook:bool, usetunneling:bool, host:str, port:int, 
             except ImportError:
                 raise ImportError("Pyngrok is required to run in a kaggle notebook. "
                                   "Use pip install MLVisualizationTools[kaggle-notebook]")
-            #ngrok.kill() #disconnects active tunnels
+            ngrok.kill() #disconnects active tunnels
             tunnel = ngrok.connect(port)
-            print("Running in an ngrok tunnel. This limits you to 40 requests and one app per minute."
+            print("Running in an ngrok tunnel. This limits you to 40 requests per minute and one active app.",
                   "For full features use google colab instead.")
             url = tunnel.public_url
         else:
