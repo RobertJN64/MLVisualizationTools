@@ -42,7 +42,7 @@ import MLVisualizationTools.express.DashModelVisualizer as App
 model = ... #your keras model
 data = ... #your pandas dataframe with features
 
-App.main(model, data)
+App.visualize(model, data)
 ```
 
 ## Functions
@@ -71,10 +71,7 @@ Colorizers mark points as being certain colors, typically above or below
 
 Graphs turn these output grids into a visual representation.
 
-## Examples
-
-See [MLVisualizationTools/Examples](/MLVisualizationTools/examples) for more examples.
-Use example.main() to run the examples and set parameters such as themes.
+## Sample
 
 ```python
 from MLVisualizationTools import Analytics, Interfaces, Graphs, Colorizers
@@ -91,3 +88,18 @@ grid = Colorizers.Binary(grid)
 fig = Graphs.PlotlyGrid(grid, maxvar[0].name, maxvar[1].name)
 fig.show()
 ```
+
+## Prebuilt Examples
+
+Prebuilt examples run off of the pretrained model and dataset
+packaged with this library. They include:
+- Demo: a basic demo of library functionality that renders 2 plots
+- MatplotlibDemo: Demo but with matplotlib instead of plotly
+- DashDemo: Non-jupyter notebook version of an interactive dash
+website demo
+- DashNotebookDemo: Notebook version of an interactive website demo
+- DashKaggleDemo: Notebook version of an dash demo that works in kaggle
+notebooks
+
+See [MLVisualizationTools/Examples](/MLVisualizationTools/examples) for more examples.
+Use example.main() to run the examples and set parameters such as themes.

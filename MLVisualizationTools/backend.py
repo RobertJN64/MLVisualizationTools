@@ -55,3 +55,48 @@ def getTheme(theme, folder=None, figtemplate=None):
             figtemplate = "plotly_dark"
 
     return theme, folder, figtemplate
+
+def getDashApp(title:str, notebook:bool, usetunneling:bool, port:int, theme, folder):
+    """
+    Creates a dash or jupyter dash app
+
+    :param title: Passed to dash app
+    :param notebook: Uses jupyter dash with default port of 1005 (instead of 8050)
+    :param usetunneling: Enables ngrok tunneling for kaggle notebooks
+    :param port: Can be used to override default ports
+    :param theme: Passed to dash app external stylesheets
+    :param folder: Passed to assets folder to load theme css
+    """
+
+    if port is None:
+        if notebook:
+            port = 1005
+        else:
+            port = 8050
+
+    if notebook:
+        if usetunneling:
+            try:
+                from pyngrok import ngrok
+            except ImportError:
+                raise ImportError("Pyngrok is required to run in a kaggle notebook. "
+                                  "Use pip install MLVisualizationTools[kaggle-notebook]")
+            tunnel = ngrok.connect(port)
+            print("Running in an ngrok tunnel. This limits you to 40 requests per minute. For full features",
+                  "use google colab instead.")
+            url = tunnel.public_url
+        else:
+            url = None
+
+        try:
+            from jupyter_dash import JupyterDash
+        except ImportError:
+            raise ImportError("JupyterDash is required to run in a kaggle notebook. "
+                              "Use pip install MLVisualizationTools[dash-notebook]")
+        app = JupyterDash(__name__, title=title, server_url=url,
+                               external_stylesheets=[theme], assets_folder=folder)
+    else:
+        from dash import Dash
+        app = Dash(__name__, title=title, external_stylesheets=[theme], assets_folder=folder)
+
+    return app, port

@@ -1,9 +1,8 @@
 from MLVisualizationTools import Analytics, Interfaces, Graphs, Colorizers
-from MLVisualizationTools.backend import fileloader, getTheme
+from MLVisualizationTools.backend import getTheme, getDashApp
 import pandas as pd
-import os
-os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2' #stops agressive error message printing
-from tensorflow import keras
+
+#TODO - tour
 
 try:
     import dash
@@ -12,8 +11,8 @@ try:
     from dash import html
     import dash_bootstrap_components as dbc
     import plotly
-except:
-    raise ImportError("Dash and plotly are required to run this demo. Install them with the [dash] flag"
+except ImportError:
+    raise ImportError("Dash and plotly are required to use this tool. Install them with the [dash] flag"
                       " on installation of this library.")
 
 class App:
@@ -22,32 +21,7 @@ class App:
                  host:str = '0.0.0.0', port: bool = None):
 
         theme, folder, self.figtemplate = getTheme(theme, folder)
-
-        if port is None:
-            if notebook:
-                self.port = 1005
-            else:
-                self.port = 8050
-        else:
-            self.port = port
-
-        if notebook:
-            from jupyter_dash import JupyterDash
-            if kagglenotebook:
-                try:
-                    from pyngrok import ngrok
-                except:
-                    raise ImportError("Pyngrok is required to run in a kaggle notebook.")
-                tunnel = ngrok.connect(self.port)
-                print("Running in an ngrok tunnel. This limits you to 40 requests per minute. For full features",
-                      "use google colab instead.")
-                url = tunnel.public_url
-            else:
-                url = None
-            self.app = JupyterDash(__name__, title=title, server_url=url,
-                                   external_stylesheets=[theme], assets_folder=folder)
-        else:
-            self.app = dash.Dash(__name__, title=title, external_stylesheets=[theme], assets_folder=folder)
+        self.app, self.port = getDashApp(title, notebook, kagglenotebook, port, theme, folder)
 
         self.model = model
         self.df = data
@@ -97,7 +71,10 @@ class App:
         self.app.callback(Output("example-graph", "figure"), inputs)(self.updateGraphFromWebsite)
 
     def run(self):
-        self.app.run_server(host = self.host, port = self.port, mode=self.mode)
+        if self.notebook:
+            self.app.run_server(host=self.host, port=self.port, mode=self.mode, debug=True, use_reloader=False)
+        else:
+            self.app.run_server(host=self.host, port=self.port, debug=True, use_reloader=False)
 
     def updateGraph(self):
         data = Interfaces.TensorflowGrid(self.model, self.x, self.y, self.df)
@@ -111,9 +88,9 @@ class App:
         self.y = y
         return self.updateGraph()
 
-def main(model, data: pd.DataFrame, title:str = "DashModelVisualizer", theme:str = "dark", folder = None,
-         highcontrast:bool = True, notebook:bool = False,
-         kagglenotebook:bool = False, mode:str = 'external', host:str = '0.0.0.0', port: bool = None):
+def visualize(model, data: pd.DataFrame, title:str = "DashModelVisualizer", theme:str = "dark", folder = None,
+              highcontrast:bool = True, notebook:bool = False, kagglenotebook:bool = False, mode:str = 'external',
+              host:str = '0.0.0.0', port: bool = None):
     """
     Creates a dash website to visualize an ML model.
 
@@ -131,12 +108,3 @@ def main(model, data: pd.DataFrame, title:str = "DashModelVisualizer", theme:str
     """
 
     App(model, data, title, theme, folder, highcontrast, notebook, kagglenotebook, mode, host, port).run()
-
-def default():
-    model = keras.models.load_model(fileloader('examples/Models/titanicmodel'))
-    df: pd.DataFrame = pd.read_csv(fileloader('examples/Datasets/Titanic/train.csv'))
-    df = df.drop('Survived', axis=1)
-    main(model, df)
-
-if __name__ == '__main__':
-    default()
