@@ -16,7 +16,7 @@ def main(theme = 'dark', highcontrast = True, mode='external'):
     model = keras.models.load_model(fileloader('examples/Models/titanicmodel'))
     df: pd.DataFrame = pd.read_csv(fileloader('examples/Datasets/Titanic/train.csv'))
     df = df.drop("Survived", axis=1)
-    DashModelVisualizer.visualize(model, df, title="DashInteractiveDemo", theme=theme,
+    DashModelVisualizer.visualize(model, df, title="DashNotebookDemo", theme=theme,
                                   highcontrast=highcontrast, notebook=True, mode=mode)
 
 print("This demo is for use inside a jupyter notebook that supports dash natively (such as google colab).")
