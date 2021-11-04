@@ -1,14 +1,12 @@
-from MLVisualizationTools.express import DashModelVisualizer
-from MLVisualizationTools.backend import fileloader
 from werkzeug.serving import is_running_from_reloader
-import pandas as pd
-import os
-
-os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'  # stops agressive error message printing
-from tensorflow import keras
-
 
 def main(theme='dark', highcontrast=True, mode='external'):
+    from MLVisualizationTools.express import DashModelVisualizer
+    from MLVisualizationTools.backend import fileloader
+    import pandas as pd
+    import os
+    os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'  # stops agressive error message printing
+    from tensorflow import keras
     """
     Runs the demo by calling DashModelVisualizer
 

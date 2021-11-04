@@ -3,8 +3,6 @@ from MLVisualizationTools.dashbackend import getTheme, getDashApp
 from SingletonProcess import SingletonProcess
 import pandas as pd
 
-print("DMV import with name: ", __name__)
-
 #TODO - tour
 
 try:

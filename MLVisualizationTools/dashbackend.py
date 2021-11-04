@@ -83,8 +83,8 @@ def getDashApp(title:str, notebook:bool, usetunneling:bool, host:str, port:int, 
 
     def runApp():
         if notebook:
-            app.run_server(host=host, port=port, mode=mode, debug=True, use_reloader=False)
+            app.run_server(host=host, port=port, mode=mode, debug=True)
         else:
-            app.run_server(host=host, port=port, debug=True, use_reloader=False)
+            app.run_server(host=host, port=port, debug=True)
 
     return app, runApp
