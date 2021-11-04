@@ -1,6 +1,9 @@
 from MLVisualizationTools import Analytics, Interfaces, Graphs, Colorizers
-from MLVisualizationTools.backend import getTheme, getDashApp
+from MLVisualizationTools.dashbackend import getTheme, getDashApp
+from SingletonProcess import SingletonProcess
 import pandas as pd
+
+print("DMV import with name: ", __name__)
 
 #TODO - tour
 
@@ -82,6 +85,7 @@ class App:
         self.y = y
         return self.updateGraph()
 
+@SingletonProcess
 def visualize(model, data: pd.DataFrame, title:str = "DashModelVisualizer", theme:str = "dark", folder = None,
               highcontrast:bool = True, notebook:bool = False, kagglenotebook:bool = False, mode:str = 'external',
               host:str = '0.0.0.0', port: bool = None):
@@ -100,5 +104,4 @@ def visualize(model, data: pd.DataFrame, title:str = "DashModelVisualizer", them
     :param host: default hostname for dash
     :param port: None for default port (8050) or (1005)
     """
-
     App(model, data, title, theme, folder, highcontrast, notebook, kagglenotebook, mode, host, port).run()
