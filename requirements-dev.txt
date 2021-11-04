@@ -2,7 +2,7 @@ pandas
 dash
 plotly
 matplotlib
-tensorflow==2.5
+tensorflow
 dash-bootstrap-components>=1.0.0
 pytest
 SingletonProcess
