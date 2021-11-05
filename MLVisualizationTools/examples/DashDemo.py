@@ -17,10 +17,8 @@ def main(theme = 'dark', highcontrast = True):
     model = keras.models.load_model(fileloader('examples/Models/titanicmodel'))
     df: pd.DataFrame = pd.read_csv(fileloader('examples/Datasets/Titanic/train.csv'))
     df = df.drop("Survived", axis=1)
-    retval = DashModelVisualizer.visualize(model, df, title="DashInteractiveDemo", theme=theme,
-                                           highcontrast=highcontrast)
+    DashModelVisualizer.visualize(model, df, title="DashInteractiveDemo", theme=theme, highcontrast=highcontrast)
     block(verbose=True)
-    retval.raw.get()
 
 if not is_running_from_reloader() and __name__ != '__mp_main__':
     print("This demo is for use outside of a jupyter notebook and uses the default precompiled model.")

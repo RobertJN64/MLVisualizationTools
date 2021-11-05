@@ -1,6 +1,6 @@
 from MLVisualizationTools import Analytics, Interfaces, Graphs, Colorizers
 from MLVisualizationTools.dashbackend import getTheme, getDashApp
-from SingletonProcess import SingletonProcess
+from SingletonProcess import VBSingletonProcess
 import pandas as pd
 
 #TODO - tour
@@ -83,7 +83,7 @@ class App:
         self.y = y
         return self.updateGraph()
 
-@SingletonProcess
+@VBSingletonProcess
 def visualize(model, data: pd.DataFrame, title:str = "DashModelVisualizer", theme:str = "dark", folder = None,
               highcontrast:bool = True, notebook:bool = False, kagglenotebook:bool = False, mode:str = 'external',
               host:str = '0.0.0.0', port: bool = None):
@@ -102,4 +102,7 @@ def visualize(model, data: pd.DataFrame, title:str = "DashModelVisualizer", them
     :param host: default hostname for dash
     :param port: None for default port (8050) or (1005)
     """
+    print("Hello from inside visualization function.")
+    from sys import stdout
+    stdout.write("Hello from stdout\n")
     App(model, data, title, theme, folder, highcontrast, notebook, kagglenotebook, mode, host, port).run()
