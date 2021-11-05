@@ -77,6 +77,7 @@ def analyzeTFModelRaw(model, coldata: List[Dict], steps:int=20) -> AnalyticsResu
         currentpos += steps
 
     print("<BACKEND> Calling model predict")
+    print("<BACKEND> Model type: ", type(model))
     predictions = model.predict(preddata)
     print("<BACKEND> Model predict finished")
 

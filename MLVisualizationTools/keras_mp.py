@@ -4,7 +4,6 @@ from tensorflow.keras.models import Model
 from tensorflow.python.keras.layers import deserialize, serialize
 from tensorflow.python.keras.saving import saving_utils
 
-
 def unpack(model, training_config, weights):
     restored_model = deserialize(model)
     if training_config is not None:
@@ -18,7 +17,7 @@ def unpack(model, training_config, weights):
 
 # Hotfix function
 def make_keras_picklable():
-
+    print("<KERAS MP> Pickling magic")
     def __reduce__(self):
         model_metadata = saving_utils.model_metadata(self)
         training_config = model_metadata.get("training_config", None)
