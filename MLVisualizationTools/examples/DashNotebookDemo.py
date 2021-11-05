@@ -10,7 +10,6 @@ def main(theme = 'dark', highcontrast = True, mode='external'):
     """
     from MLVisualizationTools.express import DashModelVisualizer
     from MLVisualizationTools.backend import fileloader
-    from SingletonProcess import block
     import pandas as pd
     import os
     os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'  # stops agressive error message printing
@@ -20,7 +19,6 @@ def main(theme = 'dark', highcontrast = True, mode='external'):
     df = df.drop("Survived", axis=1)
     DashModelVisualizer.visualize(model, df, title="DashNotebookDemo", theme=theme,
                                   highcontrast=highcontrast, notebook=True, mode=mode)
-    block(verbose=True)
 
 if not is_running_from_reloader() and __name__ != '__mp_main__':
     print("This demo is for use inside a jupyter notebook that supports dash natively (such as google colab).")
