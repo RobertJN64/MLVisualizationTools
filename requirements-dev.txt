@@ -5,4 +5,3 @@ matplotlib
 tensorflow!=2.6.1
 dash-bootstrap-components>=1.0.0
 pytest
-SingletonProcess
