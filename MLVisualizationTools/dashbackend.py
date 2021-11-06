@@ -1,7 +1,4 @@
 from MLVisualizationTools.backend import fileloader
-from MLVisualizationTools.keras_mp import make_keras_picklable
-
-make_keras_picklable()
 
 def getTheme(theme, folder=None, figtemplate=None):
     """
