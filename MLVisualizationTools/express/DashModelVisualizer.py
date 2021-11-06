@@ -1,6 +1,6 @@
 from MLVisualizationTools import Analytics, Interfaces, Graphs, Colorizers
 from MLVisualizationTools.dashbackend import getTheme, getDashApp
-from SingletonProcess import VBSingletonProcess
+from SingletonProcess import VBThreadSafeSingletonProcess
 import pandas as pd
 
 #TODO - tour
@@ -93,7 +93,7 @@ class App:
         self.y = y
         return self.updateGraph()
 
-@VBSingletonProcess
+@VBThreadSafeSingletonProcess
 def visualize(model, data: pd.DataFrame, title:str = "DashModelVisualizer", theme:str = "dark", folder = None,
               highcontrast:bool = True, notebook:bool = False, kagglenotebook:bool = False, mode:str = 'external',
               host:str = '0.0.0.0', port: bool = None):
