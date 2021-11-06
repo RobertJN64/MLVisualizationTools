@@ -20,11 +20,8 @@ class App:
                  highcontrast:bool = True, notebook:bool = False, kagglenotebook:bool = False, mode:str = 'external',
                  host:str = '0.0.0.0', port: bool = None):
 
-        print("<DASH APP> Inside init function")
         theme, folder, self.figtemplate = getTheme(theme, folder)
-        print("<DASH APP> Loaded theme")
         self.app, self.runFunc = getDashApp(title, notebook, kagglenotebook, host, port, mode, theme, folder)
-        print("<DASH APP> Retrieved dash app")
 
         self.model = model
         self.df = data
@@ -34,16 +31,13 @@ class App:
         for col in self.df.columns:
             options.append({'label': col, 'value': col})
 
-        print("<DASH APP> Before model processing")
         self.AR = Analytics.Tensorflow(self.model, self.df)
-        print("<DASH APP> After model processing")
         self.maxvar = self.AR.maxVariance()
 
         self.x = self.maxvar[0].name
         self.y = self.maxvar[1].name
 
         self.fig = self.updateGraph()
-        print("<DASH APP> Updated graph")
 
         graph = dbc.Card([
             dcc.Graph(id='example-graph', figure=self.fig)
@@ -69,16 +63,12 @@ class App:
             fluid=True,
             className='dash-bootstrap'
         )
-        print("<DASH APP> Dash app structure")
 
         inputs = [Input('xaxis', "value"), Input('yaxis', 'value')]
         self.app.callback(Output("example-graph", "figure"), inputs)(self.updateGraphFromWebsite)
-        print("<DASH APP> Registed callbacks")
 
     def run(self):
-        print("Run function being called.")
         self.runFunc()
-        print("Run function done, waiting on thread to stop process.")
 
     def updateGraph(self):
         data = Interfaces.TensorflowGrid(self.model, self.x, self.y, self.df)

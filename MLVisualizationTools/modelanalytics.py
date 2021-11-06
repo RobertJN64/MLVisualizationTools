@@ -44,7 +44,6 @@ def analyzeTFModel(model, data: pd.DataFrame, exclude: List[str] = None, steps:i
     :param exclude: Values to be excluded from data, useful for output values
     :param steps: Resolution to scan model with
     """
-    print("<BACKEND> Calling tfModelRaw")
     return analyzeTFModelRaw(model, colinfo(data, exclude), steps)
 
 def analyzeTFModelRaw(model, coldata: List[Dict], steps:int=20) -> AnalyticsResult:
@@ -58,9 +57,7 @@ def analyzeTFModelRaw(model, coldata: List[Dict], steps:int=20) -> AnalyticsResu
     :param coldata: An ordered list of dicts with col names, min max values, and means
     :param steps: Resolution to scan model with
     """
-    print("<BACKEND> Creating AR")
     AR = AnalyticsResult()
-    print("<BACKEND> Prepping data structure")
 
     predrow = []
     cols = []
@@ -76,16 +73,12 @@ def analyzeTFModelRaw(model, coldata: List[Dict], steps:int=20) -> AnalyticsResu
             preddata[item['name']][i + currentpos] = i * (item['max'] - item['min'])/(steps-1) + item['min']
         currentpos += steps
 
-    print("<BACKEND> Calling model predict")
-    print("<BACKEND> Model type: ", type(model))
     predictions = model.predict(preddata)
-    print("<BACKEND> Model predict finished")
 
     currentpos = 0
     for item in coldata:
         values = predictions[currentpos:currentpos + steps]
         currentpos += steps
         AR.append(item['name'], values.max() - values.min())
-    print("<BACKEND> AR finished")
     return AR
 #endregion
