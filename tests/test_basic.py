@@ -10,9 +10,13 @@ import copy
 def test_colorizer():
     data = pd.DataFrame({'Output': [0, 0.5, 1]})
     data = backend.GraphData(data, backend.GraphDataTypes.Grid)
-    assert list(project.Colorizers.Simple(copy.copy(data), 'red')['Color']) == ['red'] * 3
-    assert list(project.Colorizers.Binary(copy.copy(data), highcontrast=True)['Color']) == ['orange', 'orange', 'blue']
-    assert list(project.Colorizers.Binary(copy.copy(data), highcontrast=False)['Color']) == ['red', 'red', 'green']
+    assert list(project.Colorizers.Simple(copy.copy(data), 'red').dataframe['Color']) == ['red'] * 3
+
+    assert (list(project.Colorizers.Binary(copy.copy(data), highcontrast=True).dataframe['Color'])
+           == ['orange', 'orange', 'blue'])
+
+    assert (list(project.Colorizers.Binary(copy.copy(data), highcontrast=False).dataframe['Color'])
+            == ['red', 'red', 'green'])
 
 def test_dash_visualizer(): #doesn't launch dash apps, but tests creation process
     import MLVisualizationTools.express.DashModelVisualizer as DMV
