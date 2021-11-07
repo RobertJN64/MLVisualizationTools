@@ -2,14 +2,13 @@ from MLVisualizationTools import Analytics, Interfaces, Graphs, Colorizers
 from MLVisualizationTools.dashbackend import getTheme, getDashApp
 import pandas as pd
 
-#TODO - tour
-
 try:
     import dash
     from dash import Input, Output
     from dash import dcc
     from dash import html
     import dash_bootstrap_components as dbc
+    from dash_tour_component import DashTour
     import plotly
 except ImportError:
     raise ImportError("Dash and plotly are required to use this tool. Install them with the [dash] flag"
@@ -50,9 +49,26 @@ class App:
             dbc.Label("Y Axis: "),
             dcc.Dropdown(id='yaxis', options=options, value=self.y),
             html.Br(),
+            dbc.Button("Open Tour", id='open_tour_button'),
+            html.Br(),
         ], body=True)
 
+        tour = DashTour(steps=[{'selector': '[id="xaxis"]',
+                                'content': "This dropdown controls the xaxis, it has been preset with the "
+                                           "highest variance value."},
+                               {'selector': '[id="yaxis"]',
+                                'content': "This dropdown controls the yaxis, it has been preset with the "
+                                           "sceond highest variance value."},
+                               {'selector': '[id="example-graph"]',
+                                'content': "This graph updates when you change the dropdowns."}],
+                        isOpen=False,
+                        id="tour_component",
+                        children=html.Div(),
+                        rounded=7
+                        )
+
         self.app.layout = dbc.Container([
+            tour,
             html.H1(title),
             html.Hr(),
             dbc.Row([
@@ -66,6 +82,8 @@ class App:
 
         inputs = [Input('xaxis', "value"), Input('yaxis', 'value')]
         self.app.callback(Output("example-graph", "figure"), inputs)(self.updateGraphFromWebsite)
+        self.app.callback(Output('tour_component', 'isOpen'), [Input('open_tour_button', 'n_clicks')],
+                          prevent_initial_call=True)(lambda _ : True)
 
     def run(self):
         self.runFunc()

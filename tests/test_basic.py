@@ -2,14 +2,17 @@ import os
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'  # stops agressive error message printing
 from tensorflow import keras
 import MLVisualizationTools as project
+import MLVisualizationTools.backend as backend
 import pytest
 import pandas as pd
+import copy
 
 def test_colorizer():
     data = pd.DataFrame({'Output': [0, 0.5, 1]})
-    assert list(project.Colorizers.Simple(data.copy(), 'red')['Color']) == ['red'] * 3
-    assert list(project.Colorizers.Binary(data.copy(), highcontrast=True)['Color']) == ['orange', 'orange', 'blue']
-    assert list(project.Colorizers.Binary(data.copy(), highcontrast=False)['Color']) == ['red', 'red', 'green']
+    data = backend.GraphData(data, backend.GraphDataTypes.Grid)
+    assert list(project.Colorizers.Simple(copy.copy(data), 'red')['Color']) == ['red'] * 3
+    assert list(project.Colorizers.Binary(copy.copy(data), highcontrast=True)['Color']) == ['orange', 'orange', 'blue']
+    assert list(project.Colorizers.Binary(copy.copy(data), highcontrast=False)['Color']) == ['red', 'red', 'green']
 
 def test_dash_visualizer(): #doesn't launch dash apps, but tests creation process
     import MLVisualizationTools.express.DashModelVisualizer as DMV
