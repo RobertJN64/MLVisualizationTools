@@ -1,13 +1,14 @@
-import pandas as pd
+from MLVisualizationTools.backend import GraphData, ColorizerModes
 
-def simpleColor(data: pd.DataFrame, color) -> pd.DataFrame:
+def simpleColor(data: GraphData, color) -> GraphData:
     """Marks all points as being the color inputted"""
-    data['Color'] = [color] * len(data)
+    df = data.dataframe
+    df['Color'] = [color] * len(df)
+    data.colorized = ColorizerModes.Simple
     return data
 
-#TODO - keys and set default to highcontrast
-def binaryColor(data: pd.DataFrame, highcontrast:bool=False, truecolor=None, falsecolor=None,
-                cutoff:float=0.5, outputkey: str = 'Output') -> pd.DataFrame:
+def binaryColor(data: GraphData, highcontrast:bool=True, truecolor=None, falsecolor=None,
+                cutoff:float=0.5, outputkey: str = 'Output') -> GraphData:
     """
     Colors grid based on whether the value is higher than the cutoff. Default colors are green for true and red
     for false. Black will appear if an error occurs.
@@ -19,6 +20,7 @@ def binaryColor(data: pd.DataFrame, highcontrast:bool=False, truecolor=None, fal
     :param cutoff: Cutoff value, higher is true
     :param outputkey: Key to grab values from
     """
+    df = data.dataframe
     if truecolor is None:
         if not highcontrast:
             truecolor = "green"
@@ -30,8 +32,9 @@ def binaryColor(data: pd.DataFrame, highcontrast:bool=False, truecolor=None, fal
         else:
             falsecolor = "orange"
 
-    #grid['Color'] = 'black' * len(grid)
-    data.loc[data[outputkey] > cutoff, 'Color'] = truecolor
-    data.loc[data[outputkey] <= cutoff, 'Color'] = falsecolor
-
+    df.loc[df[outputkey] > cutoff, 'Color'] = truecolor
+    df.loc[df[outputkey] <= cutoff, 'Color'] = falsecolor
+    data.colorized = ColorizerModes.Binary
+    data.truecolor = truecolor
+    data.falsecolor = falsecolor
     return data

@@ -72,7 +72,7 @@ def getDashApp(title:str, notebook:bool, usetunneling:bool, host:str, port:int, 
             raise ImportError("JupyterDash is required to run in a notebook. "
                               "Use pip install MLVisualizationTools[dash-notebook]")
         app = JupyterDash(__name__, title=title, server_url=url,
-                               external_stylesheets=[theme], assets_folder=folder) #TODO - sever shutdown issues
+                               external_stylesheets=[theme], assets_folder=folder)
 
     else:
         from dash import Dash

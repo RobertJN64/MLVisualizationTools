@@ -1,5 +1,5 @@
 from typing import List, Dict
-from MLVisualizationTools.backend import colinfo
+from MLVisualizationTools.backend import colinfo, GraphData, GraphDataTypes
 import pandas as pd
 
 #Functions for passing data to ml models
@@ -7,7 +7,7 @@ import pandas as pd
 #region Tensorflow
 #region grid
 def TFModelPredictionGrid(model, x:str, y:str, data:pd.DataFrame,
-                          exclude:List[str] = None, steps:int=20) -> pd.DataFrame:
+                          exclude:List[str] = None, steps:int=20) -> GraphData:
     """
     Creates a dataset from a 2d prediction on a tensorflow model. Wrapper function for TFModelPredictionGridRaw()
     that automatically handles column info generation.
@@ -21,7 +21,7 @@ def TFModelPredictionGrid(model, x:str, y:str, data:pd.DataFrame,
     """
     return TFModelPredictionGridRaw(model, x, y, colinfo(data, exclude), steps)
 
-def TFModelPredictionGridRaw(model, x:str, y:str, coldata:List[Dict], steps:int=20) -> pd.DataFrame:
+def TFModelPredictionGridRaw(model, x:str, y:str, coldata:List[Dict], steps:int=20) -> GraphData:
     """
     Creates a dataset from a 2d prediction on a tensorflow model. Wrapper function for TFModelPredictionGridRaw()
     that automatically handles column info generation.
@@ -75,12 +75,12 @@ def TFModelPredictionGridRaw(model, x:str, y:str, coldata:List[Dict], steps:int=
 
     predictions = model.predict(preddata)
     preddata['Output'] = predictions
-    return preddata
+    return GraphData(preddata, GraphDataTypes.Grid)
 #endregion grid
 
 #region animation
 def TFModelPredictionAnimation(model, x:str, y:str, anim:str, data: pd.DataFrame,
-                               exclude:List[str] = None, steps:int=20) -> pd.DataFrame:
+                               exclude:List[str] = None, steps:int=20) -> GraphData:
     """
     Creates a dataset from a 2d prediction on a tensorflow model. Wrapper function for TFModelPredictionGridRaw()
     that automatically handles column info generation.
@@ -95,7 +95,7 @@ def TFModelPredictionAnimation(model, x:str, y:str, anim:str, data: pd.DataFrame
     """
     return TFModelPredictionAnimationRaw(model, x, y, anim, colinfo(data, exclude), steps)
 
-def TFModelPredictionAnimationRaw(model, x:str, y:str, anim:str, coldata:List[Dict], steps:int=20) -> pd.DataFrame:
+def TFModelPredictionAnimationRaw(model, x:str, y:str, anim:str, coldata:List[Dict], steps:int=20) -> GraphData:
     """
     Creates a dataset from a 2d prediction on a tensorflow model. Wrapper function for TFModelPredictionGridRaw()
     that automatically handles column info generation.
@@ -160,7 +160,7 @@ def TFModelPredictionAnimationRaw(model, x:str, y:str, anim:str, coldata:List[Di
 
     predictions = model.predict(preddata)
     preddata['Output'] = predictions
-    return preddata
+    return GraphData(preddata, GraphDataTypes.Animation)
 
 #endregion
 #endregion

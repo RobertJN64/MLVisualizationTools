@@ -26,7 +26,7 @@ def main():
     fig.show()
 
     grid = Interfaces.TensorflowGrid(model, 'Parch', 'SibSp', df, ["Survived"])
-    grid = Colorizers.Binary(grid, highcontrast=True)
+    grid = Colorizers.Binary(grid, highcontrast=False)
     fig = Graphs.PlotlyGrid(grid, 'Parch', 'SibSp')
     fig.show()
 

@@ -2,10 +2,12 @@
 #Here are the imports:
 #import plotly.express as px
 #import matplotlib.pyplot as plt
-import pandas as pd
+from MLVisualizationTools.backend import GraphData, GraphDataTypes
 
+class WrongDataFormatException(Exception):
+    pass
 
-def plotlyGrid(data: pd.DataFrame, x: str, y: str, output="Output", title=""):
+def plotlyGrid(data: GraphData, x: str, y: str, output="Output", title="", key=True):
     """
     Calls px.scatter_3d with data. Returns a plotly figure.
 
@@ -14,21 +16,24 @@ def plotlyGrid(data: pd.DataFrame, x: str, y: str, output="Output", title=""):
     :param y: ycol in df
     :param output: zcol in df
     :param title: Title for graph
+    :param key: Show a key for the colors used
     """
     try:
         import plotly.express as px
     except:
-        raise Exception("Plotly is required to use this graph. Install with `pip install plotly`")
-    if "Color" in data:
-        color = "Color"
-        colormap = "identity"
-    else:
-        color = None
-        colormap = None
-    fig = px.scatter_3d(data, x, y, output, color=color, color_discrete_map=colormap, title=title)
+        raise ImportError("Plotly is required to use this graph. Install with `pip install plotly`")
+
+    if data.datatype != GraphDataTypes.Grid:
+        raise WrongDataFormatException("Data was not formatted in grid.")
+
+    df, colorkey, cdm, co, showlegend = data.compileColorizedData()
+
+    fig = px.scatter_3d(df, x, y, output, color=colorkey, color_discrete_map=cdm,
+                        category_orders=co, title=title)
+    fig.update_layout(showlegend=showlegend and key)
     return fig
 
-def plotlyAnimation(data, x, y, anim, output="Output", title=""):
+def plotlyAnimation(data: GraphData, x: str, y: str, anim:str, output="Output", title="", key=True):
     """
     Calls px.scatter_3d with data and animation frame. Returns a plotly figure.
 
@@ -38,23 +43,26 @@ def plotlyAnimation(data, x, y, anim, output="Output", title=""):
     :param anim: column for animation
     :param output: zcol in df
     :param title: Title for graph
+    :param key: Show a key for the colors used
     """
     try:
         import plotly.express as px
     except:
-        raise Exception("Plotly is required to use this graph. Install with `pip install plotly`")
-    if "Color" in data:
-        color = "Color"
-        colormap = "identity"
-    else:
-        color = None
-        colormap = None
+        raise ImportError("Plotly is required to use this graph. Install with `pip install plotly`")
 
-    fig = px.scatter_3d(data, x, y, output, animation_frame=anim, color=color, color_discrete_map=colormap,
-                        title=title, range_z=[data[output].min(), data[output].max()])
+    if data.datatype != GraphDataTypes.Animation:
+        raise WrongDataFormatException("Data was not formatted in animation.")
+
+    df, colorkey, cdm, co, showlegend = data.compileColorizedData()
+
+    fig = px.scatter_3d(df, x, y, output, animation_frame=anim, color=colorkey, color_discrete_map=cdm,
+                        category_orders=co,
+                        title=title, range_z=[data.dataframe[output].min(), data.dataframe[output].max()])
+
+    fig.update_layout(showlegend=showlegend and key)
     return fig
 
-def matplotlibGrid(data, x, y, output="Output", title=""):
+def matplotlibGrid(data: GraphData, x: str, y: str, output="Output", title=""):
     """
     Calls ax.scatter with data. Returns a plt instance, a fig, and the ax.
 
@@ -67,16 +75,20 @@ def matplotlibGrid(data, x, y, output="Output", title=""):
     try:
         import matplotlib.pyplot as plt
     except:
-        raise Exception("Matplotlib is required to use this graph. Install with `pip install matplotlib`")
+        raise ImportError("Matplotlib is required to use this graph. Install with `pip install matplotlib`")
+
+    if data.datatype != GraphDataTypes.Grid:
+        raise WrongDataFormatException("Data was not formatted in grid.")
+
     fig = plt.figure()
     ax = fig.add_subplot(projection='3d')
 
-    if "Color" in data:
-        color = data["Color"]
-    else:
-        color = None
+    df, color, cdm, co, showlegend = data.compileColorizedData()
 
-    ax.scatter(data[x], data[y], data[output], c=color)
+    if color is not None:
+        color = df[color]
+
+    ax.scatter(df[x], df[y], df[output], c=color)
     ax.set_xlabel(x)
     ax.set_ylabel(y)
     ax.set_zlabel(output)
