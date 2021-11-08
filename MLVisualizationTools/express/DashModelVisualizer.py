@@ -58,7 +58,7 @@ class App:
                                            "highest variance value."},
                                {'selector': '[id="yaxis"]',
                                 'content': "This dropdown controls the yaxis, it has been preset with the "
-                                           "sceond highest variance value."},
+                                           "second highest variance value."},
                                {'selector': '[id="example-graph"]',
                                 'content': "This graph updates when you change the dropdowns."}],
                         isOpen=False,
