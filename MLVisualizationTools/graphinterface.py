@@ -2,6 +2,8 @@
 #Here are the imports:
 #import plotly.express as px
 #import matplotlib.pyplot as plt
+import copy
+
 from MLVisualizationTools.backend import GraphData, GraphDataTypes
 
 class WrongDataFormatException(Exception):
@@ -54,12 +56,26 @@ def plotlyAnimation(data: GraphData, x: str, y: str, anim:str, output="Output", 
         raise WrongDataFormatException("Data was not formatted in animation.")
 
     df, colorkey, cdm, co, showlegend = data.compileColorizedData()
+    df['Size'] = [1] * len(df)
+
+    # plotly animations have a bug where points aren't rendered unless
+    # one point of each color is in frame
+    if colorkey is not None:
+        d = df.iloc[0]
+        for animval in df[anim].unique():
+            for color in [data.truemsg, data.falsemsg]:
+                row = copy.deepcopy(d)
+                row['Color'] = color
+                row['Size'] = 0
+                row[anim] = animval
+                df = df.append(row)
 
     fig = px.scatter_3d(df, x, y, output, animation_frame=anim, color=colorkey, color_discrete_map=cdm,
-                        category_orders=co,
+                        category_orders=co, opacity=1, size='Size',
                         title=title, range_z=[data.dataframe[output].min(), data.dataframe[output].max()])
 
     fig.update_layout(showlegend=showlegend and key)
+    fig.update_traces(marker={'line_width': 0})
     return fig
 
 def matplotlibGrid(data: GraphData, x: str, y: str, output="Output", title=""):

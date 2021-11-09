@@ -1,5 +1,5 @@
 #THIS EXAMPLE IS BROKEN AND IS CURRENTLY BEING BUGFIXED
-raise NotImplementedError("THIS CODE IS CURRENTLY BROKEN") #TODO - bugfix
+#raise NotImplementedError("THIS CODE IS CURRENTLY BROKEN") #TODO - bugfix
 
 from MLVisualizationTools import Analytics, Interfaces, Graphs, Colorizers
 from MLVisualizationTools.backend import fileloader

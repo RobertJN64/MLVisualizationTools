@@ -55,15 +55,12 @@ def test_mpl():
         # disables agg warning on matplotlib
     )
     import MLVisualizationTools.examples.MatplotlibDemo as MPLDemo
-
-    if MPLDemo == MPLDemo: #clears warnings
-        pass
+    MPLDemo.main()
 
 def test_notimplemented(): #disabled for active debugging
     with(pytest.raises(NotImplementedError)):
         import MLVisualizationTools.examples.AnimationDemo as ADemo
-        if ADemo == ADemo:
-            pass
+        ADemo.main()
 
 def test_train_model():
     import MLVisualizationTools.examples.TrainTitanicModel as TTM
