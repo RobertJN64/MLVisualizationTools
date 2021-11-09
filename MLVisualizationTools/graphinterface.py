@@ -83,10 +83,12 @@ def matplotlibGrid(data: GraphData, x: str, y: str, output="Output", title=""):
     fig = plt.figure()
     ax = fig.add_subplot(projection='3d')
 
-    df, color, cdm, co, showlegend = data.compileColorizedData()
+    df = data.dataframe
 
-    if color is not None:
-        color = df[color]
+    if 'Color' in df.columns:
+        color = df['Color']
+    else:
+        color = None
 
     ax.scatter(df[x], df[y], df[output], c=color)
     ax.set_xlabel(x)
