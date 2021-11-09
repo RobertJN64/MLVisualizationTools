@@ -28,21 +28,11 @@ def test_dash_visualizer(): #doesn't launch dash apps, but tests creation proces
     DMV.App(model, df, theme='dark')
 
 def test_demo():
-    model = keras.models.load_model('MLVisualizationTools/examples/Models/titanicmodel')
-    df = pd.read_csv('MLVisualizationTools/examples/Datasets/Titanic/train.csv')
+    import MLVisualizationTools.examples.Demo as Demo
+    Demo.main(show=False)
 
-    AR = project.Analytics.Tensorflow(model, df, ["Survived"])
-    maxvar = AR.maxVariance()
-
-    grid = project.Interfaces.TensorflowGrid(model, maxvar[0].name, maxvar[1].name, df, ["Survived"])
-    grid = project.Colorizers.Binary(grid)
-    a = project.Graphs.PlotlyGrid(grid, maxvar[0].name, maxvar[1].name)
-
-    grid = project.Interfaces.TensorflowGrid(model, 'Parch', 'SibSp', df, ["Survived"])
-    grid = project.Colorizers.Binary(grid, highcontrast=True)
-    b = project.Graphs.PlotlyGrid(grid, 'Parch', 'SibSp')
-    if a == b:
-        pass
+    import MLVisualizationTools.examples.AnimationDemo as AnimationDemo
+    AnimationDemo.main(show=False)
 
 def test_mpl():
     import matplotlib
@@ -56,11 +46,6 @@ def test_mpl():
     )
     import MLVisualizationTools.examples.MatplotlibDemo as MPLDemo
     MPLDemo.main()
-
-def test_notimplemented(): #disabled for active debugging
-    with(pytest.raises(NotImplementedError)):
-        import MLVisualizationTools.examples.AnimationDemo as ADemo
-        ADemo.main()
 
 def test_train_model():
     import MLVisualizationTools.examples.TrainTitanicModel as TTM

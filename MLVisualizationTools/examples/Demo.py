@@ -13,7 +13,8 @@ except:
     raise ImportError("Plotly is required to run this demo. If you don't have plotly installed, install it with"
                       " `pip install plotly' or run the matplotlib demo instead.")
 
-def main():
+def main(show=True):
+    """Run the demo. Disable show for testing purposes."""
     model = keras.models.load_model(fileloader('examples/Models/titanicmodel'))
     df: pd.DataFrame = pd.read_csv(fileloader('examples/Datasets/Titanic/train.csv'))
 
@@ -23,12 +24,17 @@ def main():
     grid = Interfaces.TensorflowGrid(model, maxvar[0].name, maxvar[1].name, df, ["Survived"])
     grid = Colorizers.Binary(grid)
     fig = Graphs.PlotlyGrid(grid, maxvar[0].name, maxvar[1].name)
-    fig.show()
+    if show:
+        fig.show()
 
     grid = Interfaces.TensorflowGrid(model, 'Parch', 'SibSp', df, ["Survived"])
     grid = Colorizers.Binary(grid, highcontrast=False)
     fig = Graphs.PlotlyGrid(grid, 'Parch', 'SibSp')
-    fig.show()
+    if show:
+        fig.show()
+
+print("This demo shows basic features with tensorflow and plotly.")
+print("To run the demo, call Demo.main()")
 
 if __name__ == "__main__":
     main()

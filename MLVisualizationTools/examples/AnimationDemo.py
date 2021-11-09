@@ -1,6 +1,3 @@
-#THIS EXAMPLE IS BROKEN AND IS CURRENTLY BEING BUGFIXED
-#raise NotImplementedError("THIS CODE IS CURRENTLY BROKEN") #TODO - bugfix
-
 from MLVisualizationTools import Analytics, Interfaces, Graphs, Colorizers
 from MLVisualizationTools.backend import fileloader
 import pandas as pd
@@ -14,7 +11,7 @@ except:
     raise ImportError("Plotly is required to run this demo. If you don't have plotly installed, install it with"
                       " `pip install plotly' or run the matplotlib demo instead.")
 
-def main():
+def main(show=True):
     model = keras.models.load_model(fileloader('examples/Models/titanicmodel'))
     df: pd.DataFrame = pd.read_csv(fileloader('examples/Datasets/Titanic/train.csv'))
 
@@ -25,16 +22,18 @@ def main():
                                      df, ["Survived"])
     grid = Colorizers.Binary(grid, highcontrast=False)
     fig = Graphs.PlotlyAnimation(grid, maxvar[0].name, maxvar[1].name, maxvar[2].name)
-    fig.show()
-
-    # with open('plotly.html', 'w+') as f:
-    #     f.write(fig.to_html())
+    if show:
+        fig.show()
 
     grid = Interfaces.TensorflowAnimation(model, 'Parch', 'SibSp', maxvar[0].name,
                                           df, ["Survived"])
     grid = Colorizers.Binary(grid, highcontrast=True)
     fig = Graphs.PlotlyAnimation(grid, 'Parch', 'SibSp', maxvar[0].name)
-    fig.show()
+    if show:
+        fig.show()
+
+print("This demo shows animation features with tensorflow and plotly.")
+print("To run the demo, call AnimationDemo.main()")
 
 if __name__ == "__main__":
     main()

@@ -28,5 +28,8 @@ def main():
     plt, _, _ = Graphs.MatplotlibGrid(grid, 'Parch', 'SibSp', title="Parch by SibSp")
     plt.show()
 
+print("This demo shows basic features with tensorflow and matplotlib.")
+print("To run the demo, call MatplotlibDemo.main()")
+
 if __name__ == "__main__":
     main()
