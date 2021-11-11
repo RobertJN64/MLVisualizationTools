@@ -3,7 +3,6 @@ os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'  # stops agressive error message printi
 from tensorflow import keras
 import MLVisualizationTools as project
 import MLVisualizationTools.backend as backend
-import pytest
 import pandas as pd
 import copy
 
