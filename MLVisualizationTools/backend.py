@@ -64,3 +64,6 @@ class GraphData:
             cdm = {self.truemsg: self.truecolor, self.falsemsg: self.falsecolor}
             co = {'Color': [self.truemsg, self.falsemsg]}
             return self.dataframe, 'Color', cdm, co, True
+
+        else:
+            raise ValueError(str(self.colorized) + " is not a valid colorizer mode.")

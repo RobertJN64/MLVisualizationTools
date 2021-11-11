@@ -1,6 +1,7 @@
 from typing import List, Dict
 from MLVisualizationTools.backend import colinfo, GraphData, GraphDataTypes
 import pandas as pd
+import warnings
 
 #Functions for passing data to ml models
 
@@ -45,18 +46,14 @@ def TFModelPredictionGridRaw(model, x:str, y:str, coldata:List[Dict], steps:int=
     assert y in allcols, "Y must be in coldata"
 
     cols = []
-    for item in coldata:
-        if item not in [x, y]:
-            cols.append(item['name'])
-
     srow = []
-    for item in cols:
-        for d in coldata:
-            if d['name'] == item:
-                srow.append(d['mean'])
+    for item in coldata:
+        if item['name'] not in [x, y]:
+            cols.append(item['name'])
+        srow.append(item['mean'])
 
     srow = [srow] * (steps ** 2)
-    preddata = pd.DataFrame(srow, columns=cols)
+    preddata = pd.DataFrame(srow, columns=allcols)
 
     col = []
     for pos in range(0, steps):
@@ -74,6 +71,9 @@ def TFModelPredictionGridRaw(model, x:str, y:str, coldata:List[Dict], steps:int=
     preddata[y] = col
 
     predictions = model.predict(preddata)
+    if 'Output' in preddata.columns:
+        warnings.warn("Key 'Output' was already in dataframe. This means that 'Output' was a key in your "
+                      "dataset and could result in data being overwritten.")
     preddata['Output'] = predictions
     return GraphData(preddata, GraphDataTypes.Grid)
 #endregion grid
@@ -122,18 +122,14 @@ def TFModelPredictionAnimationRaw(model, x:str, y:str, anim:str, coldata:List[Di
     assert anim in allcols, "Anim must be in coldata"
 
     cols = []
-    for item in coldata:
-        if item not in [x, y, anim]:
-            cols.append(item['name'])
-
     srow = []
-    for item in cols:
-        for d in coldata:
-            if d['name'] == item:
-                srow.append(d['mean'])
+    for item in coldata:
+        if item['name'] not in [x, y, anim]:
+            cols.append(item['name'])
+        srow.append(item['mean'])
 
     srow = [srow] * (steps ** 3)
-    preddata = pd.DataFrame(srow, columns=cols)
+    preddata = pd.DataFrame(srow, columns=allcols)
 
     col = []
     for pos in range(0, steps):
@@ -159,6 +155,9 @@ def TFModelPredictionAnimationRaw(model, x:str, y:str, anim:str, coldata:List[Di
     preddata[anim] = col
 
     predictions = model.predict(preddata)
+    if 'Output' in preddata.columns:
+        warnings.warn("Key 'Output' was already in dataframe. This means that 'Output' was a key in your "
+                      "dataset and could result in data being overwritten.")
     preddata['Output'] = predictions
     return GraphData(preddata, GraphDataTypes.Animation)
 

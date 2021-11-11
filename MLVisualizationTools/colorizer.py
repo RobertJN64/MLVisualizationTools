@@ -1,8 +1,13 @@
 from MLVisualizationTools.backend import GraphData, ColorizerModes
+import warnings
 
 def simpleColor(data: GraphData, color) -> GraphData:
     """Marks all points as being the color inputted"""
     df = data.dataframe
+    if 'Color' in df.columns:
+        warnings.warn("Key 'Color' was already in dataframe. This could mean that 'Color' was a key in your "
+                      "dataset or colorization has already been applied to the data. This could result in data "
+                      "being overwritten.")
     df['Color'] = [color] * len(df)
     data.colorized = ColorizerModes.Simple
     return data
@@ -31,6 +36,11 @@ def binaryColor(data: GraphData, highcontrast:bool=True, truecolor=None, falseco
             falsecolor = "red"
         else:
             falsecolor = "orange"
+
+    if 'Color' in df.columns:
+        warnings.warn("Key 'Color' was already in dataframe. This could mean that 'Color' was a key in your "
+                      "dataset or colorization has already been applied to the data. This could result in data "
+                      "being overwritten.")
 
     df.loc[df[outputkey] > cutoff, 'Color'] = truecolor
     df.loc[df[outputkey] <= cutoff, 'Color'] = falsecolor
