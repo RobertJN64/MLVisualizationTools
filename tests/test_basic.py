@@ -46,17 +46,12 @@ def test_mpl():
     import MLVisualizationTools.examples.MatplotlibDemo as MPLDemo
     MPLDemo.main()
 
-def test_train_model():
-    import MLVisualizationTools.examples.TrainTitanicModel as TTM
-    if TTM == TTM:
-        pass
-
-def test_data_preprocess():
+def test_process_data_train_and_run_model():
     import MLVisualizationTools.examples.Datasets.Titanic.TitanicDemoPreprocess as TDP
-    if TDP == TDP:
-        pass
+    TDP.main()
+    import MLVisualizationTools.examples.TrainTitanicModel as TTM
+    TTM.main()
 
-def test_run_model():
     model = keras.models.load_model('MLVisualizationTools/examples/Models/titanicmodel')
     df = pd.read_csv('MLVisualizationTools/examples/Datasets/Titanic/train.csv')
 
@@ -68,4 +63,4 @@ def test_run_model():
     Y = df["Survived"].values
 
     _, accuracy = model.evaluate(X, Y)
-    #assert accuracy >= 0.70 #had to disable this because we kept failing...
+    # assert accuracy >= 0.70 #had to disable this because we kept failing...

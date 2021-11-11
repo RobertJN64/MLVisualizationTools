@@ -50,4 +50,5 @@ def main():
     model.save(fileloader('examples/Models/titanicmodel'))
     print("Model saved to Models/titanicmodel")
 
-main()
+if __name__ == '__main__':
+    main()
