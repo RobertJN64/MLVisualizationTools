@@ -89,10 +89,13 @@ class App:
         self.runFunc()
 
     def updateGraph(self):
-        data = Interfaces.TensorflowGrid(self.model, self.x, self.y, self.df)
-        data = Colorizers.Binary(data, highcontrast=self.highcontrast)
-        self.fig = Graphs.PlotlyGrid(data, self.x, self.y)
-        self.fig.update_layout(template=self.figtemplate)
+        try:
+            data = Interfaces.TensorflowGrid(self.model, self.x, self.y, self.df)
+            data = Colorizers.Binary(data, highcontrast=self.highcontrast)
+            self.fig = Graphs.PlotlyGrid(data, self.x, self.y)
+            self.fig.update_layout(template=self.figtemplate)
+        except AssertionError:
+            pass #User cleared their selection
         return self.fig
 
     def updateGraphFromWebsite(self, x, y):
