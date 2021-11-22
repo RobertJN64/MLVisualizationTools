@@ -83,7 +83,7 @@ def test_colormodes():
 
     animgrid = project.Interfaces.predictionAnimation(model, maxvar[0].name, maxvar[1].name, maxvar[2].name,
                                                   df, ["Survived"])
-    _ = project.Graphs.plotlyGraph(animgrid, maxvar[0].name, maxvar[1].name, maxvar[2].name)
+    _ = project.Graphs.plotlyGraph(animgrid)
 
     grid = project.Colorizers.simple(copy.deepcopy(grid), color='red')
     _ = project.Graphs.plotlyGraph(grid)
