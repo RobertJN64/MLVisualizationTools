@@ -1,3 +1,4 @@
+from MLVisualizationTools.types import GraphDataTypes, ColorizerModes
 from typing import List, Dict
 import pandas as pd
 from os import path
@@ -25,27 +26,25 @@ def fileloader(target: str):
     """Specify a path relative to MLVisualizationTools"""
     return path.dirname(__file__) + '/' + target
 
-class GraphDataTypes:
-    Grid = 'Grid'
-    Animation = 'Animation'
-
-class ColorizerModes:
-    NotColorized = "NotColorized"
-    Simple = "Simple"
-    Binary = "Binary"
-
 class GraphData:
-    def __init__(self, dataframe: pd.DataFrame, datatype: GraphDataTypes):
+    def __init__(self, dataframe: pd.DataFrame, datatype: GraphDataTypes, x: str, y: str, anim: str = None,
+                 outputkey: str = 'Output'):
         """Class for holding information about grid or animation data to be graphed."""
         self.dataframe = dataframe
         self.datatype = datatype
 
         self.colorized = ColorizerModes.NotColorized
+        self.colorkey = None
         self.truecolor = None
         self.falsecolor = None
 
         self.truemsg = "Avg. Value is True"
         self.falsemsg = "Avg. Value is False"
+
+        self.x = x
+        self.y = y
+        self.anim = anim
+        self.outputkey = outputkey
 
     def compileColorizedData(self):
         """
@@ -56,14 +55,14 @@ class GraphData:
             return self.dataframe, None, None, None, False
 
         elif self.colorized == ColorizerModes.Simple:
-            return self.dataframe, 'Color', None, None, False
+            return self.dataframe, self.colorkey, None, None, False
 
         elif self.colorized == ColorizerModes.Binary:
             self.dataframe.loc[self.dataframe['Color'] == self.truecolor, 'Color'] = self.truemsg
             self.dataframe.loc[self.dataframe['Color'] == self.falsecolor, 'Color'] = self.falsemsg
             cdm = {self.truemsg: self.truecolor, self.falsemsg: self.falsecolor}
             co = {'Color': [self.truemsg, self.falsemsg]}
-            return self.dataframe, 'Color', cdm, co, True
+            return self.dataframe, self.colorkey, cdm, co, True
 
         else:
             raise ValueError(str(self.colorized) + " is not a valid colorizer mode.")

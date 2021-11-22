@@ -65,17 +65,17 @@ def run_benchmark():
     df = pd.read_csv(fileloader('examples/Datasets/Titanic/train.csv'))
 
     benchmark.next("Analytics call")
-    AR = Analytics.Tensorflow(model, df, ["Survived"])
+    AR = Analytics.analyzeModel(model, df, ["Survived"])
     maxvar = AR.maxVariance()
 
     benchmark.next("Interface call")
-    grid = Interfaces.TensorflowGrid(model, maxvar[0].name, maxvar[1].name, df, ["Survived"])
+    grid = Interfaces.predictionGrid(model, maxvar[0].name, maxvar[1].name, df, ["Survived"])
 
     benchmark.next("Binary colorizer")
-    grid = Colorizers.Binary(grid)
+    grid = Colorizers.binary(grid)
 
     benchmark.next("Plotly fig creation")
-    fig = Graphs.PlotlyGrid(grid, maxvar[0].name, maxvar[1].name)
+    fig = Graphs.plotlyGraph(grid)
 
     benchmark.next("Plotly fig render")
     fig.show()
@@ -94,20 +94,20 @@ def resolution_compare():
     model = keras.models.load_model(fileloader('examples/Models/titanicmodel'))
     df = pd.read_csv(fileloader('examples/Datasets/Titanic/train.csv'))
 
-    AR = Analytics.Tensorflow(model, df, ["Survived"])
+    AR = Analytics.analyzeModel(model, df, ["Survived"])
     maxvar = AR.maxVariance()
 
     for steps in [5, 10, 15, 20, 50, 100]:
         start = time.time()
-        grid = Interfaces.TensorflowGrid(model, maxvar[0].name, maxvar[1].name,
+        grid = Interfaces.predictionGrid(model, maxvar[0].name, maxvar[1].name,
                                          df, ["Survived"], steps)
-        grid = Colorizers.Binary(grid)
+        grid = Colorizers.binary(grid)
         end = time.time()
         print("Interface grid with", steps, "steps took", round(end-start, 3), "seconds to complete.")
         print("This is", round((end-start) / steps ** 2, 5), "seconds per item.")
 
         start = time.time()
-        fig = Graphs.PlotlyGrid(grid, maxvar[0].name, maxvar[1].name)
+        fig = Graphs.plotlyGraph(grid)
         end = time.time()
         print("Graph grid with", steps, "steps took", round(end - start, 3), "seconds to complete.")
         print("This is", round((end - start) / steps ** 2, 5), "seconds per item.")
@@ -121,15 +121,15 @@ def resolution_compare():
         print()
 
         start = time.time()
-        anim = Interfaces.TensorflowAnimation(model, maxvar[0].name, maxvar[1].name, maxvar[2].name,
+        anim = Interfaces.predictionAnimation(model, maxvar[0].name, maxvar[1].name, maxvar[2].name,
                                               df, ["Survived"], steps)
-        anim = Colorizers.Binary(anim)
+        anim = Colorizers.binary(anim)
         end = time.time()
         print("Animation grid with", steps, "steps took", round(end - start, 3), "seconds to complete.")
         print("This is", round((end - start) / steps ** 3, 5), "seconds per item.")
 
         start = time.time()
-        fig = Graphs.PlotlyAnimation(anim, maxvar[0].name, maxvar[1].name, maxvar[2].name)
+        fig = Graphs.plotlyGraph(anim)
         end = time.time()
         print("Animation graph with", steps, "steps took", round(end - start, 3), "seconds to complete.")
         print("This is", round((end - start) / steps ** 3, 5), "seconds per item.")

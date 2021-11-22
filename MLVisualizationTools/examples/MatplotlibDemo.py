@@ -15,17 +15,17 @@ def main():
     model = keras.models.load_model(fileloader('examples/Models/titanicmodel'))
     df: pd.DataFrame = pd.read_csv(fileloader('examples/Datasets/Titanic/train.csv'))
 
-    AR = Analytics.Tensorflow(model, df, ["Survived"])
+    AR = Analytics.analyzeModel(model, df, ["Survived"])
     maxvar = AR.maxVariance()
 
-    grid = Interfaces.TensorflowGrid(model, maxvar[0].name, maxvar[1].name, df, ["Survived"])
-    grid = Colorizers.Simple(grid, 'red')
-    plt, _, _ = Graphs.MatplotlibGrid(grid, maxvar[0].name, maxvar[1].name, title="Max Variance")
+    grid = Interfaces.predictionGrid(model, maxvar[0].name, maxvar[1].name, df, ["Survived"])
+    grid = Colorizers.simple(grid, 'red')
+    plt, _, _ = Graphs.matplotlibGraph(grid, title="Max Variance")
     plt.show(block=False)
 
-    grid = Interfaces.TensorflowGrid(model, 'Parch', 'SibSp', df, ["Survived"])
-    grid = Colorizers.Binary(grid, highcontrast=True)
-    plt, _, _ = Graphs.MatplotlibGrid(grid, 'Parch', 'SibSp', title="Parch by SibSp")
+    grid = Interfaces.predictionGrid(model, 'Parch', 'SibSp', df, ["Survived"])
+    grid = Colorizers.binary(grid, highcontrast=True)
+    plt, _, _ = Graphs.matplotlibGraph(grid, title="Parch by SibSp")
     plt.show()
 
 print("This demo shows basic features with tensorflow and matplotlib.")

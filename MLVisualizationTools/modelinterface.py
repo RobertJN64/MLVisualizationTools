@@ -1,42 +1,42 @@
-from typing import List, Dict
 from MLVisualizationTools.backend import colinfo, GraphData, GraphDataTypes
+from typing import List, Dict
 import pandas as pd
 import warnings
 
 #Functions for passing data to ml models
 
-#region Tensorflow
 #region grid
-def TFModelPredictionGrid(model, x:str, y:str, data:pd.DataFrame,
-                          exclude:List[str] = None, steps:int=20) -> GraphData:
+def predictionGrid(model, x:str, y:str, data:pd.DataFrame, exclude:List[str] = None, steps:int=20,
+                   outputkey: str = 'Output') -> GraphData:
     """
-    Creates a dataset from a 2d prediction on a tensorflow model. Wrapper function for TFModelPredictionGridRaw()
+    Creates a dataset from a 2d prediction on a ML model. Wrapper function for PredictionGridRaw()
     that automatically handles column info generation.
 
-    :param model: A tensorflow model
+    :param model: A ML model
     :param x: xaxis for graph data
     :param y: yaxis for graph data
     :param data: A pandas dataframe
     :param exclude: Values to be excluded from data, useful for output values
     :param steps: Resolution to scan model with
+    :param outputkey: Used to override default output name
     """
-    return TFModelPredictionGridRaw(model, x, y, colinfo(data, exclude), steps)
+    return predictionGridRaw(model, x, y, colinfo(data, exclude), steps, outputkey)
 
-def TFModelPredictionGridRaw(model, x:str, y:str, coldata:List[Dict], steps:int=20) -> GraphData:
+def predictionGridRaw(model, x:str, y:str, coldata:List[Dict], steps:int=20, outputkey: str = 'Output') -> GraphData:
     """
-    Creates a dataset from a 2d prediction on a tensorflow model. Wrapper function for TFModelPredictionGridRaw()
-    that automatically handles column info generation.
+    Creates a dataset from a 2d prediction on a ML model.
 
-    Call from TFModelPredictionGrid to autogen params.
+    Call from Grid to autogen params.
 
     Coldata should be formatted with keys 'name', 'min', 'max', 'mean'
 
-    :param model: A tensorflow model
-    :param model: A tensorflow model
+    :param model: A ML model
+    :param model: A ML model
     :param x: xaxis for graph data
     :param y: yaxis for graph data
     :param coldata: An ordered list of dicts with col names, min max values, and means
     :param steps: Resolution to scan model with
+    :param outputkey: Used to override default output name
     """
     allcols = []
     for item in coldata:
@@ -71,46 +71,49 @@ def TFModelPredictionGridRaw(model, x:str, y:str, coldata:List[Dict], steps:int=
     preddata[y] = col
 
     predictions = model.predict(preddata)
-    if 'Output' in preddata.columns:
-        warnings.warn("Key 'Output' was already in dataframe. This means that 'Output' was a key in your "
-                      "dataset and could result in data being overwritten.")
-    preddata['Output'] = predictions
-    return GraphData(preddata, GraphDataTypes.Grid)
+    if outputkey in preddata.columns:
+        warnings.warn(f"Key {outputkey} was already in dataframe. This means that {outputkey} was a key in your "
+                      "dataset and could result in data being overwritten. "
+                      "You can pick a different key in the function call.")
+    preddata[outputkey] = predictions
+    return GraphData(preddata, GraphDataTypes.Grid, x, y, outputkey)
 #endregion grid
 
 #region animation
-def TFModelPredictionAnimation(model, x:str, y:str, anim:str, data: pd.DataFrame,
-                               exclude:List[str] = None, steps:int=20) -> GraphData:
+def predictionAnimation(model, x:str, y:str, anim:str, data: pd.DataFrame, exclude:List[str] = None,
+                        steps:int=20, outputkey: str = 'Output') -> GraphData:
     """
-    Creates a dataset from a 2d prediction on a tensorflow model. Wrapper function for TFModelPredictionGridRaw()
+    Creates a dataset from a 2d prediction on a ML model. Wrapper function for PredictionGridRaw()
     that automatically handles column info generation.
 
-    :param model: A tensorflow model
+    :param model: A ML model
     :param x: xaxis for graph data
     :param y: yaxis for graph data
     :param anim: Animation axis for graph data
     :param data: A pandas dataframe
     :param exclude: Values to be excluded from data, useful for output values
     :param steps: Resolution to scan model with
+    :param outputkey: Used to override default output name
     """
-    return TFModelPredictionAnimationRaw(model, x, y, anim, colinfo(data, exclude), steps)
+    return predictionAnimationRaw(model, x, y, anim, colinfo(data, exclude), steps, outputkey)
 
-def TFModelPredictionAnimationRaw(model, x:str, y:str, anim:str, coldata:List[Dict], steps:int=20) -> GraphData:
+def predictionAnimationRaw(model, x:str, y:str, anim:str, coldata:List[Dict], steps:int=20,
+                           outputkey: str = 'Output') -> GraphData:
     """
-    Creates a dataset from a 2d prediction on a tensorflow model. Wrapper function for TFModelPredictionGridRaw()
-    that automatically handles column info generation.
+    Creates a dataset from a 2d prediction on a ML model.
 
-    Call from TFModelPredictionGrid to autogen params.
+    Call from PredictionAnimation to autogen params.
 
     Coldata should be formatted with keys 'name', 'min', 'max', 'mean'
 
-    :param model: A tensorflow model
-    :param model: A tensorflow model
+    :param model: A ML model
+    :param model: A ML model
     :param x: xaxis for graph data
     :param y: yaxis for graph data
     :param anim: Animation axis for graph data
     :param coldata: An ordered list of dicts with col names, min max values, and means
     :param steps: Resolution to scan model with
+    :param outputkey: Used to override default output name
     """
 
     allcols = []
@@ -155,11 +158,11 @@ def TFModelPredictionAnimationRaw(model, x:str, y:str, anim:str, coldata:List[Di
     preddata[anim] = col
 
     predictions = model.predict(preddata)
-    if 'Output' in preddata.columns:
-        warnings.warn("Key 'Output' was already in dataframe. This means that 'Output' was a key in your "
-                      "dataset and could result in data being overwritten.")
-    preddata['Output'] = predictions
-    return GraphData(preddata, GraphDataTypes.Animation)
+    if outputkey in preddata.columns:
+        warnings.warn(f"Key {outputkey} was already in dataframe. This means that {outputkey} was a key in your "
+                      "dataset and could result in data being overwritten. "
+                      "You can pick a different key in the function call.")
+    preddata[outputkey] = predictions
+    return GraphData(preddata, GraphDataTypes.Animation, x, y, anim, outputkey)
 
-#endregion
 #endregion

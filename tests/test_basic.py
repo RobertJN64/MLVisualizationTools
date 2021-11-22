@@ -10,16 +10,16 @@ import copy
 
 def test_colorizer():
     data = pd.DataFrame({'Output': [0, 0.5, 1]})
-    data = backend.GraphData(data, backend.GraphDataTypes.Grid)
-    assert list(project.Colorizers.Simple(copy.deepcopy(data), 'red').dataframe['Color']) == ['red'] * 3
+    data = backend.GraphData(data, backend.GraphDataTypes.Grid, 'NotKey', 'NotKey')
+    assert list(project.Colorizers.simple(copy.deepcopy(data), 'red').dataframe['Color']) == ['red'] * 3
 
-    assert (list(project.Colorizers.Binary(copy.deepcopy(data), highcontrast=True).dataframe['Color'])
+    assert (list(project.Colorizers.binary(copy.deepcopy(data), highcontrast=True).dataframe['Color'])
            == ['orange', 'orange', 'blue'])
 
-    assert (list(project.Colorizers.Binary(copy.deepcopy(data), highcontrast=False).dataframe['Color'])
+    assert (list(project.Colorizers.binary(copy.deepcopy(data), highcontrast=False).dataframe['Color'])
             == ['red', 'red', 'green'])
 
-    assert (list(project.Colorizers.Binary(copy.copy(data), highcontrast=False,
+    assert (list(project.Colorizers.binary(copy.copy(data), highcontrast=False,
                                            truecolor='white', falsecolor='black').dataframe['Color'])
             == ['black', 'black', 'white'])
 
@@ -74,31 +74,31 @@ def test_colormodes():
     model = keras.models.load_model(fileloader('examples/Models/titanicmodel'))
     df: pd.DataFrame = pd.read_csv(fileloader('examples/Datasets/Titanic/train.csv'))
 
-    AR = project.Analytics.Tensorflow(model, df, ["Survived"])
+    AR = project.Analytics.analyzeModel(model, df, ["Survived"])
     maxvar = AR.maxVariance()
 
-    grid = project.Interfaces.TensorflowGrid(model, maxvar[0].name, maxvar[1].name, df, ["Survived"])
-    _ = project.Graphs.PlotlyGrid(copy.deepcopy(grid), maxvar[0].name, maxvar[1].name)
-    _ = project.Graphs.MatplotlibGrid(copy.deepcopy(grid), maxvar[0].name, maxvar[1].name)
+    grid = project.Interfaces.predictionGrid(model, maxvar[0].name, maxvar[1].name, df, ["Survived"])
+    _ = project.Graphs.plotlyGraph(copy.deepcopy(grid))
+    _ = project.Graphs.matplotlibGraph(copy.deepcopy(grid))
 
-    animgrid = project.Interfaces.TensorflowAnimation(model, maxvar[0].name, maxvar[1].name, maxvar[2].name,
+    animgrid = project.Interfaces.predictionAnimation(model, maxvar[0].name, maxvar[1].name, maxvar[2].name,
                                                   df, ["Survived"])
-    _ = project.Graphs.PlotlyAnimation(animgrid, maxvar[0].name, maxvar[1].name, maxvar[2].name)
+    _ = project.Graphs.plotlyGraph(animgrid, maxvar[0].name, maxvar[1].name, maxvar[2].name)
 
-    grid = project.Colorizers.Simple(copy.deepcopy(grid), color='red')
-    _ = project.Graphs.PlotlyGrid(grid, maxvar[0].name, maxvar[1].name)
+    grid = project.Colorizers.simple(copy.deepcopy(grid), color='red')
+    _ = project.Graphs.plotlyGraph(grid)
 
     with pytest.raises(ValueError):
         grid.colorized = "Not a mode"
-        _ = project.Graphs.PlotlyGrid(grid, maxvar[0].name, maxvar[1].name)
+        _ = project.Graphs.plotlyGraph(grid)
 
 def test_colorizer_warning():
     data = pd.DataFrame({'Output': [0, 0.5, 1], 'Color': ['red', 'orange', 'yellow']})
-    data = backend.GraphData(data, backend.GraphDataTypes.Grid)
+    data = backend.GraphData(data, backend.GraphDataTypes.Grid, 'NotKey', 'NotKey')
     with pytest.warns(Warning, match="Key 'Color' was already in dataframe."):
-        project.Colorizers.Simple(copy.deepcopy(data), 'red')
+        project.Colorizers.simple(copy.deepcopy(data), 'red')
     with pytest.warns(Warning, match="Key 'Color' was already in dataframe."):
-        project.Colorizers.Binary(copy.deepcopy(data))
+        project.Colorizers.binary(copy.deepcopy(data))
 
 def test_wrong_data_format_exception():
     from MLVisualizationTools.graphinterface import WrongDataFormatException
@@ -106,23 +106,23 @@ def test_wrong_data_format_exception():
     model = keras.models.load_model(fileloader('examples/Models/titanicmodel'))
     df: pd.DataFrame = pd.read_csv(fileloader('examples/Datasets/Titanic/train.csv'))
 
-    AR = project.Analytics.Tensorflow(model, df, ["Survived"])
+    AR = project.Analytics.analyzeModel(model, df, ["Survived"])
     maxvar = AR.maxVariance()
     print(maxvar[0]) #tests repr
 
     with pytest.raises(WrongDataFormatException):
-        grid = project.Interfaces.TensorflowGrid(model, maxvar[0].name, maxvar[1].name, df, ["Survived"])
-        _ = project.Graphs.PlotlyAnimation(grid, maxvar[0].name, maxvar[1].name, maxvar[2].name)
+        grid = project.Interfaces.predictionGrid(model, maxvar[0].name, maxvar[1].name, df, ["Survived"])
+        _ = project.Graphs.plotlyAnimation(grid)
 
     with pytest.raises(WrongDataFormatException):
-        grid = project.Interfaces.TensorflowAnimation(model, maxvar[0].name, maxvar[1].name, maxvar[2].name,
+        grid = project.Interfaces.predictionAnimation(model, maxvar[0].name, maxvar[1].name, maxvar[2].name,
                                                       df, ["Survived"])
-        _ = project.Graphs.PlotlyGrid(grid, maxvar[0].name, maxvar[1].name)
+        _ = project.Graphs.plotlyGrid(grid)
 
     with pytest.raises(WrongDataFormatException):
-        grid = project.Interfaces.TensorflowAnimation(model, maxvar[0].name, maxvar[1].name, maxvar[2].name,
+        grid = project.Interfaces.predictionAnimation(model, maxvar[0].name, maxvar[1].name, maxvar[2].name,
                                                       df, ["Survived"])
-        _ = project.Graphs.MatplotlibGrid(grid, maxvar[0].name, maxvar[1].name)
+        _ = project.Graphs.matplotlibGrid(grid)
 
 def test_OutputKey_warning():
     model = keras.models.load_model(fileloader('examples/Models/titanicmodel'))
@@ -133,7 +133,7 @@ def test_OutputKey_warning():
     df.columns = cols
 
     with pytest.warns(Warning, match="Key 'Output' was already in dataframe."):
-        project.Interfaces.TensorflowGrid(model, cols[1], cols[2], df, ["Survived"])
+        project.Interfaces.predictionGrid(model, cols[1], cols[2], df, ["Survived"])
     with pytest.warns(Warning, match="Key 'Output' was already in dataframe."):
-        project.Interfaces.TensorflowAnimation(model, cols[1], cols[2], cols[3], df, ["Survived"])
+        project.Interfaces.predictionAnimation(model, cols[1], cols[2], cols[3], df, ["Survived"])
 

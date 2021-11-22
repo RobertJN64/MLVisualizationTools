@@ -15,20 +15,20 @@ def main(show=True):
     model = keras.models.load_model(fileloader('examples/Models/titanicmodel'))
     df: pd.DataFrame = pd.read_csv(fileloader('examples/Datasets/Titanic/train.csv'))
 
-    AR = Analytics.Tensorflow(model, df, ["Survived"])
+    AR = Analytics.analyzeModel(model, df, ["Survived"])
     maxvar = AR.maxVariance()
 
-    grid = Interfaces.TensorflowAnimation(model, maxvar[0].name, maxvar[1].name, maxvar[2].name,
+    grid = Interfaces.predictionAnimation(model, maxvar[0].name, maxvar[1].name, maxvar[2].name,
                                      df, ["Survived"])
-    grid = Colorizers.Binary(grid, highcontrast=False)
-    fig = Graphs.PlotlyAnimation(grid, maxvar[0].name, maxvar[1].name, maxvar[2].name)
+    grid = Colorizers.binary(grid, highcontrast=False)
+    fig = Graphs.plotlyGraph(grid)
     if show:
         fig.show()
 
-    grid = Interfaces.TensorflowAnimation(model, 'Parch', 'SibSp', maxvar[0].name,
+    grid = Interfaces.predictionAnimation(model, 'Parch', 'SibSp', maxvar[0].name,
                                           df, ["Survived"])
-    grid = Colorizers.Binary(grid, highcontrast=True)
-    fig = Graphs.PlotlyAnimation(grid, 'Parch', 'SibSp', maxvar[0].name)
+    grid = Colorizers.binary(grid, highcontrast=True)
+    fig = Graphs.plotlyGraph(grid)
     if show:
         fig.show()
 

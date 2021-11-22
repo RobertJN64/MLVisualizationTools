@@ -16,11 +16,11 @@ except ImportError:
 
 class App:
     def __init__(self, model, data: pd.DataFrame, title:str = "DashModelVisualizer", theme:str = "dark", folder = None,
-                 highcontrast:bool = True, notebook:bool = False, kagglenotebook:bool = False, mode:str = 'external',
+                 highcontrast:bool = True, notebook:bool = False, usetunneling:bool = False, mode:str = 'external',
                  host:str = '0.0.0.0', port: bool = None):
 
         theme, folder, self.figtemplate = getTheme(theme, folder)
-        self.app, self.runFunc = getDashApp(title, notebook, kagglenotebook, host, port, mode, theme, folder)
+        self.app, self.runFunc = getDashApp(title, notebook, usetunneling, host, port, mode, theme, folder)
 
         self.model = model
         self.df = data
@@ -30,7 +30,7 @@ class App:
         for col in self.df.columns:
             options.append({'label': col, 'value': col})
 
-        self.AR = Analytics.Tensorflow(self.model, self.df)
+        self.AR = Analytics.analyzeModel(self.model, self.df)
         self.maxvar = self.AR.maxVariance()
 
         self.x = self.maxvar[0].name
@@ -90,9 +90,9 @@ class App:
 
     def updateGraph(self):
         try:
-            data = Interfaces.TensorflowGrid(self.model, self.x, self.y, self.df)
-            data = Colorizers.Binary(data, highcontrast=self.highcontrast)
-            self.fig = Graphs.PlotlyGrid(data, self.x, self.y)
+            data = Interfaces.predictionGrid(self.model, self.x, self.y, self.df)
+            data = Colorizers.binary(data, highcontrast=self.highcontrast)
+            self.fig = Graphs.plotlyGraph(data)
             self.fig.update_layout(template=self.figtemplate)
         except AssertionError:
             pass #User cleared their selection
@@ -104,7 +104,7 @@ class App:
         return self.updateGraph()
 
 def visualize(model, data: pd.DataFrame, title:str = "DashModelVisualizer", theme:str = "dark", folder = None,
-              highcontrast:bool = True, notebook:bool = False, kagglenotebook:bool = False, mode:str = 'external',
+              highcontrast:bool = True, notebook:bool = False, usetunneling:bool = False, mode:str = 'external',
               host:str = '0.0.0.0', port: bool = None):
     """
     Creates a dash website to visualize an ML model.
@@ -116,9 +116,9 @@ def visualize(model, data: pd.DataFrame, title:str = "DashModelVisualizer", them
     :param folder: Directory to load additional css and js from
     :param highcontrast: Visualizes the model with orange and blue instead of green and red. Great for colorblind people!
     :param notebook: Uses jupyter dash instead of dash
-    :param kagglenotebook: Enables ngrok tunneling for use in kaggle notebooks
+    :param usetunneling: Enables ngrok tunneling for use in notebooks that don't have built in dash support, like kaggle
     :param mode: Use 'external', 'inline', or 'jupyterlab'
     :param host: default hostname for dash
     :param port: None for default port (8050) or (1005)
     """
-    App(model, data, title, theme, folder, highcontrast, notebook, kagglenotebook, mode, host, port).run()
+    App(model, data, title, theme, folder, highcontrast, notebook, usetunneling, mode, host, port).run()

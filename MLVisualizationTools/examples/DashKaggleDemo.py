@@ -18,7 +18,7 @@ def main(theme='dark', highcontrast=True, mode='external'):
     df: pd.DataFrame = pd.read_csv(fileloader('examples/Datasets/Titanic/train.csv'))
     df = df.drop("Survived", axis=1)
     DashModelVisualizer.visualize(model, df, title="DashKaggleDemo", theme=theme,
-                                  highcontrast=highcontrast, notebook=True, mode=mode, kagglenotebook=True)
+                                  highcontrast=highcontrast, notebook=True, mode=mode, usetunneling=True)
 
 if not is_running_from_reloader():
     print("This demo is for use inside a jupyter notebook that does not supports dash natively (such as kaggle).")

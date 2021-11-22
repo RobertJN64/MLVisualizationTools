@@ -8,8 +8,9 @@ MLVisualizationTools is a python library to make
 machine learning more understandable through the
 use of effective visualizations.
 
-It supports tensorflow, matplotlib, and plotly, with 
-support for more ml libraries coming soon.
+We support graphing with matplotlib and plotly.
+We implicity support all major ML libraries, such as 
+tensorflow and sklearn.
 
 You can use the built in apps to quickly anaylyze your
 existing models, or build custom projects using the modular
@@ -80,12 +81,12 @@ from MLVisualizationTools import Analytics, Interfaces, Graphs, Colorizers
 
 model = ... #your model
 df = ... #your dataframe
-AR = Analytics.Tensorflow(model, df)
+AR = Analytics.analyzeModel(model, df)
 maxvar = AR.maxVariance()
 
-grid = Interfaces.TensorflowGrid(model, maxvar[0].name, maxvar[1].name, df)
-grid = Colorizers.Binary(grid)
-fig = Graphs.PlotlyGrid(grid, maxvar[0].name, maxvar[1].name)
+grid = Interfaces.predictionGrid(model, maxvar[0].name, maxvar[1].name, df)
+grid = Colorizers.binary(grid)
+fig = Graphs.plotlyGraph(grid)
 fig.show()
 ```
 
@@ -103,3 +104,20 @@ notebooks
 
 See [MLVisualizationTools/Examples](/MLVisualizationTools/examples) for more examples.
 Use example.main() to run the examples and set parameters such as themes.
+
+## Support for more ML Libraries
+
+We support any ML library that has a `predict()` call that takes
+a pd Dataframe with features. If this doesn't work, use a wrapper class like 
+in this example:
+
+```python
+import pandas as pd
+
+class ModelWrapper:
+    def __init(self, model):
+        self.model = model
+
+    def predict(self, dataframe: pd.DataFrame):
+        ... #Do whatever code you need here
+```

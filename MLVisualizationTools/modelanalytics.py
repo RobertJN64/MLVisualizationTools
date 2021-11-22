@@ -33,27 +33,26 @@ class AnalyticsResult:
         cols.sort(reverse=True)
         return cols
 
-#region Tensorflow
-def analyzeTFModel(model, data: pd.DataFrame, exclude: List[str] = None, steps:int=20) -> AnalyticsResult:
+def analyzeModel(model, data: pd.DataFrame, exclude: List[str] = None, steps:int=20) -> AnalyticsResult:
     """
-    Performs 1d analysis on a tensorflow model. Wrapper function for analyzeTFModelRaw()
+    Performs 1d analysis on an ML model by calling predict(). Wrapper function for analyzeModelRaw()
     that automatically handles column info generation.
 
-    :param model: A tensorflow model
+    :param model: A ML model
     :param data: A pandas dataframe
     :param exclude: Values to be excluded from data, useful for output values
     :param steps: Resolution to scan model with
     """
-    return analyzeTFModelRaw(model, colinfo(data, exclude), steps)
+    return analyzeModelRaw(model, colinfo(data, exclude), steps)
 
-def analyzeTFModelRaw(model, coldata: List[Dict], steps:int=20) -> AnalyticsResult:
+def analyzeModelRaw(model, coldata: List[Dict], steps:int=20) -> AnalyticsResult:
     """
-    Performs 1d analysis on a tensorflow model. Returns a class with lots of info for graphing.
-    Call from anaylyzeTFModel to autogen params.
+    Performs 1d analysis on a ML model by calling predict(). Returns a class with lots of info for graphing.
+    Call from anaylyzeModel to autogen params.
 
     Coldata should be formatted with keys 'name', 'min', 'max', 'mean'
 
-    :param model: A tensorflow model
+    :param model: A ML model
     :param coldata: An ordered list of dicts with col names, min max values, and means
     :param steps: Resolution to scan model with
     """
@@ -81,4 +80,3 @@ def analyzeTFModelRaw(model, coldata: List[Dict], steps:int=20) -> AnalyticsResu
         currentpos += steps
         AR.append(item['name'], values.max() - values.min())
     return AR
-#endregion
