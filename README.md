@@ -30,8 +30,8 @@ installed.
 To use interactive webapps, use the `pip install MLVisualizationTools[dash]` or `pip install MLVisualizationTools[dash-notebook]`
 flags on install.
 
-If you are running on a kaggle notebook, you might need 
-`pip install MLVisualizationTools[kaggle-notebook]`
+If you are running on a notebook that doesn't have dash support (like kaggle), you might need 
+`pip install MLVisualizationTools[ngrok-tunneling]`
 
 ## Express
 

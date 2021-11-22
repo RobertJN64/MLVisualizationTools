@@ -72,8 +72,8 @@ def predictionGridRaw(model, x:str, y:str, coldata:List[Dict], steps:int=20, out
 
     predictions = model.predict(preddata)
     if outputkey in preddata.columns:
-        warnings.warn(f"Key '{outputkey}' was already in dataframe. This means that '{outputkey}' was a key in your "
-                      "dataset and could result in data being overwritten. "
+        warnings.warn(f"Output key '{outputkey}' was already in dataframe. This means that '{outputkey}' "
+                      "was a key in your dataset and could result in data being overwritten. "
                       "You can pick a different key in the function call.")
     preddata[outputkey] = predictions
     return GraphData(preddata, GraphDataTypes.Grid, x, y, outputkey)
@@ -159,8 +159,8 @@ def predictionAnimationRaw(model, x:str, y:str, anim:str, coldata:List[Dict], st
 
     predictions = model.predict(preddata)
     if outputkey in preddata.columns:
-        warnings.warn(f"Key '{outputkey}' was already in dataframe. This means that '{outputkey}' was a key in your "
-                      "dataset and could result in data being overwritten. "
+        warnings.warn(f"Output key '{outputkey}' was already in dataframe. This means that '{outputkey}' "
+                      "was a key in your dataset and could result in data being overwritten. "
                       "You can pick a different key in the function call.")
     preddata[outputkey] = predictions
     return GraphData(preddata, GraphDataTypes.Animation, x, y, anim, outputkey)

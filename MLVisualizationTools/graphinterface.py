@@ -83,7 +83,7 @@ def plotlyAnimation(data: GraphData, title="", key=True, sizekey: str = 'Size'):
 
     df, colorkey, cdm, co, showlegend = data.compileColorizedData()
     if sizekey in df.columns:
-        warnings.warn(f"Key '{sizekey}' was already in dataframe. This means that '{sizekey}' was a key in your "
+        warnings.warn(f"Size key '{sizekey}' was already in dataframe. This means that '{sizekey}' was a key in your "
                       "dataset and could result in data being overwritten. "
                       "You can pick a different key in the function call.")
     df[sizekey] = [1] * len(df)

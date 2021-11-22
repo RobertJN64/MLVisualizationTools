@@ -6,8 +6,8 @@ def simple(data: GraphData, color, colorkey='Color') -> GraphData:
     """Marks all points as being the color inputted"""
     df = data.dataframe
     if colorkey in df.columns:
-        warnings.warn(f"Key '{colorkey}' was already in dataframe. This could mean that '{colorkey}' was a key in your "
-                      "dataset or colorization has already been applied to the data. This could result in data "
+        warnings.warn(f"Color key '{colorkey}' was already in dataframe. This could mean that '{colorkey}' was a key "
+                      "in your dataset or colorization has already been applied to the data. This could result in data "
                       "being overwritten. You can pick a different key in the function call.")
     df[colorkey] = [color] * len(df)
     data.colorized = ColorizerModes.Simple
@@ -40,8 +40,8 @@ def binary(data: GraphData, highcontrast:bool=True, truecolor=None, falsecolor=N
             falsecolor = "orange"
 
     if colorkey in df.columns:
-        warnings.warn(f"Key '{colorkey}' was already in dataframe. This could mean that '{colorkey}' was a key in your "
-                      "dataset or colorization has already been applied to the data. This could result in data "
+        warnings.warn(f"Color key '{colorkey}' was already in dataframe. This could mean that '{colorkey}' was a key "
+                      "in your dataset or colorization has already been applied to the data. This could result in data "
                       "being overwritten. You can pick a different key in the function call.")
 
     df.loc[df[data.outputkey] > cutoff, colorkey] = truecolor

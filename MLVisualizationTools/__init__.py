@@ -6,3 +6,4 @@ import MLVisualizationTools.modelanalytics as Analytics
 import MLVisualizationTools.modelinterface as Interfaces
 import MLVisualizationTools.colorizers as Colorizers
 import MLVisualizationTools.graphinterface as Graphs
+import MLVisualizationTools.types as types

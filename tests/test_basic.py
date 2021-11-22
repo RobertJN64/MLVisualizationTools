@@ -95,9 +95,9 @@ def test_colormodes():
 def test_colorizer_warning():
     data = pd.DataFrame({'Output': [0, 0.5, 1], 'Color': ['red', 'orange', 'yellow']})
     data = backend.GraphData(data, backend.GraphDataTypes.Grid, 'NotKey', 'NotKey')
-    with pytest.warns(Warning, match="Key 'Color' was already in dataframe."):
+    with pytest.warns(Warning, match="Color key 'Color' was already in dataframe."):
         project.Colorizers.simple(copy.deepcopy(data), 'red')
-    with pytest.warns(Warning, match="Key 'Color' was already in dataframe."):
+    with pytest.warns(Warning, match="Color key 'Color' was already in dataframe."):
         project.Colorizers.binary(copy.deepcopy(data))
 
 def test_wrong_data_format_exception():
@@ -132,8 +132,32 @@ def test_OutputKey_warning():
     cols[1] = "Output"
     df.columns = cols
 
-    with pytest.warns(Warning, match="Key 'Output' was already in dataframe."):
+    with pytest.warns(Warning, match="Output key 'Output' was already in dataframe."):
         project.Interfaces.predictionGrid(model, cols[1], cols[2], df, ["Survived"])
-    with pytest.warns(Warning, match="Key 'Output' was already in dataframe."):
+    with pytest.warns(Warning, match="Output key 'Output' was already in dataframe."):
         project.Interfaces.predictionAnimation(model, cols[1], cols[2], cols[3], df, ["Survived"])
 
+def test_graph_branch_error():
+    model = keras.models.load_model(fileloader('examples/Models/titanicmodel'))
+    df: pd.DataFrame = pd.read_csv(fileloader('examples/Datasets/Titanic/train.csv'))
+
+    AR = project.Analytics.analyzeModel(model, df, ["Survived"])
+    maxvar = AR.maxVariance()
+    grid = project.Interfaces.predictionGrid(model, maxvar[0].name, maxvar[1].name, df, ["Survived"])
+    project.Graphs.graph(grid)
+    project.Graphs.graph(grid, project.types.GraphOutputTypes.Matplotlib)
+    grid = project.Interfaces.predictionAnimation(model, maxvar[0].name, maxvar[1].name, maxvar[2].name, df, ["Survived"])
+    with pytest.warns(Warning, match="Size key 'Age' was already in dataframe."):
+        project.Graphs.graph(grid, sizekey='Age')
+    with pytest.raises(NotImplementedError):
+        project.Graphs.graph(grid, project.types.GraphOutputTypes.Matplotlib)
+
+    grid.datatype = "NotAType"
+    with pytest.raises(Exception):
+        project.Graphs.plotlyGraph(grid)
+    with pytest.raises(Exception):
+        project.Graphs.matplotlibGraph(grid)
+
+    with pytest.raises(Exception):
+        # noinspection PyTypeChecker
+        project.Graphs.graph(grid, "NotAType")
