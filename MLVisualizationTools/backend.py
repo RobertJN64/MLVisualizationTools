@@ -22,8 +22,13 @@ def colinfo(data: pd.DataFrame, exclude:List[str] = None) -> List[Dict]:
                             'min': data[item].min(), 'max': data[item].max()})
     return coldata
 
-def fileloader(target: str):
+def fileloader(target: str, dynamic_model_version = True):
     """Specify a path relative to MLVisualizationTools"""
+    if dynamic_model_version:
+        if 'examples/Models' in target:
+            import tensorflow as tf
+            if float(tf.version.VERSION[:3]) < 2.5:
+                target += "_v2.0"
     return path.dirname(__file__) + '/' + target
 
 class GraphData:

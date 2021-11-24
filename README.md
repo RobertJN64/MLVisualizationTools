@@ -121,3 +121,15 @@ class ModelWrapper:
     def predict(self, dataframe: pd.DataFrame):
         ... #Do whatever code you need here
 ```
+
+## Tensorflow Compatibility
+
+MLVisualizationTools is distributed with a pretrained tensorflow model
+to make running examples quick and easy. It is not needed for main library functions.
+
+For version 2.0 through 2.4, we load a v2.0 model.
+For version 2.5+ we load a v2.5 model.
+
+If this causes compatibility issues you can still use the main library on your models. 
+If you need an example model, retrain it with 
+[TrainTitanicModel.py](/MLVisualizationTools/examples/TrainTitanicModel.py)
