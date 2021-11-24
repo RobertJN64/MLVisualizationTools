@@ -11,10 +11,22 @@ from MLVisualizationTools.backend import GraphData
 class WrongDataFormatException(Exception):
     pass
 
-def graph(data: GraphData, graphtype: GraphOutputTypes = GraphOutputTypes.Plotly, title="", key=True,
+def graph(data: GraphData, graphtype: GraphOutputTypes = GraphOutputTypes.Auto, title="", key=True,
           sizekey: str = 'Size'):
     """Calls correct graph type based on data format and mode chosen"""
-    if graphtype == GraphOutputTypes.Plotly:
+
+    if graphtype == GraphOutputTypes.Auto:
+        try:
+            import plotly
+            return plotlyGraph(data, title, key, sizekey)
+        except ImportError:
+            try:
+                import matplotlib
+                return matplotlibGraph(data, title, key, sizekey)
+            except ImportError:
+                raise ImportError("Either matplotlib or plotly is required to use graphs. Install them with pip.")
+
+    elif graphtype == GraphOutputTypes.Plotly:
         return plotlyGraph(data, title, key, sizekey)
     elif graphtype == GraphOutputTypes.Matplotlib:
         return matplotlibGraph(data, title, key, sizekey)

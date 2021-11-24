@@ -154,11 +154,11 @@ def test_graph_branch_error():
         project.Graphs.graph(grid, project.types.GraphOutputTypes.Matplotlib)
 
     grid.datatype = "NotAType"
-    with pytest.raises(Exception):
+    with pytest.raises(Exception, match="DataType NotAType not recognized."):
         project.Graphs.plotlyGraph(grid)
-    with pytest.raises(Exception):
+    with pytest.raises(Exception, match="DataType NotAType not recognized."):
         project.Graphs.matplotlibGraph(grid)
 
-    with pytest.raises(Exception):
+    with pytest.raises(Exception, match="GraphType NotAType not recognized."):
         # noinspection PyTypeChecker
         project.Graphs.graph(grid, "NotAType")

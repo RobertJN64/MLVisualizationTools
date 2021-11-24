@@ -3,6 +3,7 @@ class GraphDataTypes:
     Animation = 'Animation'
 
 class GraphOutputTypes:
+    Auto = 'Auto'
     Matplotlib = 'Matplotlib'
     Plotly = 'Plotly'
 
