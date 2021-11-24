@@ -9,7 +9,6 @@ def main(theme = 'dark', highcontrast = True):
     """
     from MLVisualizationTools.express import DashModelVisualizer
     from MLVisualizationTools.backend import fileloader
-    from SingletonProcess import block
     import pandas as pd
     import os
     os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'  # stops agressive error message printing
@@ -18,7 +17,6 @@ def main(theme = 'dark', highcontrast = True):
     df: pd.DataFrame = pd.read_csv(fileloader('examples/Datasets/Titanic/train.csv'))
     df = df.drop("Survived", axis=1)
     DashModelVisualizer.visualize(model, df, title="DashInteractiveDemo", theme=theme, highcontrast=highcontrast)
-    block(verbose=True)
 
 if not is_running_from_reloader() and __name__ != '__mp_main__':
     print("This demo is for use outside of a jupyter notebook and uses the default precompiled model.")
