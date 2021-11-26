@@ -129,7 +129,7 @@ def predictionAnimationRaw(model, x:str, y:str, anim:str, coldata:Dict[str, Dict
 
     cols = []
     srow = []
-    for name, item in coldata.keys():
+    for name, item in coldata.items():
         if name not in [x, y, anim]:
             cols.append(name)
         srow.append(item['mean'])
