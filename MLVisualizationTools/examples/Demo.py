@@ -5,7 +5,7 @@ import os
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2' #stops agressive error message printing
 from tensorflow import keras
 
-#TODO - data overlay
+#TODO - data colorization
 
 try:
     import plotly

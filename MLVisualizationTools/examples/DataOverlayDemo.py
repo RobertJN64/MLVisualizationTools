@@ -1,4 +1,4 @@
-from MLVisualizationTools import Analytics, Interfaces, Graphs, Colorizers
+from MLVisualizationTools import Analytics, Interfaces, Graphs, Colorizers, DataInterfaces
 from MLVisualizationTools.backend import fileloader
 import pandas as pd
 import os
@@ -18,18 +18,20 @@ def main():
     AR = Analytics.analyzeModel(model, df, ["Survived"])
     maxvar = AR.maxVariance()
     grid = Interfaces.predictionGrid(model, maxvar[0].name, maxvar[1].name, df, ["Survived"])
-    grid = Colorizers.simple(grid, 'red')
+    grid = Colorizers.binary(grid)
+    DataInterfaces.addClumpedData(grid, df, 'Survived')
 
-    plt, _, _ = Graphs.matplotlibGraph(grid, title="Max Variance")
+    plt, _, _ = Graphs.matplotlibGraph(grid, title="Clumped Data")
     plt.show(block=False)
 
-    grid = Interfaces.predictionGrid(model, 'Parch', 'SibSp', df, ["Survived"])
-    grid = Colorizers.binary(grid, highcontrast=True)
-    plt, _, _ = Graphs.matplotlibGraph(grid, title="Parch by SibSp")
+    grid = Interfaces.predictionGrid(model, maxvar[0].name, maxvar[1].name, df, ["Survived"])
+    grid = Colorizers.binary(grid)
+    DataInterfaces.addPercentageData(grid, df, 'Survived')
+    plt, _, _ = Graphs.matplotlibGraph(grid, title="Percentage Data")
     plt.show()
 
-print("This demo shows basic features with tensorflow and matplotlib.")
-print("To run the demo, call MatplotlibDemo.main()")
+print("This demo shows data overlay features with matplotlib.")
+print("To run the demo, call DataOverlayDemo.main()")
 
 if __name__ == "__main__":
     main()

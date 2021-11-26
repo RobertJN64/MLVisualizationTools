@@ -1,11 +1,11 @@
 from MLVisualizationTools.types import GraphDataTypes, ColorizerModes
-from typing import List, Dict
+from typing import List, Dict, Tuple
 import pandas as pd
 from os import path
 
 #Backend functions and classes used by the other scripts
 
-def colinfo(data: pd.DataFrame, exclude:List[str] = None) -> List[Dict]:
+def colinfo(data: pd.DataFrame, exclude:List[str] = None) -> Tuple[Dict[str, Dict], List[str]]:
     """
     Helper function for generating column info dict for a datframe
 
@@ -15,12 +15,13 @@ def colinfo(data: pd.DataFrame, exclude:List[str] = None) -> List[Dict]:
     if exclude is None:
         exclude = []
 
-    coldata = []
+    coldata = {}
+    allcols = []
     for item in data.columns:
         if item not in exclude:
-            coldata.append({'name': item, 'mean': data[item].mean(),
-                            'min': data[item].min(), 'max': data[item].max()})
-    return coldata
+            coldata[item] = {'mean': data[item].mean(), 'min': data[item].min(), 'max': data[item].max()}
+            allcols.append(item)
+    return coldata, allcols
 
 def fileloader(target: str, dynamic_model_version = True):
     """Specify a path relative to MLVisualizationTools"""
@@ -32,8 +33,8 @@ def fileloader(target: str, dynamic_model_version = True):
     return path.dirname(__file__) + '/' + target
 
 class GraphData:
-    def __init__(self, dataframe: pd.DataFrame, datatype: GraphDataTypes, x: str, y: str, anim: str = None,
-                 outputkey: str = 'Output'):
+    def __init__(self, dataframe: pd.DataFrame, datatype: GraphDataTypes, steps: int, x: str,
+                 y: str, anim: str = None, outputkey: str = 'Output'):
         """Class for holding information about grid or animation data to be graphed."""
         self.dataframe = dataframe
         self.datatype = datatype
@@ -46,10 +47,14 @@ class GraphData:
         self.truemsg = "Avg. Value is True"
         self.falsemsg = "Avg. Value is False"
 
+        self.steps = steps
+
         self.x = x
         self.y = y
         self.anim = anim
         self.outputkey = outputkey
+
+        self.dfdata = None #holds training data overlay
 
     def compileColorizedData(self):
         """

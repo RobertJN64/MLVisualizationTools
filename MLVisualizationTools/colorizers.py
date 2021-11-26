@@ -1,3 +1,9 @@
+"""
+Colorizers
+
+A set of functions to apply colorization to a graphable dataset.
+"""
+
 from MLVisualizationTools.backend import GraphData
 from MLVisualizationTools.types import ColorizerModes
 import warnings

@@ -1,3 +1,14 @@
+"""
+Model Analytics
+
+A set of functions to anaylze how a ML model responds to different inputs.
+All functions return an AnalyticsResult object that contains data about different columns.
+
+Analytics functions can be called directly with a pandas dataframe, or indirectly through
+the raw alternative, which takes a colinfo object.
+"""
+
+
 from MLVisualizationTools.backend import colinfo
 from typing import List, Dict
 import copy
@@ -43,9 +54,10 @@ def analyzeModel(model, data: pd.DataFrame, exclude: List[str] = None, steps:int
     :param exclude: Values to be excluded from data, useful for output values
     :param steps: Resolution to scan model with
     """
-    return analyzeModelRaw(model, colinfo(data, exclude), steps)
+    coldata, allcols = colinfo(data, exclude)
+    return analyzeModelRaw(model, coldata, allcols, steps)
 
-def analyzeModelRaw(model, coldata: List[Dict], steps:int=20) -> AnalyticsResult:
+def analyzeModelRaw(model, coldata: Dict[str, Dict], allcols: List[str], steps:int=20) -> AnalyticsResult:
     """
     Performs 1d analysis on a ML model by calling predict(). Returns a class with lots of info for graphing.
     Call from anaylyzeModel to autogen params.
@@ -53,30 +65,29 @@ def analyzeModelRaw(model, coldata: List[Dict], steps:int=20) -> AnalyticsResult
     Coldata should be formatted with keys 'name', 'min', 'max', 'mean'
 
     :param model: A ML model
-    :param coldata: An ordered list of dicts with col names, min max values, and means
+    :param coldata: An dict of dicts accessed by col names with min, max, and mean values
+    :param allcols: Ordered list of column names
     :param steps: Resolution to scan model with
     """
     AR = AnalyticsResult()
 
     predrow = []
-    cols = []
-    for item in coldata:
+    for name, item in coldata.items():
         predrow.append(item['mean'])
-        cols.append(item['name'])
     predrow = [predrow] * (steps * len(coldata))
-    preddata = pd.DataFrame(predrow, columns=cols)
+    preddata = pd.DataFrame(predrow, columns=allcols)
 
     currentpos = 0
-    for item in coldata:
+    for name, item in coldata.items():
         for i in range(0, steps):
-            preddata[item['name']][i + currentpos] = i * (item['max'] - item['min'])/(steps-1) + item['min']
+            preddata[name][i + currentpos] = i * (item['max'] - item['min'])/(steps-1) + item['min']
         currentpos += steps
 
     predictions = model.predict(preddata)
 
     currentpos = 0
-    for item in coldata:
+    for name in coldata:
         values = predictions[currentpos:currentpos + steps]
         currentpos += steps
-        AR.append(item['name'], values.max() - values.min())
+        AR.append(name, values.max() - values.min())
     return AR

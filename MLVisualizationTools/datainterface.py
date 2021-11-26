@@ -1,0 +1,128 @@
+"""
+Data Interface
+
+A set of functions to add datapoints onto an ML response dataset.
+"""
+
+from MLVisualizationTools.backend import GraphData, colinfo
+import pandas as pd
+import warnings
+
+def getHashablePoint(point, graphData, coldata, outputkey, sizekey):
+    """Get dictionary information for point clumping"""
+
+    def roundScale(pval, colname, steps):
+        minval = coldata[colname]['min']
+        maxval = coldata[colname]['max']
+
+        v = round((pval - minval) / ((maxval - minval) / steps)) #scale down to step pos
+        return v, v * ((maxval - minval) / steps) + minval #scale back to rounded true pos
+
+    sep = ':'
+
+    x, truex = roundScale(point[graphData.x], graphData.x, graphData.steps)
+    y, truey = roundScale(point[graphData.y], graphData.y, graphData.steps)
+    z, truez = roundScale(point[outputkey], outputkey, graphData.steps)
+    pdict = {graphData.x: truex, graphData.y: truey, graphData.outputkey: truez, sizekey: 1}
+
+    hashstr = str(z) + sep + str(x) + sep + str(y)
+    if graphData.anim is not None:
+        anim = roundScale(point[graphData.anim], graphData.anim, graphData.steps)
+        hashstr += sep + str(anim)
+        pdict[graphData.anim] = anim
+    return hashstr, pdict
+
+def addClumpedData(graphData: GraphData, dataframe: pd.DataFrame, outputkey: str = 'Output',
+                   sizekey: str = 'Size') -> GraphData:
+    """
+    Adds datapoints from dataframe to graphData. Point size is based on frequency of points at that location
+
+    :param graphData: From an interface call
+    :param dataframe: Dataframe of points to be added
+    :param outputkey: Key in dataframe that represents output of model
+    :param sizekey: Used for storing amount of datapoints in a group, must not be in df
+    """
+    if sizekey in dataframe.columns:
+        warnings.warn(f"Size key '{sizekey}' was already in dataframe. This means that '{sizekey}' was a key in your "
+                      "dataset and could result in data being overwritten. "
+                      "You can pick a different key in the function call.")
+
+    if outputkey not in dataframe.columns:
+        warnings.warn(f"Output key '{outputkey}' was not in dataframe. You may need to override the default in the "
+                      "function call.")
+
+    coldata, _ = colinfo(dataframe)
+    clumpedData = {}
+
+    for _, point in dataframe.iterrows():
+        hashstr, pdict = getHashablePoint(point, graphData, coldata, outputkey, sizekey)
+        if hashstr in clumpedData:
+            clumpedData[hashstr][sizekey] += 1
+        else:
+            clumpedData[hashstr] = pdict
+
+    graphData.dfdata = pd.DataFrame.from_dict(clumpedData, orient='index')
+    return graphData
+
+def getHashablePercentagePoint(point, graphData, coldata, outputkey):
+    """Get dictionary information for point percentage clumping"""
+
+    def roundScale(pval, colname, steps):
+        minval = coldata[colname]['min']
+        maxval = coldata[colname]['max']
+
+        v = round((pval - minval) / ((maxval - minval) / steps)) #scale down to step pos
+        return v, v * ((maxval - minval) / steps) + minval #scale back to rounded true pos
+
+    sep = ':'
+
+    x, truex = roundScale(point[graphData.x], graphData.x, graphData.steps)
+    y, truey = roundScale(point[graphData.y], graphData.y, graphData.steps)
+    truez = point[outputkey]
+    pdict = {graphData.x: truex, graphData.y: truey, graphData.outputkey: [truez]}
+
+    hashstr = str(x) + sep + str(y)
+    if graphData.anim is not None:
+        anim = roundScale(point[graphData.anim], graphData.anim, graphData.steps)
+        hashstr += sep + str(anim)
+        pdict[graphData.anim] = anim
+    return hashstr, pdict
+
+def addPercentageData(graphData: GraphData, dataframe: pd.DataFrame, outputkey: str = 'Output',
+                      sizekey: str = 'Size') -> GraphData:
+    """
+    Adds datapoints from dataframe to graphData. Point size is based on frequency of points at that location
+    Point height is based on the average of point heights at that location
+
+    :param graphData: From an interface call
+    :param dataframe: Dataframe of points to be added
+    :param outputkey: Key in dataframe that represents output of model
+    :param sizekey: Used for storing amount of datapoints in a group, must not be in df
+    """
+    if sizekey in dataframe.columns:
+        warnings.warn(f"Size key '{sizekey}' was already in dataframe. This means that '{sizekey}' was a key in your "
+                      "dataset and could result in data being overwritten. "
+                      "You can pick a different key in the function call.")
+
+    if outputkey not in dataframe.columns:
+        warnings.warn(f"Output key '{outputkey}' was not in dataframe. You may need to override the default in the "
+                      "function call.")
+
+    coldata, _ = colinfo(dataframe)
+    clumpedData = {}
+
+    for _, point in dataframe.iterrows():
+        hashstr, pdict = getHashablePercentagePoint(point, graphData, coldata, outputkey)
+        if hashstr in clumpedData:
+            clumpedData[hashstr][graphData.outputkey].append(pdict[graphData.outputkey][0])
+        else:
+            clumpedData[hashstr] = pdict
+
+    for key in clumpedData:
+        l = len(clumpedData[key][graphData.outputkey])
+        clumpedData[key][sizekey] = l
+        clumpedData[key][graphData.outputkey] = sum(clumpedData[key][graphData.outputkey]) / l
+
+    graphData.dfdata = pd.DataFrame.from_dict(clumpedData, orient='index')
+    return graphData
+

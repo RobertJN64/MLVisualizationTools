@@ -1,3 +1,9 @@
+"""
+Graph Interface
+
+A set of functions to graph data. Matplotlib and plotly are supported.
+"""
+
 #We use just-in-time importing here to improve load times
 #Here are the imports:
 #import plotly.express as px
@@ -51,14 +57,14 @@ def matplotlibGraph(data: GraphData, title="", key=True, sizekey: str = 'Size'):
     else:
         raise Exception(f"DataType {data.datatype} not recognized.")
 
-def plotlyGrid(data: GraphData, title="", key=True, sizekey: str = 'Size'):
+def plotlyGrid(data: GraphData, title="", key=True, _sizekey: str = 'Size'):
     """
     Calls px.scatter_3d with data. Returns a plotly figure.
 
     :param data: GraphData from interface call
     :param title: Title for graph
     :param key: Show a key for the colors used
-    :param sizekey: Unused in this graph form
+    :param _sizekey: Unused in this graph form
     """
     try:
         import plotly.express as px
@@ -149,6 +155,9 @@ def matplotlibGrid(data: GraphData, title="", key=True, sizekey: str = 'Size'):
         color = None
 
     ax.scatter(df[data.x], df[data.y], df[data.outputkey], c=color)
+    if data.dfdata is not None:
+        ax.scatter(data.dfdata[data.x], data.dfdata[data.y],
+                   data.dfdata[data.outputkey], s=data.dfdata[sizekey])
     ax.set_xlabel(data.x)
     ax.set_ylabel(data.y)
     ax.set_zlabel(data.outputkey)
@@ -156,7 +165,7 @@ def matplotlibGrid(data: GraphData, title="", key=True, sizekey: str = 'Size'):
 
     return plt, fig, ax
 
-def matplotlibAnimation(data: GraphData, title="", key=True, sizekey: str = 'Size'):
+def matplotlibAnimation(_data: GraphData, _title="", _key=True, _sizekey: str = 'Size'):
     """This function is not implemented and is not planned to be implemented in the future."""
     raise NotImplementedError("Matplotib does not support animations cleanly. "
                               "This is not planned to be added in the future.")

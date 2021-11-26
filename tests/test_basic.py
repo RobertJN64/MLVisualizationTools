@@ -11,7 +11,7 @@ import copy
 
 def test_colorizer():
     data = pd.DataFrame({'Output': [0, 0.5, 1]})
-    data = backend.GraphData(data, backend.GraphDataTypes.Grid, 'NotKey', 'NotKey')
+    data = backend.GraphData(data, backend.GraphDataTypes.Grid, 20, 'NotKey', 'NotKey')
     assert list(project.Colorizers.simple(copy.deepcopy(data), 'red').dataframe['Color']) == ['red'] * 3
 
     assert (list(project.Colorizers.binary(copy.deepcopy(data), highcontrast=True).dataframe['Color'])
@@ -95,7 +95,7 @@ def test_colormodes():
 
 def test_colorizer_warning():
     data = pd.DataFrame({'Output': [0, 0.5, 1], 'Color': ['red', 'orange', 'yellow']})
-    data = backend.GraphData(data, backend.GraphDataTypes.Grid, 'NotKey', 'NotKey')
+    data = backend.GraphData(data, backend.GraphDataTypes.Grid, 20, 'NotKey', 'NotKey')
     with pytest.warns(Warning, match="Color key 'Color' was already in dataframe."):
         project.Colorizers.simple(copy.deepcopy(data), 'red')
     with pytest.warns(Warning, match="Color key 'Color' was already in dataframe."):
