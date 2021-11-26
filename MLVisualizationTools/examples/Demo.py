@@ -9,7 +9,7 @@ from tensorflow import keras
 
 try:
     import plotly
-except:
+except ImportError:
     raise ImportError("Plotly is required to run this demo. If you don't have plotly installed, install it with"
                       " `pip install plotly' or run the matplotlib demo instead.")
 
@@ -24,13 +24,13 @@ def main(show=True):
     grid = Interfaces.predictionGrid(model, maxvar[0].name, maxvar[1].name, df, ["Survived"])
     grid = Colorizers.binary(grid)
     fig = Graphs.plotlyGraph(grid)
-    if show:
+    if show: # pragma: no cover
         fig.show()
 
     grid = Interfaces.predictionGrid(model, 'Parch', 'SibSp', df, ["Survived"])
     grid = Colorizers.binary(grid, highcontrast=False)
     fig = Graphs.plotlyGraph(grid)
-    if show:
+    if show: # pragma: no cover
         fig.show()
 
 print("This demo shows basic features with tensorflow and plotly.")

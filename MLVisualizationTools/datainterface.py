@@ -48,8 +48,8 @@ def addClumpedData(graphData: GraphData, dataframe: pd.DataFrame, outputkey: str
                       "You can pick a different key in the function call.")
 
     if outputkey not in dataframe.columns:
-        warnings.warn(f"Output key '{outputkey}' was not in dataframe. You may need to override the default in the "
-                      "function call.")
+        raise UserWarning(f"Output key '{outputkey}' was not in dataframe. You may need to override the default in the "
+                          "function call.")
 
     coldata, _ = colinfo(dataframe)
     clumpedData = {}
@@ -105,8 +105,8 @@ def addPercentageData(graphData: GraphData, dataframe: pd.DataFrame, outputkey: 
                       "You can pick a different key in the function call.")
 
     if outputkey not in dataframe.columns:
-        warnings.warn(f"Output key '{outputkey}' was not in dataframe. You may need to override the default in the "
-                      "function call.")
+        raise UserWarning(f"Output key '{outputkey}' was not in dataframe. You may need to override the default in the "
+                          "function call.")
 
     coldata, _ = colinfo(dataframe)
     clumpedData = {}

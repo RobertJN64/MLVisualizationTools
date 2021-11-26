@@ -7,7 +7,7 @@ from tensorflow import keras
 
 try:
     import plotly
-except:
+except ImportError:
     raise ImportError("Plotly is required to run this demo. If you don't have plotly installed, install it with"
                       " `pip install plotly' or run the matplotlib demo instead.")
 
@@ -22,14 +22,14 @@ def main(show=True):
                                      df, ["Survived"])
     grid = Colorizers.binary(grid, highcontrast=False)
     fig = Graphs.plotlyGraph(grid)
-    if show:
+    if show: # pragma: no cover
         fig.show()
 
     grid = Interfaces.predictionAnimation(model, 'Parch', 'SibSp', maxvar[0].name,
                                           df, ["Survived"])
     grid = Colorizers.binary(grid, highcontrast=True)
     fig = Graphs.plotlyGraph(grid)
-    if show:
+    if show: # pragma: no cover
         fig.show()
 
 print("This demo shows animation features with tensorflow and plotly.")

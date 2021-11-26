@@ -68,7 +68,7 @@ def plotlyGrid(data: GraphData, title="", key=True, _sizekey: str = 'Size'):
     """
     try:
         import plotly.express as px
-    except:
+    except ImportError:
         raise ImportError("Plotly is required to use this graph. Install with `pip install plotly`")
 
     if data.datatype != GraphDataTypes.Grid:
@@ -93,7 +93,7 @@ def plotlyAnimation(data: GraphData, title="", key=True, sizekey: str = 'Size'):
     """
     try:
         import plotly.express as px
-    except:
+    except ImportError:
         raise ImportError("Plotly is required to use this graph. Install with `pip install plotly`")
 
     if data.datatype != GraphDataTypes.Animation:
@@ -138,7 +138,7 @@ def matplotlibGrid(data: GraphData, title="", key=True, sizekey: str = 'Size'):
     #TODO - matplotlib key
     try:
         import matplotlib.pyplot as plt
-    except:
+    except ImportError:
         raise ImportError("Matplotlib is required to use this graph. Install with `pip install matplotlib`")
 
     if data.datatype != GraphDataTypes.Grid:

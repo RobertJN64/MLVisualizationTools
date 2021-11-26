@@ -52,6 +52,9 @@ def test_mpl():
     import MLVisualizationTools.examples.MatplotlibDemo as MPLDemo
     MPLDemo.main()
 
+    import MLVisualizationTools.examples.DataOverlayDemo as DODemo
+    DODemo.main()
+
 def test_process_data_train_and_run_model():
     import MLVisualizationTools.examples.Datasets.Titanic.TitanicDemoPreprocess as TDP
     TDP.main()
@@ -149,7 +152,7 @@ def test_graph_branch_error():
     project.Graphs.graph(grid, project.types.GraphOutputTypes.Matplotlib)
     grid = project.Interfaces.predictionAnimation(model, maxvar[0].name, maxvar[1].name, maxvar[2].name, df, ["Survived"])
     with pytest.warns(Warning, match="Size key 'Age' was already in dataframe."):
-        project.Graphs.graph(grid, sizekey='Age')
+        project.Graphs.graph(grid, graphtype=project.types.GraphOutputTypes.Plotly, sizekey='Age')
     with pytest.raises(NotImplementedError):
         project.Graphs.graph(grid, project.types.GraphOutputTypes.Matplotlib)
 
@@ -162,3 +165,23 @@ def test_graph_branch_error():
     with pytest.raises(Exception, match="GraphType NotAType not recognized."):
         # noinspection PyTypeChecker
         project.Graphs.graph(grid, "NotAType")
+
+def test_data_interface_errors():
+    model = keras.models.load_model(fileloader('examples/Models/titanicmodel'))
+    df: pd.DataFrame = pd.read_csv(fileloader('examples/Datasets/Titanic/train.csv'))
+
+    AR = project.Analytics.analyzeModel(model, df, ["Survived"])
+    maxvar = AR.maxVariance()
+    grid = project.Interfaces.predictionGrid(model, maxvar[0].name, maxvar[1].name, df, ["Survived"])
+
+    with pytest.warns(Warning, match="Size key 'Age' was already in dataframe."):
+        project.datainterface.addClumpedData(grid, df, 'Survived', sizekey='Age')
+
+    with pytest.warns(Warning, match="Size key 'Age' was already in dataframe."):
+        project.datainterface.addPercentageData(grid, df, 'Survived', sizekey='Age')
+
+    with pytest.raises(UserWarning, match="Output key 'Output' was not in dataframe."):
+        project.datainterface.addClumpedData(grid, df)
+
+    with pytest.raises(UserWarning, match="Output key 'Output' was not in dataframe."):
+        project.datainterface.addPercentageData(grid, df)
