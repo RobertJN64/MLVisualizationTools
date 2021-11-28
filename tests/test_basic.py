@@ -100,8 +100,6 @@ def test_colorizer_warning():
     data = backend.GraphData(data, backend.GraphDataTypes.Grid, 20, 'NotKey', 'NotKey')
     with pytest.warns(Warning, match="Color key 'Color' was already in dataframe."):
         project.Colorizers.simple(copy.deepcopy(data), 'red')
-    with pytest.warns(Warning, match="Color key 'Color' was already in dataframe."):
-        project.Colorizers.binary(copy.deepcopy(data))
 
 def test_wrong_data_format_exception():
     from MLVisualizationTools.graphinterface import WrongDataFormatException
@@ -170,12 +168,6 @@ def test_data_interface_errors():
     AR = project.Analytics.analyzeModel(model, df, ["Survived"])
     maxvar = AR.maxVariance()
     grid = project.Interfaces.predictionGrid(model, maxvar[0], maxvar[1], df, ["Survived"])
-
-    with pytest.warns(Warning, match="Size key 'Age' was already in dataframe."):
-        project.datainterface.addClumpedData(grid, df, 'Survived', sizekey='Age')
-
-    with pytest.warns(Warning, match="Size key 'Age' was already in dataframe."):
-        project.datainterface.addPercentageData(grid, df, 'Survived', sizekey='Age')
 
     with pytest.raises(UserWarning, match="Output key 'Output' was not in dataframe."):
         project.datainterface.addClumpedData(grid, df)

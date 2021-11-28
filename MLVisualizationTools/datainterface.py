@@ -5,8 +5,8 @@ A set of functions to add datapoints onto an ML response dataset.
 """
 
 from MLVisualizationTools.backend import GraphData, colinfo
+from typing import Optional
 import pandas as pd
-import warnings
 
 def getHashablePoint(point, graphData, coldata, outputkey, sizekey):
     """Get dictionary information for point clumping"""
@@ -33,7 +33,7 @@ def getHashablePoint(point, graphData, coldata, outputkey, sizekey):
     return hashstr, pdict
 
 def addClumpedData(graphData: GraphData, dataframe: pd.DataFrame, outputkey: str = 'Output',
-                   sizekey: str = 'Size') -> GraphData:
+                   sizekey: Optional[str] = None) -> GraphData:
     """
     Adds datapoints from dataframe to graphData. Point size is based on frequency of points at that location
 
@@ -42,10 +42,8 @@ def addClumpedData(graphData: GraphData, dataframe: pd.DataFrame, outputkey: str
     :param outputkey: Key in dataframe that represents output of model
     :param sizekey: Used for storing amount of datapoints in a group, must not be in df
     """
-    if sizekey in dataframe.columns:
-        warnings.warn(f"Size key '{sizekey}' was already in dataframe. This means that '{sizekey}' was a key in your "
-                      "dataset and could result in data being overwritten. "
-                      "You can pick a different key in the function call.")
+    if sizekey is not None:
+        graphData.sizekey = sizekey
 
     if outputkey not in dataframe.columns:
         raise UserWarning(f"Output key '{outputkey}' was not in dataframe. You may need to override the default in the "
@@ -55,9 +53,9 @@ def addClumpedData(graphData: GraphData, dataframe: pd.DataFrame, outputkey: str
     clumpedData = {}
 
     for _, point in dataframe.iterrows():
-        hashstr, pdict = getHashablePoint(point, graphData, coldata, outputkey, sizekey)
+        hashstr, pdict = getHashablePoint(point, graphData, coldata, outputkey, graphData.sizekey)
         if hashstr in clumpedData:
-            clumpedData[hashstr][sizekey] += 1
+            clumpedData[hashstr][graphData.sizekey] += 1
         else:
             clumpedData[hashstr] = pdict
 
@@ -89,7 +87,7 @@ def getHashablePercentagePoint(point, graphData, coldata, outputkey):
     return hashstr, pdict
 
 def addPercentageData(graphData: GraphData, dataframe: pd.DataFrame, outputkey: str = 'Output',
-                      sizekey: str = 'Size') -> GraphData:
+                      sizekey: Optional[str] = 'Size') -> GraphData:
     """
     Adds datapoints from dataframe to graphData. Point size is based on frequency of points at that location
     Point height is based on the average of point heights at that location
@@ -99,10 +97,8 @@ def addPercentageData(graphData: GraphData, dataframe: pd.DataFrame, outputkey: 
     :param outputkey: Key in dataframe that represents output of model
     :param sizekey: Used for storing amount of datapoints in a group, must not be in df
     """
-    if sizekey in dataframe.columns:
-        warnings.warn(f"Size key '{sizekey}' was already in dataframe. This means that '{sizekey}' was a key in your "
-                      "dataset and could result in data being overwritten. "
-                      "You can pick a different key in the function call.")
+    if sizekey is not None:
+        graphData.sizekey = sizekey
 
     if outputkey not in dataframe.columns:
         raise UserWarning(f"Output key '{outputkey}' was not in dataframe. You may need to override the default in the "
@@ -120,7 +116,7 @@ def addPercentageData(graphData: GraphData, dataframe: pd.DataFrame, outputkey: 
 
     for key in clumpedData:
         l = len(clumpedData[key][graphData.outputkey])
-        clumpedData[key][sizekey] = l
+        clumpedData[key][graphData.sizekey] = l
         clumpedData[key][graphData.outputkey] = sum(clumpedData[key][graphData.outputkey]) / l
 
     graphData.add_datavalues(pd.DataFrame.from_dict(clumpedData, orient='index'))
