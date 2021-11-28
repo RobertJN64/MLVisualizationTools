@@ -69,7 +69,7 @@ def run_benchmark():
     maxvar = AR.maxVariance()
 
     benchmark.next("Interface call")
-    grid = Interfaces.predictionGrid(model, maxvar[0].name, maxvar[1].name, df, ["Survived"])
+    grid = Interfaces.predictionGrid(model, maxvar[0], maxvar[1], df, ["Survived"])
 
     benchmark.next("Binary colorizer")
     grid = Colorizers.binary(grid)
@@ -99,7 +99,7 @@ def resolution_compare():
 
     for steps in [5, 10, 15, 20, 50, 100]:
         start = time.time()
-        grid = Interfaces.predictionGrid(model, maxvar[0].name, maxvar[1].name,
+        grid = Interfaces.predictionGrid(model, maxvar[0], maxvar[1],
                                          df, ["Survived"], steps)
         grid = Colorizers.binary(grid)
         end = time.time()
@@ -121,7 +121,7 @@ def resolution_compare():
         print()
 
         start = time.time()
-        anim = Interfaces.predictionAnimation(model, maxvar[0].name, maxvar[1].name, maxvar[2].name,
+        anim = Interfaces.predictionAnimation(model, maxvar[0], maxvar[1], maxvar[2],
                                               df, ["Survived"], steps)
         anim = Colorizers.binary(anim)
         end = time.time()

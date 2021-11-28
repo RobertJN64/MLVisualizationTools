@@ -18,14 +18,14 @@ def main(show=True):
     AR = Analytics.analyzeModel(model, df, ["Survived"])
     maxvar = AR.maxVariance()
 
-    grid = Interfaces.predictionAnimation(model, maxvar[0].name, maxvar[1].name, maxvar[2].name,
+    grid = Interfaces.predictionAnimation(model, maxvar[0], maxvar[1], maxvar[2],
                                      df, ["Survived"])
     grid = Colorizers.binary(grid, highcontrast=False)
     fig = Graphs.plotlyGraph(grid)
     if show: # pragma: no cover
         fig.show()
 
-    grid = Interfaces.predictionAnimation(model, 'Parch', 'SibSp', maxvar[0].name,
+    grid = Interfaces.predictionAnimation(model, 'Parch', 'SibSp', maxvar[0],
                                           df, ["Survived"])
     grid = Colorizers.binary(grid, highcontrast=True)
     fig = Graphs.plotlyGraph(grid)

@@ -84,7 +84,7 @@ df = ... #your dataframe
 AR = Analytics.analyzeModel(model, df)
 maxvar = AR.maxVariance()
 
-grid = Interfaces.predictionGrid(model, maxvar[0].name, maxvar[1].name, df)
+grid = Interfaces.predictionGrid(model, maxvar[0], maxvar[1], df)
 grid = Colorizers.binary(grid)
 fig = Graphs.plotlyGraph(grid)
 fig.show()

@@ -10,14 +10,16 @@ Grid (3D) and Animation (4D) options are provided.
 """
 
 from MLVisualizationTools.backend import colinfo, GraphData, GraphDataTypes
-from typing import List, Dict
+from MLVisualizationTools.modelanalytics import AnalyticsColumnInfo
+from typing import List, Dict, Union
 import pandas as pd
 import warnings
 
 #Functions for passing data to ml models
 
 #region grid
-def predictionGrid(model, x:str, y:str, data:pd.DataFrame, exclude:List[str] = None, steps:int=20,
+def predictionGrid(model, x:Union[str, AnalyticsColumnInfo], y:Union[str, AnalyticsColumnInfo],
+                   data:pd.DataFrame, exclude:List[str] = None, steps:int=20,
                    outputkey: str = 'Output') -> GraphData:
     """
     Creates a dataset from a 2d prediction on a ML model. Wrapper function for PredictionGridRaw()
@@ -34,7 +36,9 @@ def predictionGrid(model, x:str, y:str, data:pd.DataFrame, exclude:List[str] = N
     coldata, allcols = colinfo(data, exclude)
     return predictionGridRaw(model, x, y, coldata, allcols, steps, outputkey)
 
-def predictionGridRaw(model, x:str, y:str, coldata:Dict[str, Dict], allcols: List[str], steps:int=20, outputkey: str = 'Output') -> GraphData:
+def predictionGridRaw(model, x:Union[str, AnalyticsColumnInfo], y:Union[str, AnalyticsColumnInfo],
+                      coldata:Dict[str, Dict], allcols: List[str], steps:int=20,
+                      outputkey: str = 'Output') -> GraphData:
     """
     Creates a dataset from a 2d prediction on a ML model.
 
@@ -51,6 +55,11 @@ def predictionGridRaw(model, x:str, y:str, coldata:Dict[str, Dict], allcols: Lis
     :param steps: Resolution to scan model with
     :param outputkey: Used to override default output name
     """
+    if isinstance(x, AnalyticsColumnInfo):
+        x = x.name
+    if isinstance(y, AnalyticsColumnInfo):
+        y = y.name
+
     assert x in coldata, "X must be in coldata"
     assert y in coldata, "Y must be in coldata"
 
@@ -85,7 +94,8 @@ def predictionGridRaw(model, x:str, y:str, coldata:Dict[str, Dict], allcols: Lis
 #endregion grid
 
 #region animation
-def predictionAnimation(model, x:str, y:str, anim:str, data: pd.DataFrame, exclude:List[str] = None,
+def predictionAnimation(model, x:Union[str, AnalyticsColumnInfo], y:Union[str, AnalyticsColumnInfo],
+                        anim:Union[str, AnalyticsColumnInfo], data: pd.DataFrame, exclude:List[str] = None,
                         steps:int=20, outputkey: str = 'Output') -> GraphData:
     """
     Creates a dataset from a 2d prediction on a ML model. Wrapper function for PredictionGridRaw()
@@ -103,8 +113,9 @@ def predictionAnimation(model, x:str, y:str, anim:str, data: pd.DataFrame, exclu
     coldata, allcols = colinfo(data, exclude)
     return predictionAnimationRaw(model, x, y, anim, coldata, allcols, steps, outputkey)
 
-def predictionAnimationRaw(model, x:str, y:str, anim:str, coldata:Dict[str, Dict], allcols: List[str], steps:int=20,
-                           outputkey: str = 'Output') -> GraphData:
+def predictionAnimationRaw(model, x:Union[str, AnalyticsColumnInfo], y:Union[str, AnalyticsColumnInfo],
+                           anim:Union[str, AnalyticsColumnInfo], coldata:Dict[str, Dict], allcols: List[str],
+                           steps:int=20, outputkey: str = 'Output') -> GraphData:
     """
     Creates a dataset from a 2d prediction on a ML model.
 
@@ -122,6 +133,13 @@ def predictionAnimationRaw(model, x:str, y:str, anim:str, coldata:Dict[str, Dict
     :param steps: Resolution to scan model with
     :param outputkey: Used to override default output name
     """
+
+    if isinstance(x, AnalyticsColumnInfo):
+        x = x.name
+    if isinstance(y, AnalyticsColumnInfo):
+        y = y.name
+    if isinstance(anim, AnalyticsColumnInfo):
+        anim = anim.name
 
     assert x in coldata, "X must be in coldata"
     assert y in coldata, "Y must be in coldata"

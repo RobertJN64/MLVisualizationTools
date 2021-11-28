@@ -17,7 +17,7 @@ def main():
 
     AR = Analytics.analyzeModel(model, df, ["Survived"])
     maxvar = AR.maxVariance()
-    grid = Interfaces.predictionGrid(model, maxvar[0].name, maxvar[1].name, df, ["Survived"])
+    grid = Interfaces.predictionGrid(model, maxvar[0], maxvar[1], df, ["Survived"])
     grid = Colorizers.simple(grid, 'red')
 
     plt, _, _ = Graphs.matplotlibGraph(grid, title="Max Variance")

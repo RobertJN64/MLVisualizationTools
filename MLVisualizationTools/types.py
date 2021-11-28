@@ -1,6 +1,8 @@
 class GraphDataTypes:
     Grid = 'Grid'
     Animation = 'Animation'
+    ModelPrediction = 'ModelPrediction'
+    DataValues = 'DataValues'
 
 class GraphOutputTypes:
     Auto = 'Auto'

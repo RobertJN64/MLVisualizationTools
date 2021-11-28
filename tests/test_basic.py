@@ -12,16 +12,16 @@ import copy
 def test_colorizer():
     data = pd.DataFrame({'Output': [0, 0.5, 1]})
     data = backend.GraphData(data, backend.GraphDataTypes.Grid, 20, 'NotKey', 'NotKey')
-    assert list(project.Colorizers.simple(copy.deepcopy(data), 'red').dataframe['Color']) == ['red'] * 3
+    assert list(project.Colorizers.simple(copy.deepcopy(data), 'red').modeldata.dataframe['Color']) == ['red'] * 3
 
-    assert (list(project.Colorizers.binary(copy.deepcopy(data), highcontrast=True).dataframe['Color'])
+    assert (list(project.Colorizers.binary(copy.deepcopy(data), highcontrast=True).modeldata.dataframe['Color'])
            == ['orange', 'orange', 'blue'])
 
-    assert (list(project.Colorizers.binary(copy.deepcopy(data), highcontrast=False).dataframe['Color'])
+    assert (list(project.Colorizers.binary(copy.deepcopy(data), highcontrast=False).modeldata.dataframe['Color'])
             == ['red', 'red', 'green'])
 
     assert (list(project.Colorizers.binary(copy.copy(data), highcontrast=False,
-                                           truecolor='white', falsecolor='black').dataframe['Color'])
+                                           truecolor='white', falsecolor='black').modeldata.dataframe['Color'])
             == ['black', 'black', 'white'])
 
 def test_dash_visualizer(): #doesn't launch dash apps, but tests creation process
@@ -81,12 +81,11 @@ def test_colormodes():
     AR = project.Analytics.analyzeModel(model, df, ["Survived"])
     maxvar = AR.maxVariance()
 
-    grid = project.Interfaces.predictionGrid(model, maxvar[0].name, maxvar[1].name, df, ["Survived"])
+    grid = project.Interfaces.predictionGrid(model, maxvar[0], maxvar[1], df, ["Survived"])
     _ = project.Graphs.plotlyGraph(copy.deepcopy(grid))
     _ = project.Graphs.matplotlibGraph(copy.deepcopy(grid))
 
-    animgrid = project.Interfaces.predictionAnimation(model, maxvar[0].name, maxvar[1].name, maxvar[2].name,
-                                                  df, ["Survived"])
+    animgrid = project.Interfaces.predictionAnimation(model, maxvar[0], maxvar[1], maxvar[2], df, ["Survived"])
     _ = project.Graphs.plotlyGraph(animgrid)
 
     grid = project.Colorizers.simple(copy.deepcopy(grid), color='red')
@@ -115,17 +114,15 @@ def test_wrong_data_format_exception():
     print(maxvar[0]) #tests repr
 
     with pytest.raises(WrongDataFormatException):
-        grid = project.Interfaces.predictionGrid(model, maxvar[0].name, maxvar[1].name, df, ["Survived"])
+        grid = project.Interfaces.predictionGrid(model, maxvar[0], maxvar[1], df, ["Survived"])
         _ = project.Graphs.plotlyAnimation(grid)
 
     with pytest.raises(WrongDataFormatException):
-        grid = project.Interfaces.predictionAnimation(model, maxvar[0].name, maxvar[1].name, maxvar[2].name,
-                                                      df, ["Survived"])
+        grid = project.Interfaces.predictionAnimation(model, maxvar[0], maxvar[1], maxvar[2], df, ["Survived"])
         _ = project.Graphs.plotlyGrid(grid)
 
     with pytest.raises(WrongDataFormatException):
-        grid = project.Interfaces.predictionAnimation(model, maxvar[0].name, maxvar[1].name, maxvar[2].name,
-                                                      df, ["Survived"])
+        grid = project.Interfaces.predictionAnimation(model, maxvar[0], maxvar[1], maxvar[2], df, ["Survived"])
         _ = project.Graphs.matplotlibGrid(grid)
 
 def test_OutputKey_warning():
@@ -147,10 +144,10 @@ def test_graph_branch_error():
 
     AR = project.Analytics.analyzeModel(model, df, ["Survived"])
     maxvar = AR.maxVariance()
-    grid = project.Interfaces.predictionGrid(model, maxvar[0].name, maxvar[1].name, df, ["Survived"])
+    grid = project.Interfaces.predictionGrid(model, maxvar[0], maxvar[1], df, ["Survived"])
     project.Graphs.graph(grid)
     project.Graphs.graph(grid, project.types.GraphOutputTypes.Matplotlib)
-    grid = project.Interfaces.predictionAnimation(model, maxvar[0].name, maxvar[1].name, maxvar[2].name, df, ["Survived"])
+    grid = project.Interfaces.predictionAnimation(model, maxvar[0], maxvar[1], maxvar[2], df, ["Survived"])
     with pytest.warns(Warning, match="Size key 'Age' was already in dataframe."):
         project.Graphs.graph(grid, graphtype=project.types.GraphOutputTypes.Plotly, sizekey='Age')
     with pytest.raises(NotImplementedError):
@@ -172,7 +169,7 @@ def test_data_interface_errors():
 
     AR = project.Analytics.analyzeModel(model, df, ["Survived"])
     maxvar = AR.maxVariance()
-    grid = project.Interfaces.predictionGrid(model, maxvar[0].name, maxvar[1].name, df, ["Survived"])
+    grid = project.Interfaces.predictionGrid(model, maxvar[0], maxvar[1], df, ["Survived"])
 
     with pytest.warns(Warning, match="Size key 'Age' was already in dataframe."):
         project.datainterface.addClumpedData(grid, df, 'Survived', sizekey='Age')

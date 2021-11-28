@@ -14,7 +14,7 @@ f = 'AR = Analytics.Tensorflow(model, df, ["Survived"])'
 cProfile.run(f, 'analytics.prof')
 maxvar = AR.maxVariance()
 
-f = 'anim = Interfaces.TensorflowAnimation(model, maxvar[0].name, maxvar[1].name, maxvar[2].name, df, ["Survived"])'
+f = 'anim = Interfaces.TensorflowAnimation(model, maxvar[0], maxvar[1], maxvar[2], df, ["Survived"])'
 cProfile.run(f, 'interface.prof')
 if Interfaces == Analytics:
     pass

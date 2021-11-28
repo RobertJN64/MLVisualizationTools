@@ -1,5 +1,6 @@
 from MLVisualizationTools.types import GraphDataTypes, ColorizerModes
-from typing import List, Dict, Tuple
+from typing import List, Dict, Tuple, Optional
+import warnings
 import pandas as pd
 from os import path
 
@@ -32,91 +33,82 @@ def fileloader(target: str, dynamic_model_version = True):
                 target += "_v2.0"
     return path.dirname(__file__) + '/' + target
 
+class ColorMessage:
+    def __init__(self, color: Optional[str], message: str):
+        self.color: Optional[str] = color
+        self.message: str = message
+
+class ColorizerableDataFrame:
+    def __init__(self, dataframe: pd.DataFrame, mode: GraphDataTypes):
+        self.dataframe: pd.DataFrame = dataframe
+
+        self.colorized: ColorizerModes = ColorizerModes.NotColorized
+
+        if mode == GraphDataTypes.ModelPrediction:
+            self.basecolor = ColorMessage(None, 'Avg. Predictions from Model')
+            self.truecolor = ColorMessage(None, 'Avg. Prediction is True')
+            self.falsecolor = ColorMessage(None, 'Avg. Prediction is False')
+
+        elif mode == GraphDataTypes.DataValues:
+            self.basecolor = ColorMessage(None, 'Actual Data Values')
+            self.truecolor = ColorMessage(None, 'Data Values are True')
+            self.falsecolor = ColorMessage(None, 'Data Values are False')
+
+        else:
+            raise ValueError(str(mode) + " is not a valid data storage mode.")
+
+
 class GraphData:
     def __init__(self, dataframe: pd.DataFrame, datatype: GraphDataTypes, steps: int, x: str,
                  y: str, anim: str = None, outputkey: str = 'Output'):
         """Class for holding information about grid or animation data to be graphed."""
-        self.dataframe = dataframe
-        self.datatype = datatype
+        self.modeldata: ColorizerableDataFrame = ColorizerableDataFrame(dataframe, GraphDataTypes.ModelPrediction)
+        self.datavalues: Optional[ColorizerableDataFrame] = None
+        self.datatype: GraphDataTypes = datatype
 
-        self.colorized = ColorizerModes.NotColorized
-        self.colorkey = None
-        self.color = None #holds color value from simple
-        self.truecolor = None
-        self.falsecolor = None
+        self.outputkey: str = outputkey
+        self._colorkey: str = 'Color'
+        self._sizekey: str = 'Size'
 
-        self.truemsg = "Avg. Value is True"
-        self.falsemsg = "Avg. Value is False"
-        self.modelmessage = "Avg. Predictions from Model"
-        self.datamessage = "Actual Data Values"
+        self.steps: int = steps
+        self.x: str = x
+        self.y: str = y
+        self.anim: Optional[str] = anim
+        self.outputkey: str = outputkey
 
-        self.steps = steps
+    def add_datavalues(self, dataframe: pd.DataFrame):
+        self.datavalues = ColorizerableDataFrame(dataframe, GraphDataTypes.DataValues)
 
-        self.x = x
-        self.y = y
-        self.anim = anim
-        self.outputkey = outputkey
+    @property
+    def colorkey(self):
+        return self._colorkey
 
-        self.dfdata = None #holds training data overlay
+    @colorkey.setter
+    def colorkey(self, value: str):
+        locations = [self.modeldata.dataframe]
+        if self.datavalues is not None:
+            locations.append(self.datavalues.dataframe)
+        for df in locations:
+            if value in df.columns:
+                warnings.warn(f"Color key '{value}' was already in dataframe. This could mean that '{value}' was a "
+                              "key in your dataset or colorization has already been applied to the data. This could "
+                              "result in data being overwritten. You can pick a different key in the function call.")
+                break
+        self._colorkey = value
 
-    def should_show_key(self):
-        if self.colorized == ColorizerModes.NotColorized:
-            return False
-        elif self.colorized == ColorizerModes.Simple:
-            if self.dfdata is not None:
-                return True
-            else:
-                return False
-        elif self.colorized == ColorizerModes.Binary:
-            return True
-        else:
-            raise ValueError(str(self.colorized) + " is not a valid colorizer mode.")
+    @property
+    def sizekey(self):
+        return self._sizekey
 
-    def compileColorizedData(self, sizekey):
-        """
-        Process a dataframe for use in a plotly graph.
-        Returns a dataframe, a color key, a color_discrete_map, and a category order
-        """
-
-        if self.colorized == ColorizerModes.NotColorized:
-            return self.dataframe, None, None, None
-
-        elif self.colorized == ColorizerModes.Simple:
-            df = self.dataframe.copy()
-            df[sizekey] = 5
-
-            df[self.colorkey] = self.modelmessage
-            cdm = {self.modelmessage: self.color}
-            order = {self.colorkey: [self.color]}
-
-            if self.dfdata is not None:
-                self.dfdata['Color'] = self.datamessage
-                dfdata = self.dfdata.copy()
-                dfdata[sizekey] = dfdata[sizekey].apply(lambda x: x * 50 / dfdata[sizekey].max())
-                df = df.append(dfdata)
-                cdm[self.datamessage] = 'black'
-                order[self.colorkey].append('black')
-
-            return df, self.colorkey, cdm, order
-
-        elif self.colorized == ColorizerModes.Binary:
-            df = self.dataframe.copy()
-            df[sizekey] = 5
-
-            df.loc[df[self.colorkey] == self.truecolor, self.colorkey] = self.truemsg
-            df.loc[df[self.colorkey] == self.falsecolor, self.colorkey] = self.falsemsg
-            cdm = {self.truemsg: self.truecolor, self.falsemsg: self.falsecolor}
-            order = {self.colorkey: [self.truemsg, self.falsemsg]}
-
-            if self.dfdata is not None:
-                self.dfdata['Color'] = self.datamessage
-                dfdata = self.dfdata.copy()
-                dfdata[sizekey] = dfdata[sizekey].apply(lambda x: x * 50/dfdata[sizekey].max())
-                df = df.append(dfdata)
-                cdm[self.datamessage] = 'black'
-                order[self.colorkey].append('black')
-
-            return df, self.colorkey, cdm, order
-
-        else:
-            raise ValueError(str(self.colorized) + " is not a valid colorizer mode.")
+    @sizekey.setter
+    def sizekey(self, value: str):
+        locations = [self.modeldata.dataframe]
+        if self.datavalues is not None:
+            locations.append(self.datavalues.dataframe)
+        for df in locations:
+            if value in df.columns:
+                warnings.warn(f"Size key '{value}' was already in dataframe. This means that '{value}' was a key in "
+                              "your dataset. This could result in data being overwritten. You can pick a different key "
+                              "in the function call.")
+                break
+        self._sizekey = value

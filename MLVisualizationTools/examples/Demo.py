@@ -21,7 +21,7 @@ def main(show=True):
     AR = Analytics.analyzeModel(model, df, ["Survived"])
     maxvar = AR.maxVariance()
 
-    grid = Interfaces.predictionGrid(model, maxvar[0].name, maxvar[1].name, df, ["Survived"])
+    grid = Interfaces.predictionGrid(model, maxvar[0], maxvar[1], df, ["Survived"])
     grid = Colorizers.binary(grid)
     fig = Graphs.plotlyGraph(grid)
     if show: # pragma: no cover

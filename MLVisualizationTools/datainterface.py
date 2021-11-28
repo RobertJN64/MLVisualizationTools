@@ -61,7 +61,7 @@ def addClumpedData(graphData: GraphData, dataframe: pd.DataFrame, outputkey: str
         else:
             clumpedData[hashstr] = pdict
 
-    graphData.dfdata = pd.DataFrame.from_dict(clumpedData, orient='index')
+    graphData.add_datavalues(pd.DataFrame.from_dict(clumpedData, orient='index'))
     return graphData
 
 def getHashablePercentagePoint(point, graphData, coldata, outputkey):
@@ -123,6 +123,6 @@ def addPercentageData(graphData: GraphData, dataframe: pd.DataFrame, outputkey: 
         clumpedData[key][sizekey] = l
         clumpedData[key][graphData.outputkey] = sum(clumpedData[key][graphData.outputkey]) / l
 
-    graphData.dfdata = pd.DataFrame.from_dict(clumpedData, orient='index')
+    graphData.add_datavalues(pd.DataFrame.from_dict(clumpedData, orient='index'))
     return graphData
 
