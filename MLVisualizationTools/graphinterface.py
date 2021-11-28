@@ -115,7 +115,7 @@ def _plotlyGraphCore(data: GraphData, title, legend):
         for colordata in [datavals.truecolor, datavals.falsecolor, datavals.basecolor]:
             if colordata.color is not None:
                 cdm[colordata.message] = colordata.color
-                order.append(colordata.color)
+                order.append(colordata.message)
                 
                 df = datavals.dataframe
                 df.loc[df[data.colorkey] == colordata.color, data.colorkey] = colordata.message

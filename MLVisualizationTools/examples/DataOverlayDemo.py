@@ -38,7 +38,7 @@ def main(show=True):
     if show:  # pragma no cover
         fig.show()
 
-print("This demo shows data overlay features with matplotlib.")
+print("This demo shows data overlay features with plotly.")
 print("To run the demo, call DataOverlayDemo.main()")
 
 if __name__ == "__main__":
