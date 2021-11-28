@@ -39,6 +39,9 @@ def test_demo():
     import MLVisualizationTools.examples.AnimationDemo as AnimationDemo
     AnimationDemo.main(show=False)
 
+    import MLVisualizationTools.examples.DataOverlayDemo as DODemo
+    DODemo.main(show=False)
+
 def test_mpl():
     import matplotlib
     matplotlib.use('Agg')  # disables UI rendering
@@ -51,9 +54,6 @@ def test_mpl():
     )
     import MLVisualizationTools.examples.MatplotlibDemo as MPLDemo
     MPLDemo.main()
-
-    import MLVisualizationTools.examples.DataOverlayDemo as DODemo
-    DODemo.main()
 
 def test_process_data_train_and_run_model():
     import MLVisualizationTools.examples.Datasets.Titanic.TitanicDemoPreprocess as TDP

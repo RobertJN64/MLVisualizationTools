@@ -11,7 +11,7 @@ except ImportError:
     raise ImportError("Matplotlib is required to run this demo. If you don't have matplotlib installed, install it"
                       " with `pip install matplotlib` or run the plotly demo instead.")
 
-def main():
+def main(show=True):
     model = keras.models.load_model(fileloader('examples/Models/titanicmodel'))
     df: pd.DataFrame = pd.read_csv(fileloader('examples/Datasets/Titanic/train.csv'))
 
@@ -25,7 +25,8 @@ def main():
     # plt.show(block=False)
 
     fig = Graphs.plotlyGraph(grid)
-    fig.show()
+    if show: # pragma no cover
+        fig.show()
 
     grid = Interfaces.predictionGrid(model, maxvar[0], maxvar[1], df, ["Survived"])
     grid = Colorizers.binary(grid)
@@ -34,7 +35,8 @@ def main():
     # plt.show()
 
     fig = Graphs.plotlyGraph(grid)
-    fig.show()
+    if show:  # pragma no cover
+        fig.show()
 
 print("This demo shows data overlay features with matplotlib.")
 print("To run the demo, call DataOverlayDemo.main()")
