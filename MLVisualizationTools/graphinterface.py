@@ -8,11 +8,11 @@ A set of functions to graph data. Matplotlib and plotly are supported.
 #Here are the imports:
 #import plotly.express as px
 #import matplotlib.pyplot as plt
+from MLVisualizationTools.types import GraphDataTypes, GraphOutputTypes, ColorizerModes
+from MLVisualizationTools.backend import GraphData
 import warnings
 import copy
 
-from MLVisualizationTools.types import GraphDataTypes, GraphOutputTypes
-from MLVisualizationTools.backend import GraphData
 
 class WrongDataFormatException(Exception):
     pass
@@ -57,14 +57,14 @@ def matplotlibGraph(data: GraphData, title="", key=True, sizekey: str = 'Size'):
     else:
         raise Exception(f"DataType {data.datatype} not recognized.")
 
-def plotlyGrid(data: GraphData, title="", key=True, _sizekey: str = 'Size'):
+def plotlyGrid(data: GraphData, title="", key=True, sizekey: str = 'Size'):
     """
     Calls px.scatter_3d with data. Returns a plotly figure.
 
     :param data: GraphData from interface call
     :param title: Title for graph
     :param key: Show a key for the colors used
-    :param _sizekey: Unused in this graph form
+    :param sizekey: Should match with datainterface sizekey if used
     """
     try:
         import plotly.express as px
@@ -74,12 +74,19 @@ def plotlyGrid(data: GraphData, title="", key=True, _sizekey: str = 'Size'):
     if data.datatype != GraphDataTypes.Grid:
         raise WrongDataFormatException("Data was not formatted in grid.")
 
-    df, colorkey, cdm, co, showlegend = data.compileColorizedData()
+    if sizekey in data.dataframe.columns:
+        warnings.warn(f"Size key '{sizekey}' was already in dataframe. This means that '{sizekey}' was a key in your "
+                      "dataset and could result in data being overwritten. "
+                      "You can pick a different key in the function call.")
 
+    df, colorkey, cdm, order = data.compileColorizedData(sizekey)
+
+    sm = 50 if data.dfdata is not None else None
     fig = px.scatter_3d(df, data.x, data.y, data.outputkey, color=colorkey, color_discrete_map=cdm,
-                        category_orders=co, title=title)
+                        category_orders=order, title=title, opacity=1, size=sizekey, size_max=sm)
 
-    fig.update_layout(showlegend=showlegend and key)
+    fig.update_layout(showlegend=data.should_show_key() and key)
+    fig.update_traces(marker={'line_width': 0})
     return fig
 
 def plotlyAnimation(data: GraphData, title="", key=True, sizekey: str = 'Size'):
@@ -89,7 +96,7 @@ def plotlyAnimation(data: GraphData, title="", key=True, sizekey: str = 'Size'):
     :param data: GraphData from interface call
     :param title: Title for graph
     :param key: Show a key for the colors used
-    :param sizekey: Key to use in dataframe to store size values
+    :param sizekey: Key to use in dataframe to store size values, should match with datainterface sizekey if used
     """
     try:
         import plotly.express as px
@@ -99,12 +106,12 @@ def plotlyAnimation(data: GraphData, title="", key=True, sizekey: str = 'Size'):
     if data.datatype != GraphDataTypes.Animation:
         raise WrongDataFormatException("Data was not formatted in animation.")
 
-    df, colorkey, cdm, co, showlegend = data.compileColorizedData()
-    if sizekey in df.columns:
+    if sizekey in data.dataframe.columns:
         warnings.warn(f"Size key '{sizekey}' was already in dataframe. This means that '{sizekey}' was a key in your "
                       "dataset and could result in data being overwritten. "
                       "You can pick a different key in the function call.")
-    df[sizekey] = [1] * len(df)
+
+    df, colorkey, cdm, order = data.compileColorizedData(sizekey)
 
     # plotly animations have a bug where points aren't rendered unless
     # one point of each color is in frame
@@ -118,11 +125,13 @@ def plotlyAnimation(data: GraphData, title="", key=True, sizekey: str = 'Size'):
                 row[data.anim] = animval
                 df = df.append(row)
 
+    sm = 50 if data.dfdata is not None else None
     fig = px.scatter_3d(df, data.x, data.y, data.outputkey, animation_frame=data.anim, color=colorkey,
-                        color_discrete_map=cdm, category_orders=co, opacity=1, size=sizekey,
-                        title=title, range_z=[df[data.outputkey].min(), df[data.outputkey].max()])
+                        color_discrete_map=cdm, category_orders=order, opacity=1, size=sizekey,
+                        title=title, range_z=[df[data.outputkey].min(), df[data.outputkey].max()],
+                        size_max=sm)
 
-    fig.update_layout(showlegend=showlegend and key)
+    fig.update_layout(showlegend=data.should_show_key() and key)
     fig.update_traces(marker={'line_width': 0})
     return fig
 
@@ -135,9 +144,9 @@ def matplotlibGrid(data: GraphData, title="", key=True, sizekey: str = 'Size'):
     :param key: Key for graph
     :param sizekey: Unused in this graph form
     """
-    #TODO - matplotlib key
     try:
         import matplotlib.pyplot as plt
+        import matplotlib.patches as mpatches
     except ImportError:
         raise ImportError("Matplotlib is required to use this graph. Install with `pip install matplotlib`")
 
@@ -151,13 +160,26 @@ def matplotlibGrid(data: GraphData, title="", key=True, sizekey: str = 'Size'):
 
     if data.colorkey in df.columns:
         color = df[data.colorkey]
+        if key and data.should_show_key():
+            patches = []
+            if data.colorized == ColorizerModes.Binary:
+                patches.append(mpatches.Patch(color=data.truecolor, label=data.truemsg))
+                patches.append(mpatches.Patch(color=data.falsecolor, label=data.falsemsg))
+
+            if data.colorized == ColorizerModes.Simple:
+                patches.append(mpatches.Patch(color=data.color, label=data.modelmessage))
+
+            if data.dfdata is not None:
+                patches.append(mpatches.Patch(color='black', label=data.datamessage))
+
+            ax.legend(handles=patches)
     else:
         color = None
 
     ax.scatter(df[data.x], df[data.y], df[data.outputkey], c=color)
     if data.dfdata is not None:
         ax.scatter(data.dfdata[data.x], data.dfdata[data.y],
-                   data.dfdata[data.outputkey], s=data.dfdata[sizekey])
+                   data.dfdata[data.outputkey], s=data.dfdata[sizekey], c='black')
     ax.set_xlabel(data.x)
     ax.set_ylabel(data.y)
     ax.set_zlabel(data.outputkey)

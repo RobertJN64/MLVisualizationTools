@@ -18,6 +18,7 @@ def simple(data: GraphData, color, colorkey='Color') -> GraphData:
     df[colorkey] = [color] * len(df)
     data.colorized = ColorizerModes.Simple
     data.colorkey = colorkey
+    data.color = color
     return data
 
 def binary(data: GraphData, highcontrast:bool=True, truecolor=None, falsecolor=None,
