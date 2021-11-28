@@ -24,8 +24,8 @@ def main():
     # plt, _, _ = Graphs.matplotlibGraph(grid, title="Clumped Data")
     # plt.show(block=False)
 
-    fig = Graphs.plotlyGraph(grid)
-    fig.show()
+    #fig = Graphs.plotlyGraph(grid)
+    #fig.show()
 
     grid = Interfaces.predictionGrid(model, maxvar[0].name, maxvar[1].name, df, ["Survived"])
     grid = Colorizers.binary(grid)
@@ -33,8 +33,8 @@ def main():
     # plt, _, _ = Graphs.matplotlibGraph(grid, title="Percentage Data")
     # plt.show()
 
-    fig = Graphs.plotlyGraph(grid)
-    fig.show()
+    #fig = Graphs.plotlyGraph(grid)
+    #fig.show()
 
 print("This demo shows data overlay features with matplotlib.")
 print("To run the demo, call DataOverlayDemo.main()")
