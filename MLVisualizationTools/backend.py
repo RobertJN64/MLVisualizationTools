@@ -1,3 +1,5 @@
+import copy
+
 from MLVisualizationTools.types import GraphDataTypes, ColorizerModes
 from typing import List, Dict, Tuple, Optional
 import warnings
@@ -76,8 +78,11 @@ class GraphData:
         self.anim: Optional[str] = anim
         self.outputkey: str = outputkey
 
+        self.orig_df_cols = copy.deepcopy(list(self.modeldata.dataframe.columns))
+
     def add_datavalues(self, dataframe: pd.DataFrame):
         self.datavalues = ColorizerableDataFrame(dataframe, GraphDataTypes.DataValues)
+        self.orig_df_cols.append(copy.deepcopy(list(self.datavalues.dataframe.columns)))
 
     @property
     def colorkey(self):
@@ -85,16 +90,8 @@ class GraphData:
 
     @colorkey.setter
     def colorkey(self, value: str):
-        locations = [self.modeldata.dataframe]
-        if self.datavalues is not None:
-            locations.append(self.datavalues.dataframe)
-        for df in locations:
-            if value in df.columns:
-                warnings.warn(f"Color key '{value}' was already in dataframe. This could mean that '{value}' was a "
-                              "key in your dataset or colorization has already been applied to the data. This could "
-                              "result in data being overwritten. You can pick a different key in the function call.")
-                break
         self._colorkey = value
+        self.check_color_key()
 
     @property
     def sizekey(self):
@@ -102,13 +99,19 @@ class GraphData:
 
     @sizekey.setter
     def sizekey(self, value: str):
-        locations = [self.modeldata.dataframe]
-        if self.datavalues is not None:
-            locations.append(self.datavalues.dataframe)
-        for df in locations:
-            if value in df.columns:
-                warnings.warn(f"Size key '{value}' was already in dataframe. This means that '{value}' was a key in "
-                              "your dataset. This could result in data being overwritten. You can pick a different key "
-                              "in the function call.")
-                break
         self._sizekey = value
+        self.check_size_key()
+
+    def check_color_key(self):
+        if self._colorkey in self.orig_df_cols:
+            raise Exception
+            warnings.warn(f"Color key '{self._colorkey}' was already in dataframe. This could mean that "
+                          f"'{self._colorkey}' was a key in your dataset, or the data has already been colorized. "
+                          f"This could result in data being overwritten. "
+                          "You can pick a different key in the function call.")
+
+    def check_size_key(self):
+        if self._sizekey in self.orig_df_cols:
+            warnings.warn(f"Size key '{self._sizekey}' was already in dataframe. This means that '{self.sizekey}' was a"    
+                          " key in your dataset. This could result in data being overwritten. You can pick a different "
+                          "key in the function call.")

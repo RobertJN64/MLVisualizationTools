@@ -27,9 +27,9 @@ def getHashablePoint(point, graphData, coldata, outputkey, sizekey):
 
     hashstr = str(z) + sep + str(x) + sep + str(y)
     if graphData.anim is not None:
-        anim = roundScale(point[graphData.anim], graphData.anim, graphData.steps)
+        anim, trueanim = roundScale(point[graphData.anim], graphData.anim, graphData.steps)
         hashstr += sep + str(anim)
-        pdict[graphData.anim] = anim
+        pdict[graphData.anim] = trueanim
     return hashstr, pdict
 
 def addClumpedData(graphData: GraphData, dataframe: pd.DataFrame, outputkey: str = 'Output',
@@ -81,13 +81,13 @@ def getHashablePercentagePoint(point, graphData, coldata, outputkey):
 
     hashstr = str(x) + sep + str(y)
     if graphData.anim is not None:
-        anim = roundScale(point[graphData.anim], graphData.anim, graphData.steps)
+        anim, trueanim = roundScale(point[graphData.anim], graphData.anim, graphData.steps)
         hashstr += sep + str(anim)
-        pdict[graphData.anim] = anim
+        pdict[graphData.anim] = trueanim
     return hashstr, pdict
 
 def addPercentageData(graphData: GraphData, dataframe: pd.DataFrame, outputkey: str = 'Output',
-                      sizekey: Optional[str] = 'Size') -> GraphData:
+                      sizekey: Optional[str] = None) -> GraphData:
     """
     Adds datapoints from dataframe to graphData. Point size is based on frequency of points at that location
     Point height is based on the average of point heights at that location

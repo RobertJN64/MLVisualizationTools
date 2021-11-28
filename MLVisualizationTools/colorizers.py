@@ -25,6 +25,9 @@ def _valid_colorization_call(data: GraphData, colorkey: str, apply_to_model: boo
 
     if colorkey is not None:
         data.colorkey = colorkey
+    else:
+        data.colorkey = data.colorkey #asserts key is valid
+    data.orig_df_cols.append(data.colorkey) #prevent recolorization
 
     return locations
 

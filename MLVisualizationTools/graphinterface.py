@@ -113,7 +113,7 @@ def _plotlyGraphCore(data: GraphData, title, legend):
 
     for datavals in locations:
         for colordata in [datavals.truecolor, datavals.falsecolor, datavals.basecolor]:
-            if colordata is not None:
+            if colordata.color is not None:
                 cdm[colordata.message] = colordata.color
                 order.append(colordata.color)
                 
@@ -176,14 +176,15 @@ def plotlyAnimation(data: GraphData, title="", legend: bool=True, sizekey: Optio
     if data.datavalues is not None:
         locations.append(data.datavalues)
     for datavals in locations:
-        orig_row = datavals.dataframe.iloc[0]
-        for animval in datavals.dataframe[data.anim].unique(): #apply to each frame
-            for color in [datavals.truecolor, datavals.falsecolor]: #apply each color
-                row = copy.deepcopy(orig_row)
-                row[data.colorkey] = color.color
-                row[data.sizekey] = 0
-                row[data.anim] = animval
-                datavals.dataframe = datavals.dataframe.append(row)
+        if datavals.colorized == ColorizerModes.Binary:
+            orig_row = datavals.dataframe.iloc[0]
+            for animval in datavals.dataframe[data.anim].unique(): #apply to each frame
+                for color in [datavals.truecolor, datavals.falsecolor]: #apply each color
+                    row = copy.deepcopy(orig_row)
+                    row[data.colorkey] = color.color
+                    row[data.sizekey] = 0
+                    row[data.anim] = animval
+                    datavals.dataframe = datavals.dataframe.append(row)
 
     return _plotlyGraphCore(data, title, legend)
 

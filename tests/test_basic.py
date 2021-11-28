@@ -74,7 +74,7 @@ def test_process_data_train_and_run_model():
     _, accuracy = model.evaluate(X, Y)
     # assert accuracy >= 0.70 #had to disable this because we kept failing...
 
-def test_colormodes():
+def test_colorizer_edge_cases():
     model = keras.models.load_model(fileloader('examples/Models/titanicmodel'))
     df: pd.DataFrame = pd.read_csv(fileloader('examples/Datasets/Titanic/train.csv'))
 
@@ -82,24 +82,14 @@ def test_colormodes():
     maxvar = AR.maxVariance()
 
     grid = project.Interfaces.predictionGrid(model, maxvar[0], maxvar[1], df, ["Survived"])
-    _ = project.Graphs.plotlyGraph(copy.deepcopy(grid))
-    _ = project.Graphs.matplotlibGraph(copy.deepcopy(grid))
 
-    animgrid = project.Interfaces.predictionAnimation(model, maxvar[0], maxvar[1], maxvar[2], df, ["Survived"])
-    _ = project.Graphs.plotlyGraph(animgrid)
-
-    grid = project.Colorizers.simple(copy.deepcopy(grid), color='red')
-    _ = project.Graphs.plotlyGraph(grid)
-
-    with pytest.raises(ValueError):
-        grid.colorized = "Not a mode"
-        _ = project.Graphs.plotlyGraph(grid)
-
-def test_colorizer_warning():
-    data = pd.DataFrame({'Output': [0, 0.5, 1], 'Color': ['red', 'orange', 'yellow']})
-    data = backend.GraphData(data, backend.GraphDataTypes.Grid, 20, 'NotKey', 'NotKey')
-    with pytest.warns(Warning, match="Color key 'Color' was already in dataframe."):
-        project.Colorizers.simple(copy.deepcopy(data), 'red')
+    with pytest.warns(UserWarning, match = "Colorization not being applied to any points"):
+        project.Colorizers.simple(copy.deepcopy(grid), 'red', apply_to_model=False)
+    with pytest.warns(UserWarning, match = "Colorization should be applied to data values"):
+        project.Colorizers.simple(copy.deepcopy(grid), 'red', apply_to_data=True)
+    with pytest.warns(UserWarning, match = "Color key 'Color' was already in dataframe"):
+        project.Colorizers.simple(grid, 'red')
+        project.Colorizers.simple(grid, 'bue')
 
 def test_wrong_data_format_exception():
     from MLVisualizationTools.graphinterface import WrongDataFormatException
@@ -161,6 +151,10 @@ def test_graph_branch_error():
         # noinspection PyTypeChecker
         project.Graphs.graph(grid, "NotAType")
 
+    with pytest.raises(ValueError, match="Not A Mode is not a valid data storage mode"):
+        # noinspection PyTypeChecker
+        project.backend.ColorizerableDataFrame(pd.DataFrame(), mode = 'Not A Mode')
+
 def test_data_interface_errors():
     model = keras.models.load_model(fileloader('examples/Models/titanicmodel'))
     df: pd.DataFrame = pd.read_csv(fileloader('examples/Datasets/Titanic/train.csv'))
@@ -174,3 +168,37 @@ def test_data_interface_errors():
 
     with pytest.raises(UserWarning, match="Output key 'Output' was not in dataframe."):
         project.datainterface.addPercentageData(grid, df)
+
+def test_custom_sizekeys():
+    model = keras.models.load_model(fileloader('examples/Models/titanicmodel'))
+    df: pd.DataFrame = pd.read_csv(fileloader('examples/Datasets/Titanic/train.csv'))
+
+    AR = project.Analytics.analyzeModel(model, df, ["Survived"])
+    maxvar = AR.maxVariance()
+    grid = project.Interfaces.predictionGrid(model, maxvar[0], maxvar[1], df, ["Survived"])
+    anim = project.Interfaces.predictionAnimation(model, maxvar[0], maxvar[1], maxvar[2], df, ['Survived'])
+    project.Graphs.matplotlibGraph(grid, sizekey='Skey', legend=False)
+    project.Graphs.plotlyGraph(grid, sizekey='Skey')
+    project.Graphs.plotlyGraph(anim, sizekey='Skey')
+    project.DataInterfaces.addClumpedData(grid, df, outputkey='Survived', sizekey='Skey')
+    project.DataInterfaces.addPercentageData(grid, df, outputkey='Survived', sizekey='Skey2')
+
+
+def test_unusual_dataoverlay():
+    model = keras.models.load_model(fileloader('examples/Models/titanicmodel'))
+    df: pd.DataFrame = pd.read_csv(fileloader('examples/Datasets/Titanic/train.csv'))
+
+    AR = project.Analytics.analyzeModel(model, df, ["Survived"])
+    maxvar = AR.maxVariance()
+    grid = project.Interfaces.predictionGrid(model, maxvar[0], maxvar[1], df, ["Survived"])
+    anim = project.Interfaces.predictionAnimation(model, maxvar[0], maxvar[1], maxvar[2], df, ['Survived'])
+
+    project.DataInterfaces.addClumpedData(grid, df, outputkey='Survived')
+    panim = project.DataInterfaces.addPercentageData(copy.deepcopy(anim), df, outputkey='Survived')
+    project.DataInterfaces.addClumpedData(anim, df, outputkey='Survived')
+
+    grid = project.Colorizers.simple(grid, 'white', apply_to_data=True)
+
+    project.Graphs.plotlyGraph(anim)
+    project.Graphs.plotlyGraph(panim)
+    project.Graphs.matplotlibGraph(grid)
