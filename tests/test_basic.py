@@ -87,9 +87,16 @@ def test_colorizer_edge_cases():
         project.Colorizers.simple(copy.deepcopy(grid), 'red', apply_to_model=False)
     with pytest.warns(UserWarning, match = "Colorization should be applied to data values"):
         project.Colorizers.simple(copy.deepcopy(grid), 'red', apply_to_data=True)
-    with pytest.warns(UserWarning, match = "Color key 'Color' was already in dataframe"):
+    with pytest.warns(UserWarning, match = "Color key 'Age' was already in dataframe."):
+        project.Colorizers.simple(copy.deepcopy(grid), 'red', colorkey='Age')
+    with pytest.warns(UserWarning, match = "Colorization may overwrite existing colorization."):
         project.Colorizers.simple(grid, 'red')
         project.Colorizers.simple(grid, 'bue')
+    with pytest.warns(UserWarning, match = "Colorization may overwrite existing colorization."):
+        grid = project.DataInterfaces.addClumpedData(grid, df, outputkey='Survived')
+        project.Colorizers.simple(grid, 'red', apply_to_data=True, apply_to_model=False)
+        project.Colorizers.simple(grid, 'blue', apply_to_data=True, apply_to_model=False)
+
 
 def test_wrong_data_format_exception():
     from MLVisualizationTools.graphinterface import WrongDataFormatException

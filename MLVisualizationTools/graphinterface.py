@@ -148,6 +148,7 @@ def plotlyGrid(data: GraphData, title="", legend: bool=True, sizekey: Optional[s
     
     if sizekey is not None:
         data.sizekey = sizekey
+    data.check_size_key()
 
     data = _applyDefaultFormat(copy.deepcopy(data))
 
@@ -167,6 +168,7 @@ def plotlyAnimation(data: GraphData, title="", legend: bool=True, sizekey: Optio
     
     if sizekey is not None:
         data.sizekey = sizekey
+    data.check_size_key()
 
     data = _applyDefaultFormat(copy.deepcopy(data))
 
@@ -208,6 +210,7 @@ def matplotlibGrid(data: GraphData, title="", legend: bool = True, sizekey: Opti
 
     if sizekey is not None:
         data.sizekey = sizekey
+    data.check_size_key()
 
     fig = plt.figure()
     ax = fig.add_subplot(projection='3d')

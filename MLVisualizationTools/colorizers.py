@@ -14,9 +14,13 @@ def _valid_colorization_call(data: GraphData, colorkey: str, apply_to_model: boo
     locations = []
     if apply_to_model:
         locations.append(data.modeldata)
+        if data.modeldata.colorized != ColorizerModes.NotColorized:
+            warnings.warn("Colorization may overwrite existing colorization.")
     if apply_to_data:
         if data.datavalues is not None:
             locations.append(data.datavalues)
+            if data.datavalues.colorized != ColorizerModes.NotColorized:
+                warnings.warn("Colorization may overwrite existing colorization.")
         else:
             warnings.warn("Colorization should be applied to data values, but no data was given.")
 
@@ -25,9 +29,7 @@ def _valid_colorization_call(data: GraphData, colorkey: str, apply_to_model: boo
 
     if colorkey is not None:
         data.colorkey = colorkey
-    else:
-        data.colorkey = data.colorkey #asserts key is valid
-    data.orig_df_cols.append(data.colorkey) #prevent recolorization
+    data.check_color_key()
 
     return locations
 

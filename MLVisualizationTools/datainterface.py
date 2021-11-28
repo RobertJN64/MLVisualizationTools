@@ -44,6 +44,7 @@ def addClumpedData(graphData: GraphData, dataframe: pd.DataFrame, outputkey: str
     """
     if sizekey is not None:
         graphData.sizekey = sizekey
+    graphData.check_size_key()
 
     if outputkey not in dataframe.columns:
         raise UserWarning(f"Output key '{outputkey}' was not in dataframe. You may need to override the default in the "
@@ -99,6 +100,7 @@ def addPercentageData(graphData: GraphData, dataframe: pd.DataFrame, outputkey: 
     """
     if sizekey is not None:
         graphData.sizekey = sizekey
+    graphData.check_size_key()
 
     if outputkey not in dataframe.columns:
         raise UserWarning(f"Output key '{outputkey}' was not in dataframe. You may need to override the default in the "

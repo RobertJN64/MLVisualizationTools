@@ -104,14 +104,12 @@ class GraphData:
 
     def check_color_key(self):
         if self._colorkey in self.orig_df_cols:
-            raise Exception
             warnings.warn(f"Color key '{self._colorkey}' was already in dataframe. This could mean that "
-                          f"'{self._colorkey}' was a key in your dataset, or the data has already been colorized. "
-                          f"This could result in data being overwritten. "
+                          f"'{self._colorkey}' was a key in your dataset. This could result in data being overwritten. "
                           "You can pick a different key in the function call.")
 
     def check_size_key(self):
         if self._sizekey in self.orig_df_cols:
-            warnings.warn(f"Size key '{self._sizekey}' was already in dataframe. This means that '{self.sizekey}' was a"    
-                          " key in your dataset. This could result in data being overwritten. You can pick a different "
-                          "key in the function call.")
+            warnings.warn(f"Size key '{self._sizekey}' was already in dataframe. This means that '{self._sizekey}' was "
+                          "a key in your dataset. This could result in data being overwritten. You can pick a different"
+                          " key in the function call.")
