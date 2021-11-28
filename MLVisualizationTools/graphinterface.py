@@ -172,7 +172,7 @@ def plotlyAnimation(data: GraphData, title="", legend: bool=True, sizekey: Optio
 
     # plotly animations have a bug where points aren't rendered unless
     # one point of each color is in frame
-    locations = [data.modeldata.dataframe]
+    locations = [data.modeldata]
     if data.datavalues is not None:
         locations.append(data.datavalues)
     for datavals in locations:
@@ -180,7 +180,7 @@ def plotlyAnimation(data: GraphData, title="", legend: bool=True, sizekey: Optio
         for animval in datavals.dataframe[data.anim].unique(): #apply to each frame
             for color in [datavals.truecolor, datavals.falsecolor]: #apply each color
                 row = copy.deepcopy(orig_row)
-                row[data.colorkey] = color
+                row[data.colorkey] = color.color
                 row[data.sizekey] = 0
                 row[data.anim] = animval
                 datavals.dataframe = datavals.dataframe.append(row)
