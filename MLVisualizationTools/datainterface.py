@@ -16,18 +16,18 @@ def getHashablePoint(point, graphData, coldata, outputkey, sizekey):
         maxval = coldata[colname]['max']
 
         v = round((pval - minval) / ((maxval - minval) / steps)) #scale down to step pos
-        return v, v * ((maxval - minval) / steps) + minval #scale back to rounded true pos
+        return v, round(v * ((maxval - minval) / steps) + minval,6) #scale back to rounded true pos
 
     sep = ':'
 
-    x, truex = roundScale(point[graphData.x], graphData.x, graphData.steps)
-    y, truey = roundScale(point[graphData.y], graphData.y, graphData.steps)
-    z, truez = roundScale(point[outputkey], outputkey, graphData.steps)
+    x, truex = roundScale(point[graphData.x], graphData.x, graphData.steps - 1)
+    y, truey = roundScale(point[graphData.y], graphData.y, graphData.steps - 1)
+    z, truez = roundScale(point[outputkey], outputkey, graphData.steps - 1)
     pdict = {graphData.x: truex, graphData.y: truey, graphData.outputkey: truez, sizekey: 1}
 
     hashstr = str(z) + sep + str(x) + sep + str(y)
     if graphData.anim is not None:
-        anim, trueanim = roundScale(point[graphData.anim], graphData.anim, graphData.steps)
+        anim, trueanim = roundScale(point[graphData.anim], graphData.anim, graphData.steps - 1)
         hashstr += sep + str(anim)
         pdict[graphData.anim] = trueanim
     return hashstr, pdict
@@ -71,18 +71,18 @@ def getHashablePercentagePoint(point, graphData, coldata, outputkey):
         maxval = coldata[colname]['max']
 
         v = round((pval - minval) / ((maxval - minval) / steps)) #scale down to step pos
-        return v, v * ((maxval - minval) / steps) + minval #scale back to rounded true pos
+        return v, round(v * ((maxval - minval) / steps) + minval,6) #scale back to rounded true pos
 
     sep = ':'
 
-    x, truex = roundScale(point[graphData.x], graphData.x, graphData.steps)
-    y, truey = roundScale(point[graphData.y], graphData.y, graphData.steps)
+    x, truex = roundScale(point[graphData.x], graphData.x, graphData.steps - 1)
+    y, truey = roundScale(point[graphData.y], graphData.y, graphData.steps - 1)
     truez = point[outputkey]
     pdict = {graphData.x: truex, graphData.y: truey, graphData.outputkey: [truez]}
 
     hashstr = str(x) + sep + str(y)
     if graphData.anim is not None:
-        anim, trueanim = roundScale(point[graphData.anim], graphData.anim, graphData.steps)
+        anim, trueanim = roundScale(point[graphData.anim], graphData.anim, graphData.steps - 1)
         hashstr += sep + str(anim)
         pdict[graphData.anim] = trueanim
     return hashstr, pdict

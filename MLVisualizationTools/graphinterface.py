@@ -152,6 +152,19 @@ def plotlyGrid(data: GraphData, title="", legend: bool=True, sizekey: Optional[s
 
     data = _applyDefaultFormat(copy.deepcopy(data))
 
+    # Consistency with plotly animation key style
+    locations = [data.modeldata]
+    if data.datavalues is not None:
+        locations.append(data.datavalues)
+    for datavals in locations:
+        orig_row = datavals.dataframe.iloc[0]
+        for color in [datavals.basecolor, datavals.truecolor, datavals.falsecolor]:  # apply each color
+            if color.color is not None:
+                row = copy.deepcopy(orig_row)
+                row[data.colorkey] = color.color
+                row[data.sizekey] = 0
+                datavals.dataframe = datavals.dataframe.append(row)
+
     return _plotlyGraphCore(data, title, legend)
 
 def plotlyAnimation(data: GraphData, title="", legend: bool=True, sizekey: Optional[str] = None):
@@ -178,10 +191,10 @@ def plotlyAnimation(data: GraphData, title="", legend: bool=True, sizekey: Optio
     if data.datavalues is not None:
         locations.append(data.datavalues)
     for datavals in locations:
-        if datavals.colorized == ColorizerModes.Binary:
-            orig_row = datavals.dataframe.iloc[0]
-            for animval in datavals.dataframe[data.anim].unique(): #apply to each frame
-                for color in [datavals.truecolor, datavals.falsecolor]: #apply each color
+        orig_row = datavals.dataframe.iloc[0]
+        for animval in data.modeldata.dataframe[data.anim].unique(): #apply to each frame (use model data for smoother animation)
+            for color in [datavals.basecolor, datavals.truecolor, datavals.falsecolor]: #apply each color
+                if color.color is not None:
                     row = copy.deepcopy(orig_row)
                     row[data.colorkey] = color.color
                     row[data.sizekey] = 0
@@ -250,5 +263,5 @@ def matplotlibGrid(data: GraphData, title="", legend: bool = True, sizekey: Opti
 
 def matplotlibAnimation(_data: GraphData, _title="", _legend: bool = True, _sizekey: Optional[str] = None):
     """This function is not implemented and is not planned to be implemented in the future."""
-    raise NotImplementedError("Matplotib does not support animations cleanly. "
-                              "This is not planned to be added in the future.")
+    raise NotImplementedError("Matplotib does not support animations cleanly. This is not planned to be added in the "
+                              "future. Use plotly instead (`pip install plotly`)")

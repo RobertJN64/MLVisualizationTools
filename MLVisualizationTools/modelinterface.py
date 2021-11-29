@@ -75,13 +75,13 @@ def predictionGridRaw(model, x:Union[str, AnalyticsColumnInfo], y:Union[str, Ana
 
     col = []
     for pos in range(0, steps):
-        col.append(pos * (coldata[x]['max'] - coldata[x]['min']) / (steps - 1) + coldata[x]['min'])
+        col.append(round(pos * (coldata[x]['max'] - coldata[x]['min']) / (steps - 1) + coldata[x]['min'], 6))
     col = col * steps
     preddata[x] = col
 
     col = []
     for pos in range(0, steps):
-        col += [pos * (coldata[y]['max'] - coldata[y]['min']) / (steps - 1) + coldata[y]['min']] * steps
+        col += [round(pos * (coldata[y]['max'] - coldata[y]['min']) / (steps - 1) + coldata[y]['min'], 6)] * steps
     preddata[y] = col
 
     predictions = model.predict(preddata)
@@ -157,19 +157,19 @@ def predictionAnimationRaw(model, x:Union[str, AnalyticsColumnInfo], y:Union[str
 
     col = []
     for pos in range(0, steps):
-         col.append(pos * (coldata[x]['max'] - coldata[x]['min']) / (steps - 1) + coldata[x]['min'])
+         col.append(round(pos * (coldata[x]['max'] - coldata[x]['min']) / (steps - 1) + coldata[x]['min'], 6))
     col = col * (steps ** 2)
     preddata[x] = col
 
     col = []
     for pos in range(0, steps):
-        col += [pos * (coldata[y]['max'] - coldata[y]['min']) / (steps - 1) + coldata[y]['min']] * steps
+        col += [round(pos * (coldata[y]['max'] - coldata[y]['min']) / (steps - 1) + coldata[y]['min'], 6)] * steps
     col = col * steps
     preddata[y] = col
 
     col = []
     for pos in range(0, steps):
-        col += [pos * (coldata[anim]['max'] - coldata[anim]['min']) / (steps - 1) + coldata[anim]['min']] * (steps ** 2)
+        col += [round(pos * (coldata[anim]['max'] - coldata[anim]['min']) / (steps - 1) + coldata[anim]['min'],6 )] * (steps ** 2)
     preddata[anim] = col
 
     predictions = model.predict(preddata)
