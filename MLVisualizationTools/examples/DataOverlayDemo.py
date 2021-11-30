@@ -31,7 +31,7 @@ def main(show=True):
     maxvar = AR.maxVariance()
     grid = Interfaces.predictionGrid(model, maxvar[0], maxvar[1], df, ["Survived"])
     grid = Colorizers.binary(grid)
-    DataInterfaces.addClumpedData(grid, df, 'Survived')
+    grid = DataInterfaces.addClumpedData(grid, df, 'Survived')
 
     if hasplotly:
         fig = Graphs.plotlyGraph(grid, title="Clumped Data")
@@ -47,7 +47,8 @@ def main(show=True):
 
     grid = Interfaces.predictionGrid(model, maxvar[0], maxvar[1], df, ["Survived"])
     grid = Colorizers.binary(grid)
-    DataInterfaces.addPercentageData(grid, df, 'Survived')
+    grid = DataInterfaces.addPercentageData(grid, df, 'Survived')
+    grid = Colorizers.binary(grid, highcontrast=False, apply_to_data=True, apply_to_model=False)
 
     if hasplotly:
         fig = Graphs.plotlyGraph(grid, title="Percentage Data")

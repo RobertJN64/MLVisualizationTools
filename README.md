@@ -55,7 +55,9 @@ Steps:
 2. Analyzer
 3. Interface / Interface Raw (if you don't have a dataframe)
 4. Colorizers (optional)
-5. Graphs
+5. Apply Training Data Points (Optional)
+6. Colorize data points (Optional)
+7. Graphs
 
 Analyzers take a keras model and return information about the inputs
 such as which ones have high variance.
@@ -70,12 +72,15 @@ max, and mean values for each feature column)
 Colorizers mark points as being certain colors, typically above or below
 0.5.
 
+Data Interfaces render training data points on top of the 
+graph to make it easier to tell if the model trained properly.
+
 Graphs turn these output grids into a visual representation.
 
 ## Sample
 
 ```python
-from MLVisualizationTools import Analytics, Interfaces, Graphs, Colorizers
+from MLVisualizationTools import Analytics, Interfaces, Graphs, Colorizers, DataInterfaces
 
 #Displays plotly graphs with max variance inputs to model
 
@@ -86,6 +91,7 @@ maxvar = AR.maxVariance()
 
 grid = Interfaces.predictionGrid(model, maxvar[0], maxvar[1], df)
 grid = Colorizers.binary(grid)
+grid = DataInterfaces.addPercentageData(grid, df, str('OutputKey'))
 fig = Graphs.plotlyGraph(grid)
 fig.show()
 ```
@@ -101,6 +107,7 @@ website demo
 - DashNotebookDemo: Notebook version of an interactive website demo
 - DashKaggleDemo: Notebook version of an dash demo that works in kaggle
 notebooks
+- DataOverlayDemo: Demonstrates data overlay features
 
 See [MLVisualizationTools/Examples](/MLVisualizationTools/examples) for more examples.
 Use example.main() to run the examples and set parameters such as themes.
