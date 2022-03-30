@@ -164,7 +164,7 @@ def plotlyGrid(data: GraphData, title="", legend: bool=True, sizekey: Optional[s
                 row = copy.deepcopy(orig_row)
                 row[data.colorkey] = color.color
                 row[data.sizekey] = 0
-                datavals.dataframe = pd.concat(datavals.dataframe, row)
+                datavals.dataframe = pd.concat([datavals.dataframe, row])
 
     return _plotlyGraphCore(data, title, legend)
 
@@ -200,7 +200,7 @@ def plotlyAnimation(data: GraphData, title="", legend: bool=True, sizekey: Optio
                     row[data.colorkey] = color.color
                     row[data.sizekey] = 0
                     row[data.anim] = animval
-                    datavals.dataframe = pd.concat(datavals.dataframe, row)
+                    datavals.dataframe = pd.concat([datavals.dataframe, row])
 
     return _plotlyGraphCore(data, title, legend)
 
