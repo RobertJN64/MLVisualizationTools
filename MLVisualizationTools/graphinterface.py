@@ -122,7 +122,7 @@ def _plotlyGraphCore(data: GraphData, title, legend):
                 df.loc[df[data.colorkey] == colordata.color, data.colorkey] = colordata.message
 
     if data.datavalues is not None:
-        combined_df = data.modeldata.dataframe.append(data.datavalues.dataframe)
+        combined_df = pd.concat([data.modeldata.dataframe, data.datavalues.dataframe])
     else:
         combined_df = data.modeldata.dataframe
 
