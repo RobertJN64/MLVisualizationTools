@@ -8,6 +8,8 @@ MLVisualizationTools is a python library to make
 machine learning more understandable through the
 use of effective visualizations.
 
+![Demo Image](image.png)
+
 We support graphing with matplotlib and plotly.
 We implicity support all major ML libraries, such as 
 tensorflow and sklearn.
