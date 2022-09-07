@@ -1,8 +1,7 @@
 import pytest
 import os
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'  # stops agressive error message printing
-with pytest.warns(DeprecationWarning, match="imp module is deprecated"):
-    from tensorflow import keras
+from tensorflow import keras
 import MLVisualizationTools as project
 import MLVisualizationTools.backend as backend
 from MLVisualizationTools.backend import fileloader
