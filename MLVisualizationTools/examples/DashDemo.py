@@ -11,7 +11,7 @@ def main(theme = 'dark', highcontrast = True):
     from MLVisualizationTools.backend import fileloader
     import pandas as pd
     import os
-    os.environ['TF_CPP_MIN_LOG_LEVEL'] = '0'  # stops agressive error message printing
+    os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'  # stops agressive error message printing
     from tensorflow import keras
     model = keras.models.load_model(fileloader('examples/Models/titanicmodel'))
     df: pd.DataFrame = pd.read_csv(fileloader('examples/Datasets/Titanic/train.csv'))
