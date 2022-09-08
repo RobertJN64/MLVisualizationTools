@@ -1,5 +1,5 @@
 pandas
-flask<2.2.0
+flask
 dash
 plotly
 matplotlib

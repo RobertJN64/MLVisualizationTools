@@ -7,6 +7,7 @@ import MLVisualizationTools.backend as backend
 from MLVisualizationTools.backend import fileloader
 import pandas as pd
 import copy
+import warnings
 
 def test_colorizer():
     data = pd.DataFrame({'Output': [0, 0.5, 1]})
@@ -30,6 +31,8 @@ def test_dash_visualizer(): #doesn't launch dash apps, but tests creation proces
     df = df.drop("Survived", axis=1)
     DMV.App(model, df, theme='light')
     DMV.App(model, df, theme='dark')
+
+    warnings.warn("Test warning!")
 
 def test_demo():
     import MLVisualizationTools.examples.Demo as Demo
