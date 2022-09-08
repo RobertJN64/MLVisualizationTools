@@ -7,7 +7,6 @@ import MLVisualizationTools.backend as backend
 from MLVisualizationTools.backend import fileloader
 import pandas as pd
 import copy
-import warnings
 
 def test_colorizer():
     data = pd.DataFrame({'Output': [0, 0.5, 1]})
