@@ -32,8 +32,6 @@ def test_dash_visualizer(): #doesn't launch dash apps, but tests creation proces
     DMV.App(model, df, theme='light')
     DMV.App(model, df, theme='dark')
 
-    warnings.warn("Test warning!")
-
 def test_demo():
     import MLVisualizationTools.examples.Demo as Demo
     Demo.main(show=False)
