@@ -1,6 +1,6 @@
 pandas
 flask
-dash
+dash==2.8.1
 plotly
 matplotlib
 tensorflow!=2.6.1
