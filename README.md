@@ -114,23 +114,6 @@ notebooks
 See [MLVisualizationTools/Examples](/MLVisualizationTools/examples) for more examples.
 Use example.main() to run the examples and set parameters such as themes.
 
-## Support for more ML Libraries
-
-We support any ML library that has a `predict()` call that takes
-a pd Dataframe with features. If this doesn't work, use a wrapper class like 
-in this example:
-
-```python
-import pandas as pd
-
-class ModelWrapper:
-    def __init(self, model):
-        self.model = model
-
-    def predict(self, dataframe: pd.DataFrame):
-        ... #Do whatever code you need here
-```
-
 ## Tensorflow Compatibility
 
 MLVisualizationTools is distributed with a pretrained tensorflow model
@@ -147,4 +130,22 @@ If you need an example model, retrain it with
 
 See [SklearnDemo.py](/MLVisualizationTools/examples/SklearnDemo.py)
 
-Sklearn can be used exactly like TF because it has the same `.predict(X, Y)` interface.
+Sklearn can be used exactly like TF because it has the same `.predict(X) -> Y` interface.
+
+
+## Support for more ML Libraries
+
+We support any ML library that has a `predict()` call that takes
+a pd Dataframe with features. If this doesn't work, use a wrapper class like 
+in this example:
+
+```python
+import pandas as pd
+
+class ModelWrapper:
+    def __init(self, model):
+        self.model = model
+
+    def predict(self, dataframe: pd.DataFrame):
+        ... #Do whatever code you need here
+```
