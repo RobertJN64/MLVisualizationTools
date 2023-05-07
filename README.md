@@ -142,3 +142,9 @@ For version 2.5+ we load a v2.5 model.
 If this causes compatibility issues you can still use the main library on your models. 
 If you need an example model, retrain it with 
 [TrainTitanicModel.py](/MLVisualizationTools/examples/TrainTitanicModel.py)
+
+## scikit-learn Compatibility
+
+See [SklearnDemo.py](/MLVisualizationTools/examples/SklearnDemo.py)
+
+Sklearn can be used exactly like TF because it has the same `.predict(X, Y)` interface.
