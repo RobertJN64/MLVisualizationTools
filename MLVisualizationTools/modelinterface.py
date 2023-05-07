@@ -84,7 +84,7 @@ def predictionGridRaw(model, x:Union[str, AnalyticsColumnInfo], y:Union[str, Ana
         col += [round(pos * (coldata[y]['max'] - coldata[y]['min']) / (steps - 1) + coldata[y]['min'], 6)] * steps
     preddata[y] = col
 
-    predictions = model.predict(preddata)
+    predictions = model.predict(preddata.values)
     if outputkey in preddata.columns:
         warnings.warn(f"Output key '{outputkey}' was already in dataframe. This means that '{outputkey}' "
                       "was a key in your dataset and could result in data being overwritten. "
@@ -172,7 +172,7 @@ def predictionAnimationRaw(model, x:Union[str, AnalyticsColumnInfo], y:Union[str
         col += [round(pos * (coldata[anim]['max'] - coldata[anim]['min']) / (steps - 1) + coldata[anim]['min'],6 )] * (steps ** 2)
     preddata[anim] = col
 
-    predictions = model.predict(preddata)
+    predictions = model.predict(preddata.values)
     if outputkey in preddata.columns:
         warnings.warn(f"Output key '{outputkey}' was already in dataframe. This means that '{outputkey}' "
                       "was a key in your dataset and could result in data being overwritten. "

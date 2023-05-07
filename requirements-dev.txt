@@ -4,6 +4,7 @@ dash
 plotly
 matplotlib
 tensorflow!=2.6.1
+sklearn
 dash-bootstrap-components>=1.0.0
 dash-tour-component
 pytest

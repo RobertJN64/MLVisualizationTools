@@ -83,7 +83,8 @@ def analyzeModelRaw(model, coldata: Dict[str, Dict], allcols: List[str], steps:i
             preddata[name][i + currentpos] = i * (item['max'] - item['min'])/(steps-1) + item['min']
         currentpos += steps
 
-    predictions = model.predict(preddata)
+
+    predictions = model.predict(preddata.values)
 
     currentpos = 0
     for name in coldata:

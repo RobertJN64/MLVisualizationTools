@@ -1,3 +1,6 @@
+#Command to run: coverage run -m pytest
+#Comamnd to run: coverage html -i
+
 # .coveragerc to control coverage.py
 [run]
 branch = True

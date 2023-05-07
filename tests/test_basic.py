@@ -41,6 +41,10 @@ def test_demo():
     import MLVisualizationTools.examples.DataOverlayDemo as DODemo
     DODemo.main(show=False)
 
+    import MLVisualizationTools.examples.SklearnDemo as SKDemo
+    SKDemo.main(show=False)
+
+
 def test_mpl():
     import matplotlib
     matplotlib.use('Agg')  # disables UI rendering
