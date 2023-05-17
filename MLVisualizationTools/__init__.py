@@ -8,3 +8,4 @@ import MLVisualizationTools.colorizers as Colorizers
 import MLVisualizationTools.graphinterface as Graphs
 import MLVisualizationTools.datainterface as DataInterfaces
 import MLVisualizationTools.types as types
+import MLVisualizationTools.removefeature as RemoveFeature

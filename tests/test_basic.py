@@ -212,3 +212,8 @@ def test_unusual_dataoverlay():
     project.Graphs.plotlyGraph(anim)
     project.Graphs.plotlyGraph(panim)
     project.Graphs.matplotlibGraph(grid)
+
+def test_rm_feature():
+    from MLVisualizationTools.examples import RemoveFeatureDemo
+    RemoveFeatureDemo.main() #verbose true
+    RemoveFeatureDemo.main(False) #verbose false
