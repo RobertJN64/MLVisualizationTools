@@ -53,7 +53,7 @@ App.visualize(model, data)
 MLVisualizationTools connects a variety of smaller functions.
 
 Steps:
-1. Keras Model and Dataframe with features
+1. Start with a ML Model and Dataframe with features
 2. Analyzer
 3. Interface / Interface Raw (if you don't have a dataframe)
 4. Colorizers (optional)
@@ -61,7 +61,7 @@ Steps:
 6. Colorize data points (Optional)
 7. Graphs
 
-Analyzers take a keras model and return information about the inputs
+Analyzers take a ml model and return information about the inputs
 such as which ones have high variance.
 
 Interfaces take parameters and construct a multidimensional grid
@@ -149,3 +149,10 @@ class ModelWrapper:
     def predict(self, dataframe: pd.DataFrame):
         ... #Do whatever code you need here
 ```
+
+## Remove Feature Testing
+
+See [RemoveFeatureDemo.py](/MLVisualizationTools/examples/RemoveFeatureDemo.py)
+
+Tests if features can be removed from dataset without significantly affecting accuracy.
+Replaces each dataset column with mean and compares to baseline accuracy.
