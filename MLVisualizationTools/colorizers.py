@@ -88,7 +88,7 @@ def binary(data: GraphData, highcontrast:bool=True, truecolor: Optional[str] = N
     for d in locations:
         df = d.dataframe
 
-        df.loc[df[data.outputkey] > cutoff, data.colorkey] = truecolor
+        df[data.colorkey] = truecolor
         df.loc[df[data.outputkey] <= cutoff, data.colorkey] = falsecolor
         d.colorized = ColorizerModes.Binary
         d.truecolor.color = truecolor
