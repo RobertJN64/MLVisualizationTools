@@ -55,6 +55,14 @@ def test_mpl():
         message= r'Matplotlib is currently using agg, which is a non-GUI backend, so cannot show the figure.'
         # disables agg warning on matplotlib
     )
+
+    warnings.filterwarnings(
+        action='ignore',
+        category=UserWarning,
+        message=r'FigureCanvasAgg is non-interactive, and thus cannot be shown'
+        # disables agg warning on matplotlib
+    )
+
     import MLVisualizationTools.examples.MatplotlibDemo as MPLDemo
     MPLDemo.main()
 
