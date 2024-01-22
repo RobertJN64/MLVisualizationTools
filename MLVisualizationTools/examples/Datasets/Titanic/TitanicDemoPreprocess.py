@@ -6,7 +6,11 @@ import pandas as pd
 # The modified file was moved to train.csv
 # All operations performed are standard preprocessing
 
-pd.set_option('future.no_silent_downcasting', True) #removes downcasting errors
+# noinspection PyProtectedMember
+try:
+    pd.set_option('future.no_silent_downcasting', True) #removes downcasting errors
+except pd._config.config.OptionError:
+    pass #This is fine - will throw dep warning on new version without it
 
 def main():
     df = pd.read_csv(fileloader('examples/Datasets/Titanic/train_orig.csv'))
