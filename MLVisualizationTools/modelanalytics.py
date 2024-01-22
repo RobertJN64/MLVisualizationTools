@@ -80,7 +80,7 @@ def analyzeModelRaw(model, coldata: Dict[str, Dict], allcols: List[str], steps:i
     currentpos = 0
     for name, item in coldata.items():
         for i in range(0, steps):
-            preddata[name][i + currentpos] = i * (item['max'] - item['min'])/(steps-1) + item['min']
+            preddata.loc[i + currentpos, name] = i * (item['max'] - item['min'])/(steps-1) + item['min']
         currentpos += steps
 
 

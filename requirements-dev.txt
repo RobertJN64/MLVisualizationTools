@@ -8,3 +8,4 @@ scikit-learn
 dash-bootstrap-components>=1.0.0
 dash-tour-component
 pytest
+pyarrow
