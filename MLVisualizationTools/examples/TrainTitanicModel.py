@@ -12,7 +12,8 @@ from MLVisualizationTools.backend import fileloader
 
 def getModel():
     model = keras.Sequential()
-    model.add(keras.layers.Dense(10, input_dim=7, activation='relu'))
+    model.add(keras.layers.Input((7,)))
+    model.add(keras.layers.Dense(10, activation='relu'))
     model.add(keras.layers.Dense(10, activation='relu'))
     model.add(keras.layers.Dense(1, activation='sigmoid'))
     model.compile(loss="binary_crossentropy", optimizer="adam", metrics=["accuracy"])
