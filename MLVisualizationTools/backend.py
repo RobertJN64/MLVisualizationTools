@@ -37,6 +37,7 @@ def fileloader(target: str, dynamic_model_version = True):
     if dynamic_model_version and 'examples/Models' in target and model_version_check():
         target = target.replace('.keras', '')
         target += "_old"
+    print(target)
     return path.dirname(__file__) + '/' + target
 
 class ColorMessage:
