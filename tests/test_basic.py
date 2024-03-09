@@ -72,8 +72,8 @@ def test_process_data_train_and_run_model():
     import MLVisualizationTools.examples.TrainTitanicModel as TTM
     TTM.main()
 
-    model = keras.models.load_model(fileloader('MLVisualizationTools/examples/Models/titanicmodel.keras'))
-    df = pd.read_csv('MLVisualizationTools/examples/Datasets/Titanic/train.csv')
+    model = keras.models.load_model(fileloader('examples/Models/titanicmodel.keras'))
+    df = pd.read_csv(fileloader('examples/Datasets/Titanic/train.csv'))
 
     # region preprocess
     header = list(df.columns)
