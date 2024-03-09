@@ -26,14 +26,17 @@ def colinfo(data: pd.DataFrame, exclude:List[str] = None) -> Tuple[Dict[str, Dic
             allcols.append(item)
     return coldata, allcols
 
+def model_version_check():
+    """Returns true if old tf version"""
+    import tensorflow as tf
+    return float('.'.join(tf.version.VERSION.split('.')[0:2])) < 2.16
+
 def fileloader(target: str, dynamic_model_version = True):
     """Specify a path relative to MLVisualizationTools"""
-    if dynamic_model_version:
-        if 'examples/Models' in target:
-            import tensorflow as tf
-            if float('.'.join(tf.version.VERSION.split('.')[0:2])) < 2.16:
-                target = target.replace('.keras', '')
-                target += "_old"
+
+    if dynamic_model_version and 'examples/Models' in target and model_version_check():
+        target = target.replace('.keras', '')
+        target += "_old"
     return path.dirname(__file__) + '/' + target
 
 class ColorMessage:

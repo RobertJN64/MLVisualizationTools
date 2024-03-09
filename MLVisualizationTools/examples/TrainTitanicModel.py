@@ -2,7 +2,7 @@ import os
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2' #stops agressive error message printing
 from tensorflow import keras
 import pandas as pd
-from MLVisualizationTools.backend import fileloader
+from MLVisualizationTools.backend import fileloader, model_version_check
 
 # This creates a keras model for use in demo visualizations
 # It uses the Datasets/Titanic/train.csv file
@@ -12,8 +12,11 @@ from MLVisualizationTools.backend import fileloader
 
 def getModel():
     model = keras.Sequential()
-    model.add(keras.layers.Input((7,)))
-    model.add(keras.layers.Dense(10, activation='relu'))
+    if model_version_check():
+        model.add(keras.layers.Dense(10, input_dim=7, activation='relu'))
+    else:
+        model.add(keras.layers.Input((7,)))
+        model.add(keras.layers.Dense(10, activation='relu'))
     model.add(keras.layers.Dense(10, activation='relu'))
     model.add(keras.layers.Dense(1, activation='sigmoid'))
     model.compile(loss="binary_crossentropy", optimizer="adam", metrics=["accuracy"])
