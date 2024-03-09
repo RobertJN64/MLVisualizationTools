@@ -31,8 +31,9 @@ def fileloader(target: str, dynamic_model_version = True):
     if dynamic_model_version:
         if 'examples/Models' in target:
             import tensorflow as tf
-            if float(tf.version.VERSION[:3]) < 2.5:
-                target += "_v2.0"
+            if float('.'.join(tf.version.VERSION.split('.')[0:2])) < 2.16:
+                target = target.replace('.keras', '')
+                target += "_old"
     return path.dirname(__file__) + '/' + target
 
 class ColorMessage:

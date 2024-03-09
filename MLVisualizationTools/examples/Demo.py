@@ -13,7 +13,7 @@ except ImportError:
 
 def main(show=True):
     """Run the demo. Disable show for testing purposes."""
-    model = keras.models.load_model(fileloader('examples/Models/titanicmodel'))
+    model = keras.models.load_model(fileloader('examples/Models/titanicmodel.keras'))
     df: pd.DataFrame = pd.read_csv(fileloader('examples/Datasets/Titanic/train.csv'))
 
     AR = Analytics.analyzeModel(model, df, ["Survived"])

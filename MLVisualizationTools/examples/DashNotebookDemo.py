@@ -14,7 +14,7 @@ def main(theme = 'dark', highcontrast = True, mode='external'):
     import os
     os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'  # stops agressive error message printing
     from tensorflow import keras
-    model = keras.models.load_model(fileloader('examples/Models/titanicmodel'))
+    model = keras.models.load_model(fileloader('examples/Models/titanicmodel.keras'))
     df: pd.DataFrame = pd.read_csv(fileloader('examples/Datasets/Titanic/train.csv'))
     df = df.drop("Survived", axis=1)
     DashModelVisualizer.visualize(model, df, title="DashNotebookDemo", theme=theme,

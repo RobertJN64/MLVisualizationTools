@@ -12,7 +12,7 @@ except ImportError:
                       " with `pip install matplotlib` or run the plotly demo instead.")
 
 def main():
-    model = keras.models.load_model(fileloader('examples/Models/titanicmodel'))
+    model = keras.models.load_model(fileloader('examples/Models/titanicmodel.keras'))
     df: pd.DataFrame = pd.read_csv(fileloader('examples/Datasets/Titanic/train.csv'))
 
     AR = Analytics.analyzeModel(model, df, ["Survived"])

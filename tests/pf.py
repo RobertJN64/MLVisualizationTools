@@ -6,7 +6,7 @@ import os
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'  # stops agressive error message printing
 from tensorflow import keras
 import cProfile
-model = keras.models.load_model(fileloader('examples/Models/titanicmodel'))
+model = keras.models.load_model(fileloader('examples/Models/titanicmodel.keras'))
 df = pd.read_csv(fileloader('examples/Datasets/Titanic/train.csv'))
 
 AR = AnalyticsResult()

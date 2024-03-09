@@ -24,7 +24,7 @@ except ImportError:
     raise ImportError()
 
 def main(show=True):
-    model = keras.models.load_model(fileloader('examples/Models/titanicmodel'))
+    model = keras.models.load_model(fileloader('examples/Models/titanicmodel.keras'))
     df: pd.DataFrame = pd.read_csv(fileloader('examples/Datasets/Titanic/train.csv'))
 
     AR = Analytics.analyzeModel(model, df, ["Survived"])

@@ -59,7 +59,7 @@ def run_benchmark():
     from tensorflow import keras
 
     benchmark.next("Model load")
-    model = keras.models.load_model(fileloader('examples/Models/titanicmodel'))
+    model = keras.models.load_model(fileloader('examples/Models/titanicmodel.keras'))
 
     benchmark.next("CSV load")
     df = pd.read_csv(fileloader('examples/Datasets/Titanic/train.csv'))
@@ -91,7 +91,7 @@ def resolution_compare():
     os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'  # stops agressive error message printing
     from tensorflow import keras
 
-    model = keras.models.load_model(fileloader('examples/Models/titanicmodel'))
+    model = keras.models.load_model(fileloader('examples/Models/titanicmodel.keras'))
     df = pd.read_csv(fileloader('examples/Datasets/Titanic/train.csv'))
 
     AR = Analytics.analyzeModel(model, df, ["Survived"])

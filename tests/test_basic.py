@@ -25,7 +25,7 @@ def test_colorizer():
 
 def test_dash_visualizer(): #doesn't launch dash apps, but tests creation process
     import MLVisualizationTools.express.DashModelVisualizer as DMV
-    model = keras.models.load_model(fileloader('examples/Models/titanicmodel'))
+    model = keras.models.load_model(fileloader('examples/Models/titanicmodel.keras'))
     df: pd.DataFrame = pd.read_csv(fileloader('examples/Datasets/Titanic/train.csv'))
     df = df.drop("Survived", axis=1)
     DMV.App(model, df, theme='light')
@@ -72,7 +72,7 @@ def test_process_data_train_and_run_model():
     import MLVisualizationTools.examples.TrainTitanicModel as TTM
     TTM.main()
 
-    model = keras.models.load_model('MLVisualizationTools/examples/Models/titanicmodel')
+    model = keras.models.load_model('MLVisualizationTools/examples/Models/titanicmodel.keras')
     df = pd.read_csv('MLVisualizationTools/examples/Datasets/Titanic/train.csv')
 
     # region preprocess
@@ -86,7 +86,7 @@ def test_process_data_train_and_run_model():
     # assert accuracy >= 0.70 #had to disable this because we kept failing...
 
 def test_colorizer_edge_cases():
-    model = keras.models.load_model(fileloader('examples/Models/titanicmodel'))
+    model = keras.models.load_model(fileloader('examples/Models/titanicmodel.keras'))
     df: pd.DataFrame = pd.read_csv(fileloader('examples/Datasets/Titanic/train.csv'))
 
     AR = project.Analytics.analyzeModel(model, df, ["Survived"])
@@ -112,7 +112,7 @@ def test_colorizer_edge_cases():
 def test_wrong_data_format_exception():
     from MLVisualizationTools.graphinterface import WrongDataFormatException
 
-    model = keras.models.load_model(fileloader('examples/Models/titanicmodel'))
+    model = keras.models.load_model(fileloader('examples/Models/titanicmodel.keras'))
     df: pd.DataFrame = pd.read_csv(fileloader('examples/Datasets/Titanic/train.csv'))
 
     AR = project.Analytics.analyzeModel(model, df, ["Survived"])
@@ -132,7 +132,7 @@ def test_wrong_data_format_exception():
         _ = project.Graphs.matplotlibGrid(grid)
 
 def test_OutputKey_warning():
-    model = keras.models.load_model(fileloader('examples/Models/titanicmodel'))
+    model = keras.models.load_model(fileloader('examples/Models/titanicmodel.keras'))
     df: pd.DataFrame = pd.read_csv(fileloader('examples/Datasets/Titanic/train.csv'))
 
     cols = list(df.columns)
@@ -145,7 +145,7 @@ def test_OutputKey_warning():
         project.Interfaces.predictionAnimation(model, cols[1], cols[2], cols[3], df, ["Survived"])
 
 def test_graph_branch_error():
-    model = keras.models.load_model(fileloader('examples/Models/titanicmodel'))
+    model = keras.models.load_model(fileloader('examples/Models/titanicmodel.keras'))
     df: pd.DataFrame = pd.read_csv(fileloader('examples/Datasets/Titanic/train.csv'))
 
     AR = project.Analytics.analyzeModel(model, df, ["Survived"])
@@ -174,7 +174,7 @@ def test_graph_branch_error():
         project.backend.ColorizerableDataFrame(pd.DataFrame(), mode = 'Not A Mode')
 
 def test_data_interface_errors():
-    model = keras.models.load_model(fileloader('examples/Models/titanicmodel'))
+    model = keras.models.load_model(fileloader('examples/Models/titanicmodel.keras'))
     df: pd.DataFrame = pd.read_csv(fileloader('examples/Datasets/Titanic/train.csv'))
 
     AR = project.Analytics.analyzeModel(model, df, ["Survived"])
@@ -188,7 +188,7 @@ def test_data_interface_errors():
         project.datainterface.addPercentageData(grid, df)
 
 def test_custom_sizekeys():
-    model = keras.models.load_model(fileloader('examples/Models/titanicmodel'))
+    model = keras.models.load_model(fileloader('examples/Models/titanicmodel.keras'))
     df: pd.DataFrame = pd.read_csv(fileloader('examples/Datasets/Titanic/train.csv'))
 
     AR = project.Analytics.analyzeModel(model, df, ["Survived"])
@@ -203,7 +203,7 @@ def test_custom_sizekeys():
 
 
 def test_unusual_dataoverlay():
-    model = keras.models.load_model(fileloader('examples/Models/titanicmodel'))
+    model = keras.models.load_model(fileloader('examples/Models/titanicmodel.keras'))
     df: pd.DataFrame = pd.read_csv(fileloader('examples/Datasets/Titanic/train.csv'))
 
     AR = project.Analytics.analyzeModel(model, df, ["Survived"])
