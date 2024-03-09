@@ -12,7 +12,8 @@ from MLVisualizationTools.backend import fileloader
 
 def getModel():
     model = keras.Sequential()
-    model.add(keras.layers.Dense(10, input_dim=7, activation='relu'))
+    model.add(keras.layers.Input((7,)))
+    model.add(keras.layers.Dense(10, activation='relu'))
     model.add(keras.layers.Dense(10, activation='relu'))
     model.add(keras.layers.Dense(1, activation='sigmoid'))
     model.compile(loss="binary_crossentropy", optimizer="adam", metrics=["accuracy"])
@@ -47,7 +48,7 @@ def main():
     print("We achieved an (training) accuracy of:", str(round(trainaccuracy,3) * 100) + "%")
     print("We achieved an (testing) accuracy of:", str(round(testaccuracy,3) * 100) + "%")
     print()
-    model.save(fileloader('examples/Models/titanicmodel_new'))
+    model.save(fileloader('examples/Models/titanicmodel_new.keras'))
     print("Model saved to Models/titanicmodel_new")
 
 if __name__ == '__main__':
