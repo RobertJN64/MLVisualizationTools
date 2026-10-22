@@ -8,7 +8,7 @@ import pandas as pd
 
 def main():
     df = pd.read_csv(fileloader('examples/Datasets/Titanic/train_orig.csv'))
-    df.drop(['PassengerId', 'Name', 'Ticket', 'Cabin'], axis=1, inplace=True) #these cols don't have much useful data
+    df = df.drop(['PassengerId', 'Name', 'Ticket', 'Cabin'], axis=1) #these cols don't have much useful data
     df['Age'] = df['Age'].fillna(df['Age'].mean()) #this data has lots of nan values
     df = df[df['Embarked'].notna()] #this col is only missing two values
     df["Embarked"] = df["Embarked"].replace({"C": 0, "S": 1, "Q": 2}) #numerical values are better for training
