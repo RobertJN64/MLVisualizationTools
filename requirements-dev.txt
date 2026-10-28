@@ -6,5 +6,5 @@ tensorflow!=2.6.1
 scikit-learn
 dash-bootstrap-components>=1.0.0
 dash-tour-component
-pytest
+pytest<9.2.0
 pyarrow
